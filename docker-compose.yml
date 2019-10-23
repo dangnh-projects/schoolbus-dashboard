@@ -1,0 +1,12 @@
+version: "3"
+services:
+  erp_fe:
+    container_name: erp_fe
+    restart: always
+    image: erp_fe:0.0.1
+    build:
+      context: ./
+    ports:
+      - "8010:80"
+    expose:
+      - "8010"

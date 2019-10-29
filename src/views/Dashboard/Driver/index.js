@@ -6,7 +6,7 @@ import DataTable from 'components/DataTable';
 import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
-const ButtonGroup = Button.Group;
+//const ButtonGroup = Button.Group;
 
 export const Driver = props => {
   const [viewType, setViewType] = useState('LIST');
@@ -73,7 +73,7 @@ export const Driver = props => {
 
   return (
     <Card
-      title="Manage bus"
+      title="Manage Driver"
       style={{ width: '100%', background: 'none' }}
       headStyle={{ backgroundColor: 'white' }}
       bodyStyle={{
@@ -95,7 +95,7 @@ export const Driver = props => {
         //     <Icon type="appstore" />
         //   </Button>
         // </ButtonGroup>,
-        <Button key="add-new" onClick={() => navigate('/dashboard/bus/new')}>
+        <Button key="add-new" onClick={() => navigate('/dashboard/driver/new')}>
           Add
         </Button>,
       ]}

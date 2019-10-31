@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, notification } from 'antd';
-import moment from 'moment';
+//import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import BaseForm from 'components/Form';
@@ -51,21 +51,9 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
   }, [item, data, id]);
 
   return (
-    <Card title={id ? 'Update Bus' : 'Create New Bus'}>
+    <Card title={id ? 'Update Driver' : 'Create New Driver'}>
       <BaseForm
         fields={[
-          {
-            type: 'TEXT',
-            label: 'License plate',
-            name: 'name',
-            rules: [
-              {
-                required: true,
-                message: 'Name is required',
-              },
-            ],
-            defaultValue: item ? item.name : '',
-          },
           {
             type: 'TEXT',
             label: 'Code',
@@ -76,12 +64,24 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
                 message: 'Code is required',
               },
             ],
+            defaultValue: item ? item.name : '',
+          },
+          {
+            type: 'TEXT',
+            label: 'Full name',
+            name: 'fullname',
+            rules: [
+              {
+                required: true,
+                message: 'Name is required',
+              },
+            ],
             defaultValue: item ? item.code : '',
           },
           {
             type: 'SELECT',
-            label: 'Driver',
-            name: 'course_id',
+            label: 'License plate',
+            name: 'license_plate',
             options: courses.map(course => ({
               value: course.id,
               title: course.name,
@@ -93,8 +93,8 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
 
           {
             type: 'SELECT',
-            label: 'Quản sinh',
-            name: 'course_id',
+            label: 'Permission',
+            name: 'permission',
             options: courses.map(course => ({
               value: course.id,
               title: course.name,

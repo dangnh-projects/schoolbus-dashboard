@@ -13,6 +13,8 @@ const Home = lazy(() => import('./views/Dashboard/Home'));
 const Bus = lazy(() => import('./views/Dashboard/Bus'));
 const BusForm = lazy(() => import('./views/Dashboard/Bus/Form'));
 
+const BusRoute = lazy(() => import('./views/Dashboard/BusRoute'));
+
 const Driver = lazy(() => import('./views/Dashboard/Driver'));
 const DriverForm = lazy(() => import('./views/Dashboard/Driver/Form'));
 
@@ -34,6 +36,7 @@ function App() {
           <WaitingComponent Component={Bus} path="bus" />
           <WaitingComponent Component={BusForm} path="bus/new" />
           <WaitingComponent Component={BusForm} path="bus/:id" />
+          <WaitingComponent Component={BusRoute} path="bus-route" />
 
           <WaitingComponent Component={Driver} path="driver" />
           <WaitingComponent Component={DriverForm} path="driver/new" />

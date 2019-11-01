@@ -1,21 +1,39 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import { Link } from '@reach/router';
-import { Badge, Card, Col, Row, Icon, Select, List, Calendar } from 'antd';
+import { Badge, Card, Col, Row, Icon } from 'antd';
 import { Line } from 'react-chartjs-2';
+import Family from 'assets/family';
 import './style.scss';
 
-const DashboardItem = ({ i }) => {
+const DashboardItem = ({ i, theme = '', Component }) => {
   return (
-    <Col xs={12} sm={8} md={6} className="dashboard__col">
+    <Col
+      xs={12}
+      sm={8}
+      md={6}
+      className="dashboard__col"
+      style={{ borderRadius: 2 }}
+    >
       <Link
         to={i.link}
         className="dashboard__link"
         style={{ borderBottom: `3px solid ${i.boderColor}`, padding: 8 }}
       >
-        <Icon
-          type={i.type}
-          style={{ fontSize: 42, color: 'rgba(0,0,0,0.65)', marginBottom: 24 }}
-        />
+        {Component ? (
+          <Col style={{ marginBottom: 24 }}>
+            <Component />
+          </Col>
+        ) : (
+          <Icon
+            theme={theme}
+            type={i.type}
+            style={{
+              fontSize: 42,
+              color: 'rgba(0,0,0,0.65)',
+              marginBottom: 24,
+            }}
+          />
+        )}
         <span className="dashboard__content">{i.content}</span>
       </Link>
     </Col>
@@ -180,49 +198,58 @@ const Home = () => {
           i={{
             type: 'idcard',
             boderColor: 'black',
-            content: 'Quản lý học sinh',
-            link: '/bus',
-          }}
-        />
-        <DashboardItem
-          i={{
-            type: 'solution',
-            boderColor: 'black',
-            content: 'Quản lý phụ huynh',
-            link: '/bus',
+            content: 'Student',
+            link: '/dashboard/student',
           }}
         />
         <DashboardItem
           i={{
             type: 'team',
             boderColor: 'black',
-            content: 'Quản lý giám sinh',
-            link: '/bus',
+            content: 'Parent',
+            link: '/dashboard/parent',
           }}
         />
         <DashboardItem
           i={{
-            type: 'deployment-unit',
+            type: 'user',
             boderColor: 'black',
-            content: 'Quản lý tuyến đường',
-            link: '/bus',
+            content: 'Bus supervisor',
+            link: '/dashboard/bus-supervisor',
           }}
         />
 
         <DashboardItem
           i={{
-            type: 'user',
+            type: 'car',
             boderColor: 'black',
-            content: 'Quản lý người dùng',
+            content: 'Quản lý xe bus',
             link: '/bus',
           }}
         />
         <DashboardItem
           i={{
-            type: 'apartment',
+            type: 'user',
             boderColor: 'black',
-            content: 'Học sinh nghỉ học',
+            content: 'Quản lý tài xế',
             link: '/bus',
+          }}
+        />
+        <DashboardItem
+          i={{
+            type: 'branches',
+            boderColor: 'black',
+            content: 'Bus route',
+            link: '/dashboard/bus-route',
+          }}
+        />
+
+        <DashboardItem
+          i={{
+            type: 'user-delete',
+            boderColor: 'black',
+            content: 'Student Absence',
+            link: '/dashboard/absense',
           }}
         />
 
@@ -230,17 +257,17 @@ const Home = () => {
           i={{
             type: 'message',
             boderColor: 'black',
-            content: 'Tin nhắn & thông báo',
-            link: '/bus',
+            content: 'Notification messages',
+            link: '/dashboard/notification',
           }}
         />
 
         <DashboardItem
           i={{
-            type: 'apartment',
+            type: 'setting',
             boderColor: 'black',
             content: 'Other settings',
-            link: '/bus',
+            link: '/dashboard/settings',
           }}
         />
 

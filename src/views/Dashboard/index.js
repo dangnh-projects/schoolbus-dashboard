@@ -24,12 +24,13 @@ const Dashboard = ({ children, location }) => {
               flex: 1,
               overflowY: 'scroll',
               flexDirection: 'column',
+              padding: 12,
             }}
           >
-            <Breadcrumb style={{ margin: '16px 0' }}>
+            {/* <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>Manage</Breadcrumb.Item>
               <Breadcrumb.Item>User</Breadcrumb.Item>
-            </Breadcrumb>
+            </Breadcrumb> */}
             {/* content here */}
             {children}
           </div>

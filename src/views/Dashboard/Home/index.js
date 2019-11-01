@@ -184,7 +184,7 @@ function monthCellRender(value) {
 const Home = () => {
   const [type, setType] = useState('STAFF');
   return (
-    <Col type="flex" style={{ flex: 1, padding: 24, backgroundColor: 'white' }}>
+    <Col type="flex" style={{ flex: 1, padding: 24 }}>
       {/* {type === 'STAFF' && (
         <Row type="flex" gutter={12} style={{ width: '100%' }}>
           <DataGraph />
@@ -193,12 +193,12 @@ const Home = () => {
           <DataGraph />
         </Row>
       )} */}
-      <Row>
+      <Card title="Management">
         <DashboardItem
           i={{
             type: 'idcard',
             boderColor: 'black',
-            content: 'Student',
+            content: 'Students',
             link: '/dashboard/student',
           }}
         />
@@ -206,7 +206,7 @@ const Home = () => {
           i={{
             type: 'team',
             boderColor: 'black',
-            content: 'Parent',
+            content: 'Parents',
             link: '/dashboard/parent',
           }}
         />
@@ -221,18 +221,20 @@ const Home = () => {
 
         <DashboardItem
           i={{
-            type: 'car',
-            boderColor: 'black',
-            content: 'Quản lý xe bus',
-            link: '/bus',
-          }}
-        />
-        <DashboardItem
-          i={{
             type: 'user',
             boderColor: 'black',
-            content: 'Quản lý tài xế',
-            link: '/bus',
+            content: 'Drivers',
+            link: '/dashboard/driver',
+          }}
+        />
+      </Card>
+      <Card title="Bus information and operation" style={{ marginTop: 12 }}>
+        <DashboardItem
+          i={{
+            type: 'car',
+            boderColor: 'black',
+            content: 'Bus',
+            link: '/dashboard/bus',
           }}
         />
         <DashboardItem
@@ -243,7 +245,8 @@ const Home = () => {
             link: '/dashboard/bus-route',
           }}
         />
-
+      </Card>
+      <Card title="Others" style={{ marginTop: 12 }}>
         <DashboardItem
           i={{
             type: 'user-delete',
@@ -266,19 +269,21 @@ const Home = () => {
           i={{
             type: 'setting',
             boderColor: 'black',
-            content: 'Other settings',
+            content: 'Settings',
             link: '/dashboard/settings',
           }}
         />
-
-        {/* <DashboardItem
+        <DashboardItem
           i={{
             type: 'apartment',
             boderColor: 'black',
-            content: 'Quản lý trường học',
-            link: '/bus',
+            content: 'Schools',
+            link: '/dashboard/bus',
           }}
         />
+      </Card>
+      <Row>
+        {/* 
         <DashboardItem
           i={{
             type: 'car',

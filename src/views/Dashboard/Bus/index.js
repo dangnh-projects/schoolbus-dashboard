@@ -82,20 +82,20 @@ export const Bus = props => {
         backgroundColor: viewType === 'LIST' && 'white',
       }}
       extra={[
-        // <ButtonGroup style={{ marginRight: 12 }} key="action-list">
-        //   <Button
-        //     type={viewType === 'LIST' ? 'primary' : 'default'}
-        //     onClick={() => setViewType('LIST')}
-        //   >
-        //     <Icon type="unordered-list" />
-        //   </Button>
-        //   <Button
-        //     type={viewType === 'CARD' ? 'primary' : 'default'}
-        //     onClick={() => setViewType('CARD')}
-        //   >
-        //     <Icon type="appstore" />
-        //   </Button>
-        // </ButtonGroup>,
+        <ButtonGroup style={{ marginRight: 12 }} key="action-list">
+          <Button
+            type={viewType === 'LIST' ? 'primary' : 'default'}
+            onClick={() => setViewType('LIST')}
+          >
+            <Icon type="unordered-list" />
+          </Button>
+          <Button
+            type={viewType === 'CARD' ? 'primary' : 'default'}
+            onClick={() => setViewType('CARD')}
+          >
+            <Icon type="appstore" />
+          </Button>
+        </ButtonGroup>,
         <Button key="add-new" onClick={() => navigate('/dashboard/bus/new')}>
           Add
         </Button>,

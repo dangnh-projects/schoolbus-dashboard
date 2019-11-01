@@ -25,6 +25,7 @@ const LayoutHeader = props => {
     <Header
       style={{
         paddingLeft: 12,
+        padding: 0,
         display: 'flex',
         backgroundColor: '#3e8247',
         justifyContent: 'space-between',
@@ -32,7 +33,7 @@ const LayoutHeader = props => {
         zIndex: 1,
       }}
     >
-      <div>
+      <div style={{ display: 'flex' }}>
         {/* <img
           src="/images/bus.svg"
           height="100%"
@@ -41,7 +42,11 @@ const LayoutHeader = props => {
           style={{ fill: 'currentColor' }}
         /> */}
         <Bus style={{ fill: 'white' }} />
+        <div style={{ fontSize: 24, color: 'white' }}>
+          Hệ thống quản lý xe bus
+        </div>
       </div>
+
       <div style={{ display: 'flex' }}>
         <div
           style={{

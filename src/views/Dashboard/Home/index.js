@@ -1,6 +1,44 @@
-import React, { useState, Fragment } from 'react';
-import { Badge, Card, Col, Row, Icon, Select, List, Calendar } from 'antd';
+import React, { useState } from 'react';
+import { Link } from '@reach/router';
+import { Badge, Card, Col, Row, Icon } from 'antd';
 import { Line } from 'react-chartjs-2';
+import Family from 'assets/family';
+import './style.scss';
+
+const DashboardItem = ({ i, theme = '', Component }) => {
+  return (
+    <Col
+      xs={12}
+      sm={8}
+      md={6}
+      className="dashboard__col"
+      style={{ borderRadius: 2 }}
+    >
+      <Link
+        to={i.link}
+        className="dashboard__link"
+        style={{ borderBottom: `3px solid ${i.boderColor}`, padding: 8 }}
+      >
+        {Component ? (
+          <Col style={{ marginBottom: 24 }}>
+            <Component />
+          </Col>
+        ) : (
+          <Icon
+            theme={theme}
+            type={i.type}
+            style={{
+              fontSize: 42,
+              color: 'rgba(0,0,0,0.65)',
+              marginBottom: 24,
+            }}
+          />
+        )}
+        <span className="dashboard__content">{i.content}</span>
+      </Link>
+    </Col>
+  );
+};
 
 const DataGraph = props => (
   <Col xs={12} md={6}>
@@ -146,103 +184,131 @@ function monthCellRender(value) {
 const Home = () => {
   const [type, setType] = useState('STAFF');
   return (
-    <Col type="flex" style={{ flex: 1, padding: '0px 24px' }}>
-      <Row style={{ marginBottom: 24 }}>
-        <Select defaultValue={type} onChange={value => setType(value)}>
-          <Select.Option value="STAFF">Staff</Select.Option>
-          <Select.Option value="STUDENT">Student</Select.Option>
-        </Select>
-      </Row>
-      {type === 'STAFF' && (
+    <Col type="flex" style={{ flex: 1, padding: 24 }}>
+      {/* {type === 'STAFF' && (
         <Row type="flex" gutter={12} style={{ width: '100%' }}>
           <DataGraph />
           <DataGraph />
           <DataGraph />
           <DataGraph />
         </Row>
-      )}
-      {type === 'STUDENT' && (
-        <Fragment>
-          <Row type="flex" gutter={24}>
-            <Col style={{ flex: 1 }}>
-              <Card title="Thông báo">
-                <List
-                  itemLayout="horizontal"
-                  dataSource={[
-                    {
-                      title: 'Thông báo đóng học phí năm học 2019',
-                    },
-                    {
-                      title: 'Thông báo đăng ký luận văn đợt 1',
-                    },
-                    {
-                      title: 'Thông báo nghỉ học năm nay',
-                    },
-                    {
-                      title: 'Thông báo',
-                    },
-                  ]}
-                  renderItem={item => (
-                    <List.Item>
-                      <List.Item.Meta
-                        avatar={<Icon type="notification" />}
-                        title={
-                          <a href="https://ant.design">
-                            <Icon type="notification" /> {item.title}
-                          </a>
-                        }
-                        description="Thông báo từ BGH"
-                      />
-                    </List.Item>
-                  )}
-                />
-              </Card>
-            </Col>
-            <Col style={{ flex: 1 }}>
-              <Card title="Bài tập">
-                <List
-                  itemLayout="horizontal"
-                  dataSource={[
-                    {
-                      title: 'Bài tập 1 (Nhập môn)',
-                    },
-                    {
-                      title: 'Bài tập 2 (rẽ nhánh)',
-                    },
-                    {
-                      title: 'Bài tập 3 (vòng lặp)',
-                    },
-                    {
-                      title: 'Bài tập 4 (hàm)',
-                    },
-                  ]}
-                  renderItem={item => (
-                    <List.Item>
-                      <List.Item.Meta
-                        avatar={<Icon type="notification" />}
-                        title={
-                          <a href="https://ant.design">
-                            <Icon type="pushpin" /> {item.title}
-                          </a>
-                        }
-                        description="Nhập môn lập trình"
-                      />
-                    </List.Item>
-                  )}
-                />
-              </Card>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: 24 }}>
-            <Card title="Timetable">
-              <Calendar
-                dateCellRender={dateCellRender}
-                monthCellRender={monthCellRender}
-              />
-            </Card>
-          </Row>
-        </Fragment>
-      )}
+      )} */}
+      <Card title="Management">
+        <DashboardItem
+          i={{
+            type: 'idcard',
+            boderColor: 'black',
+            content: 'Students',
+            link: '/dashboard/student',
+          }}
+        />
+        <DashboardItem
+          i={{
+            type: 'team',
+            boderColor: 'black',
+            content: 'Parents',
+            link: '/dashboard/parent',
+          }}
+        />
+        <DashboardItem
+          i={{
+            type: 'user',
+            boderColor: 'black',
+            content: 'Bus supervisor',
+            link: '/dashboard/bus-supervisor',
+          }}
+        />
+
+        <DashboardItem
+          i={{
+            type: 'user',
+            boderColor: 'black',
+            content: 'Drivers',
+            link: '/dashboard/driver',
+          }}
+        />
+      </Card>
+      <Card title="Bus information and operation" style={{ marginTop: 12 }}>
+        <DashboardItem
+          i={{
+            type: 'car',
+            boderColor: 'black',
+            content: 'Bus',
+            link: '/dashboard/bus',
+          }}
+        />
+        <DashboardItem
+          i={{
+            type: 'branches',
+            boderColor: 'black',
+            content: 'Bus route',
+            link: '/dashboard/bus-route',
+          }}
+        />
+      </Card>
+      <Card title="Others" style={{ marginTop: 12 }}>
+        <DashboardItem
+          i={{
+            type: 'user-delete',
+            boderColor: 'black',
+            content: 'Student Absence',
+            link: '/dashboard/absense',
+          }}
+        />
+
+        <DashboardItem
+          i={{
+            type: 'message',
+            boderColor: 'black',
+            content: 'Notification messages',
+            link: '/dashboard/notification',
+          }}
+        />
+
+        <DashboardItem
+          i={{
+            type: 'setting',
+            boderColor: 'black',
+            content: 'Settings',
+            link: '/dashboard/settings',
+          }}
+        />
+        <DashboardItem
+          i={{
+            type: 'apartment',
+            boderColor: 'black',
+            content: 'Schools',
+            link: '/dashboard/bus',
+          }}
+        />
+      </Card>
+      <Row>
+        {/* 
+        <DashboardItem
+          i={{
+            type: 'car',
+            boderColor: 'black',
+            content: 'Quản lý xe bus',
+            link: '/bus',
+          }}
+        />
+        <DashboardItem
+          i={{
+            type: 'user',
+            boderColor: 'black',
+            content: 'Quản lý tài xế',
+            link: '/bus',
+          }}
+        />
+        <DashboardItem
+          i={{
+            type: 'bar-chart',
+            boderColor: 'black',
+            content: 'Thống kê / báo cáo',
+            link: '/bus',
+          }}
+        /> */}
+      </Row>
     </Col>
   );
 };

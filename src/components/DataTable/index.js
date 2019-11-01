@@ -15,6 +15,7 @@ const DataTable = ({
   const getTableData = () => {
     url && getList({ url });
   };
+
   useEffect(() => {
     setPage(1);
     getTableData();

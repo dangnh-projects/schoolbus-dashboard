@@ -6,7 +6,7 @@ import DataTable from 'components/DataTable';
 import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
-export const Student = props =>{
+export const Parent = props =>{
     const [viewType, setViewType] = useState('LIST');
     const columns = [
         {
@@ -26,46 +26,26 @@ export const Student = props =>{
             dataIndex: 'lastname'
         },
         {
-            title: 'Birthday',
-            dataIndex: 'birthday'
+            title: 'Phone Number',
+            dataIndex: 'phonenumber'
         },
         {
-            title: 'Class',
-            dataIndex: 'class'
+            title: 'Username',
+            dataIndex: 'username'
         },
         {
-            title: 'District',
-            dataIndex: 'district'
+            title: 'Chilren',
+            dataIndex: 'chilren'
         },
         {
-            title: 'Ward',
-            dataIndex: 'ward'
-        },
-        {
-            title: 'Parent',
-            dataIndex: 'parent'
-        },
-        {
-            title: 'Registered Date',
-            dataIndex: 'registereddate'
-        },
-        {
-            title: 'Bus No',
-            dataIndex: 'busno'
-        },
-        {
-            title: 'To School',
-            dataIndex: 'to school'
-        },
-        {
-            title: 'To Home',
-            dataIndex: 'tohome'
+            title: 'Status',
+            dataIndex: 'status'
         },
     ]
 
     return(
         <Card
-            title="Manage Students"
+            title="Manage Parents"
             style={{width: '100%', background: 'none',}}
             headStyle={{backgroundColor: 'white',}}
             bodyStyle={{
@@ -73,7 +53,7 @@ export const Student = props =>{
                 backgroundColor: viewType === 'LIST' && 'white',
             }}
             extra={[
-                <Button key="add-new" onClick={()=>navigate('/dashboard/student/new')}>
+                <Button key="add-new" onClick={()=>navigate('/dashboard/parent/new')}>
                     Add
                 </Button>
             ]}
@@ -94,4 +74,4 @@ const mapStateToProps = state => state.dataTable;
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Student);
+)(Parent);

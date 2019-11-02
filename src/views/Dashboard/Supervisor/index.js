@@ -26,46 +26,30 @@ export const Student = props =>{
             dataIndex: 'lastname'
         },
         {
-            title: 'Birthday',
-            dataIndex: 'birthday'
+            title: 'Phone Number',
+            dataIndex: 'phonenumber'
         },
         {
-            title: 'Class',
+            title: 'Start Working Day',
             dataIndex: 'class'
         },
         {
-            title: 'District',
+            title: 'Status',
             dataIndex: 'district'
         },
         {
-            title: 'Ward',
+            title: 'Bus No',
             dataIndex: 'ward'
         },
         {
-            title: 'Parent',
+            title: 'Address',
             dataIndex: 'parent'
-        },
-        {
-            title: 'Registered Date',
-            dataIndex: 'registereddate'
-        },
-        {
-            title: 'Bus No',
-            dataIndex: 'busno'
-        },
-        {
-            title: 'To School',
-            dataIndex: 'to school'
-        },
-        {
-            title: 'To Home',
-            dataIndex: 'tohome'
         },
     ]
 
     return(
         <Card
-            title="Manage Students"
+            title="Manage Supervisor"
             style={{width: '100%', background: 'none',}}
             headStyle={{backgroundColor: 'white',}}
             bodyStyle={{
@@ -73,7 +57,7 @@ export const Student = props =>{
                 backgroundColor: viewType === 'LIST' && 'white',
             }}
             extra={[
-                <Button key="add-new" onClick={()=>navigate('/dashboard/student/new')}>
+                <Button key="add-new" onClick={()=>navigate('/dashboard/supervisor/new')}>
                     Add
                 </Button>
             ]}

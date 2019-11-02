@@ -19,6 +19,12 @@ const DriverForm = lazy(() => import('./views/Dashboard/Driver/Form'));
 const Student = lazy(() => import('./views/Dashboard/Student'));
 const StudentForm = lazy(() => import('./views/Dashboard/Student/Form'));
 
+const Parent = lazy(() => import('./views/Dashboard/Parent'));
+const ParentForm = lazy(() => import('./views/Dashboard/Parent/Form'));
+
+const Supervisor = lazy(() => import('./views/Dashboard/Supervisor'));
+const SupervisorForm = lazy(() => import('./views/Dashboard/Supervisor/Form'));
+
 const WaitingComponent = ({ Component, ...props }) => (
   <Suspense maxDuration={1500} fallback={<Loading />}>
     <Component {...props} />
@@ -31,6 +37,7 @@ function App() {
       <Router>
         <WaitingComponent Component={Login} path="/" />
         <WaitingComponent Component={Login} path="/login" />
+
         <WaitingComponent Component={Dashboard} path="dashboard">
           <WaitingComponent Component={Home} path="/" />
 
@@ -45,6 +52,15 @@ function App() {
           <WaitingComponent Component={Student} path="student" />
           <WaitingComponent Component={StudentForm} path="student/new" />
           <WaitingComponent Component={StudentForm} path="student/:id" />
+
+          <WaitingComponent Component={Parent} path="parent" />
+          <WaitingComponent Component={ParentForm} path="parent/new" />
+          <WaitingComponent Component={ParentForm} path="parent/:id" />
+          
+          <WaitingComponent Component={Supervisor} path="supervisor" />
+          <WaitingComponent Component={SupervisorForm} path="supervisor/new" />
+          <WaitingComponent Component={SupervisorForm} path="supervisor/:id" />
+
         </WaitingComponent>
         <WaitingComponent Component={Dashboard} path="permission">
           {/* <WaitingComponent Component={User} path="user" />

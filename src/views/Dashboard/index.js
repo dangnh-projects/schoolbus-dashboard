@@ -7,46 +7,43 @@ const { Content, Footer } = Layout;
 const Dashboard = ({ children, location }) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      {/* <SliderMenu location={location} /> */}
-      <Layout style={{ height: '100vh' }}>
-        <Header />
+      <Header />
 
-        <Content
+      <Content
+        style={{
+          margin: '0px 16px',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <div
           style={{
-            margin: '0px 16px',
             display: 'flex',
+            flex: 1,
+            // overflowY: 'scroll',
             flexDirection: 'column',
+            padding: 12,
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              flex: 1,
-              overflowY: 'scroll',
-              flexDirection: 'column',
-              padding: 12,
-            }}
-          >
-            {/* <Breadcrumb style={{ margin: '16px 0' }}>
+          {/* <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>Manage</Breadcrumb.Item>
               <Breadcrumb.Item>User</Breadcrumb.Item>
             </Breadcrumb> */}
-            {/* content here */}
-            {children}
-          </div>
-        </Content>
-        <Footer
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 50,
-            padding: 8,
-          }}
-        >
-          ©2019 Powered by Nguyen Hoang Group
-        </Footer>
-      </Layout>
+          {/* content here */}
+          {children}
+        </div>
+      </Content>
+      <Footer
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 50,
+          padding: 8,
+        }}
+      >
+        ©2019 Powered by Nguyen Hoang Group
+      </Footer>
     </Layout>
   );
 };

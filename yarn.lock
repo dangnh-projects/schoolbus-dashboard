@@ -1246,6 +1246,25 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
+"@react-google-maps/api@^1.7.7":
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/@react-google-maps/api/-/api-1.7.7.tgz#9b26fabeb8e0fad7835b72b35f5b2336d564942a"
+  integrity sha512-4AiYpvwldlNI3LIXxHUdL029XvtwV5WPRuDrS+XIoXA2miWeSewOoRwDkMerO91mJE781zt4N3vlvoi4Fd6sfA==
+  dependencies:
+    "@react-google-maps/infobox" "1.7.0"
+    "@react-google-maps/marker-clusterer" "1.7.0"
+    invariant "2.2.4"
+
+"@react-google-maps/infobox@1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@react-google-maps/infobox/-/infobox-1.7.0.tgz#b904737fe48670accfa456502e11c0729c6abf25"
+  integrity sha512-cfrRpSS5/fb0ZNtqbYBc/BL6cJoCpuHOdvsrusROl+sDTQ/0NyiDxB44U/hQlWqbpfS6nA4q9yoPCi2ICEJl4g==
+
+"@react-google-maps/marker-clusterer@1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@react-google-maps/marker-clusterer/-/marker-clusterer-1.7.0.tgz#eb47d118ea1b1a96617418c07400ae7435bbe57b"
+  integrity sha512-g8lp2pFlDgVyHEUH4QyNv+VFqY7uARMnuyA+Sn7QG4MT8ehdRK/kVfhmZkbyXDOt6yfzW4GtQFezOQRESQAxlA==
+
 "@redux-saga/core@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@redux-saga/core/-/core-1.0.3.tgz#c29ec7ae3d7dfcbcb8dc93177f2b3edc798c5d85"
@@ -5591,7 +5610,7 @@ internal-ip@^4.2.0:
     default-gateway "^4.2.0"
     ipaddr.js "^1.9.0"
 
-invariant@^2.2.2, invariant@^2.2.3, invariant@^2.2.4:
+invariant@2.2.4, invariant@^2.2.2, invariant@^2.2.3, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -6834,7 +6853,7 @@ lodash._reinterpolate@^3.0.0:
   resolved "https://registry.yarnpkg.com/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
   integrity sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=
 
-lodash.debounce@^4.0.0, lodash.debounce@^4.0.8:
+lodash.debounce@^4, lodash.debounce@^4.0.0, lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
@@ -9553,6 +9572,14 @@ react-chartjs-2@^2.7.6:
   dependencies:
     lodash "^4.17.4"
     prop-types "^15.5.8"
+
+react-debounce-input@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/react-debounce-input/-/react-debounce-input-3.2.2.tgz#d2cc99c1ce47fae89037965f5699edc1b0317197"
+  integrity sha512-RIBu68Cq/gImKz/2h1cE042REDqyqj3D+7SJ3lnnIpJX0ht9D9PfH7KAnL+SgDz6hvKa9pZS2CnAxlkrLmnQlg==
+  dependencies:
+    lodash.debounce "^4"
+    prop-types "^15.7.2"
 
 react-dev-utils@^9.0.1:
   version "9.0.1"

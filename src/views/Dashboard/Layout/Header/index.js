@@ -43,7 +43,7 @@ const LayoutHeader = props => {
         /> */}
         <Bus style={{ fill: 'white' }} />
         <div style={{ fontSize: 24, color: 'white' }}>
-          Hệ thống quản lý xe bus
+          Bus management system
         </div>
       </div>
 

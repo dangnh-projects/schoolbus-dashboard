@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Card, notification, Button } from 'antd'
+import { Card, notification, Button, Modal } from 'antd'
 import { navigate } from '@reach/router'
 import DataTable from 'components/DataTable'
 import BaseForm from 'components/StudentForm'
@@ -8,10 +8,13 @@ import { connect } from 'react-redux'
 import { actionCreator } from 'store/dataTable/dataTable.meta'
 import { API } from 'api/metaData'
 
+
+
 const BatchForm = ({ formSave, updateItem, id, data }) => {
     const [item, setItem] = useState(null);
     const [courses, setCourses] = useState([]);
     const [viewType, setViewType] = useState('LIST');
+    const [showParent, setShowParent] = useState(false);
 
     const getCourses = async () => {
         const { body } = await API.getCourse();
@@ -39,6 +42,17 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
         }
     }, [item, data, id]);
     
+    const showModal = () => {
+        setShowParent(!showParent);
+    };
+
+    const handleOk = () => {
+        setShowParent(!showParent);
+    };
+
+    const handleCancel = () => {
+        setShowParent(!showParent);
+    };
 
     const columns = [
         {
@@ -57,9 +71,10 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
 
     return (
         <div>
+        
             <Card title={id ? 'Update Student' : 'Create New Student'}>
                 <BaseForm
-                fields={[
+                fields_0={[
                     {
                         type: 'TEXT',
                         label: 'First Name',
@@ -112,6 +127,8 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
                         label: 'Bus Registered Date',
                         name: 'busregistereddate',
                     },
+                ]}
+                fields_1={[
                     {
                         type: 'TEXT',
                         label: 'No',
@@ -143,10 +160,17 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
                         ],
                     },
                     {
-                        type: 'CHECKBOX',
-                        label: 'Status',
-                        name: 'status',
+                        type: 'TEXT',
+                        label: 'Province',
+                        name: 'province',
+                        rules: [
+                            {
+                                required: false,
+                            },
+                        ],
                     },
+                ]}
+                fields_2={[
                     {
                         type: 'CHECKBOX',
                         label: 'To School',
@@ -167,6 +191,8 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
                             },
                         ],
                     },
+                ]}
+                fields_3={[
                     {
                         type: 'SELECT',
                         label: 'Parent',
@@ -187,11 +213,11 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
                         ],
                     },
                 ]}
-                handleSubmit={ handleSubmit }
+                handleSubmit= { handleSubmit }
             />
             </Card>
             <Card
-                title="Manage Students"
+                title="Sibling"
                 style={{width: '100%', background: 'none',}}
                 headStyle={{backgroundColor: 'white',}}
                 bodyStyle={{
@@ -199,11 +225,21 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
                     backgroundColor: viewType === 'LIST' && 'white',
                 }}
                 extra={[
-                    <Button key="add-new" onClick={()=>navigate('/dashboard/student/new')}>
+                    <Button key="add-new" onClick={showModal}>
                         (+) Add Parent
                     </Button>
                 ]}
             >
+                <Modal
+                    title="Add Parent"
+                    visible= {showParent}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                >
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                </Modal>
                 {viewType === 'LIST' && <DataTable columns={columns} />}
                 {viewType === 'CARD' && <GridView />}
             </Card>

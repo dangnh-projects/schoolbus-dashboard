@@ -1,4 +1,5 @@
 import React from 'react'
+import { Divider } from 'antd'
 import {
   Button,
   Col,
@@ -81,7 +82,7 @@ const FieldBuilder = ({ type, options }) => {
 
 const BaseForm = props => {
   const { getFieldDecorator } = props.form;
-  const { fields } = props;
+  const { fields_0, fields_1, fields_2, fields_3 } = props;
   const handleSubmit = e => {
     e.preventDefault();
     props.form.validateFields((err, fieldsValue) => {
@@ -122,8 +123,62 @@ const BaseForm = props => {
           </div>
         </Col>
         {
-          fields.map(field => (
-            <div>
+          fields_0.map((field, index) => (
+            <div key={index}>
+              <Col span={12} key={field.name}>
+                <Form.Item label={field.label}>
+                  {
+                    getFieldDecorator(field.name, {
+                      initialValue: field.defaultValue,
+                      rules: field.rules || [],
+                      valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
+                    })(FieldBuilder(field))
+                  }
+                </Form.Item>
+              </Col>
+            </div>
+          ))
+        }
+        <Divider orientation="left">Address</Divider>
+        {
+          fields_1.map((field, index) => (
+            <div key={index}>
+              <Col span={12} key={field.name}>
+                <Form.Item label={field.label}>
+                  {
+                    getFieldDecorator(field.name, {
+                      initialValue: field.defaultValue,
+                      rules: field.rules || [],
+                      valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
+                    })(FieldBuilder(field))
+                  }
+                </Form.Item>
+              </Col>
+            </div>
+          ))
+        }
+        <Divider orientation="left">Status: Active</Divider>
+        {
+          fields_2.map((field, index) => (
+            <div key={index}>
+              <Col span={12} key={field.name}>
+                <Form.Item label={field.label}>
+                  {
+                    getFieldDecorator(field.name, {
+                      initialValue: field.defaultValue,
+                      rules: field.rules || [],
+                      valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
+                    })(FieldBuilder(field))
+                  }
+                </Form.Item>
+              </Col>
+            </div>
+          ))
+        }
+        <Divider orientation="left">Parent Contact</Divider>
+        {
+          fields_3.map((field, index) => (
+            <div key={index}>
               <Col span={12} key={field.name}>
                 <Form.Item label={field.label}>
                   {

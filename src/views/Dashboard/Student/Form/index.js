@@ -74,145 +74,152 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
         
             <Card title={id ? 'Update Student' : 'Create New Student'}>
                 <BaseForm
-                fields_0={[
-                    {
-                        type: 'TEXT',
-                        label: 'First Name',
-                        name: 'firstname',
-                        rules: [
-                        {
-                            required: true,
-                            message: 'First name is required',
-                        },
-                        ],
-                    },
-                    {
-                        type: 'TEXT',
-                        label: 'Last Name',
-                        name: 'lastname',
-                        rules: [
+                    group_field = {
+                        [
                             {
-                                required: true,
-                                message: 'Last name is required',
+                                student_inf: [
+                                    {
+                                        type: 'TEXT',
+                                        label: 'First Name',
+                                        name: 'firstname',
+                                        rules: [
+                                        {
+                                            required: true,
+                                            message: 'First name is required',
+                                        },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Last Name',
+                                        name: 'lastname',
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: 'Last name is required',
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'DATE_PICKER',
+                                        label: 'Birthday',
+                                        name: 'Birthday',
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'School',
+                                        name: 'School',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Class',
+                                        name: 'class',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'DATE_PICKER',
+                                        label: 'Bus Registered Date',
+                                        name: 'busregistereddate',
+                                    },
+                                ],
+                                address_inf: [
+                                    {
+                                        type: 'TEXT',
+                                        label: 'No',
+                                        name: 'no',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'District',
+                                        name: 'district',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Ward',
+                                        name: 'ward',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Province',
+                                        name: 'province',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                ],
+                                status_inf: [
+                                    {
+                                        type: 'CHECKBOX',
+                                        label: 'To School',
+                                        name: 'toschool',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'CHECKBOX',
+                                        label: 'To Home',
+                                        name: 'tohome',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                ],
+                                parent_inf: [
+                                    {
+                                        type: 'SELECT',
+                                        label: 'Parent',
+                                        name: 'parent',
+                                        options: courses.map(course => ({
+                                            value: '',
+                                            title: course.name,
+                                        })),
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Mobile',
+                                        name: 'mobile',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                ],
                             },
-                        ],
-                    },
-                    {
-                        type: 'DATE_PICKER',
-                        label: 'Birthday',
-                        name: 'Birthday',
-                    },
-                    {
-                        type: 'TEXT',
-                        label: 'School',
-                        name: 'School',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                    {
-                        type: 'TEXT',
-                        label: 'Class',
-                        name: 'class',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                    {
-                        type: 'DATE_PICKER',
-                        label: 'Bus Registered Date',
-                        name: 'busregistereddate',
-                    },
-                ]}
-                fields_1={[
-                    {
-                        type: 'TEXT',
-                        label: 'No',
-                        name: 'no',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                    {
-                        type: 'TEXT',
-                        label: 'District',
-                        name: 'district',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                    {
-                        type: 'TEXT',
-                        label: 'Ward',
-                        name: 'ward',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                    {
-                        type: 'TEXT',
-                        label: 'Province',
-                        name: 'province',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                ]}
-                fields_2={[
-                    {
-                        type: 'CHECKBOX',
-                        label: 'To School',
-                        name: 'toschool',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                    {
-                        type: 'CHECKBOX',
-                        label: 'To Home',
-                        name: 'tohome',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                ]}
-                fields_3={[
-                    {
-                        type: 'SELECT',
-                        label: 'Parent',
-                        name: 'parent',
-                        options: courses.map(course => ({
-                            value: '',
-                            title: course.name,
-                        })),
-                    },
-                    {
-                        type: 'TEXT',
-                        label: 'Mobile',
-                        name: 'mobile',
-                        rules: [
-                            {
-                                required: false,
-                            },
-                        ],
-                    },
-                ]}
+                        ]
+                }
+                
                 handleSubmit= { handleSubmit }
             />
             </Card>

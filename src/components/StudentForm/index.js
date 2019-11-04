@@ -82,7 +82,7 @@ const FieldBuilder = ({ type, options }) => {
 
 const BaseForm = props => {
   const { getFieldDecorator } = props.form;
-  const { fields_0, fields_1, fields_2, fields_3 } = props;
+  const { group_field } = props;
   const handleSubmit = e => {
     e.preventDefault();
     props.form.validateFields((err, fieldsValue) => {
@@ -122,74 +122,88 @@ const BaseForm = props => {
             </Button>
           </div>
         </Col>
+        
+        
         {
-          fields_0.map((field, index) => (
+          group_field.map((group_field, index) => (
             <div key={index}>
-              <Col span={12} key={field.name}>
-                <Form.Item label={field.label}>
-                  {
-                    getFieldDecorator(field.name, {
-                      initialValue: field.defaultValue,
-                      rules: field.rules || [],
-                      valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
-                    })(FieldBuilder(field))
-                  }
-                </Form.Item>
-              </Col>
-            </div>
-          ))
-        }
-        <Divider orientation="left">Address</Divider>
-        {
-          fields_1.map((field, index) => (
-            <div key={index}>
-              <Col span={12} key={field.name}>
-                <Form.Item label={field.label}>
-                  {
-                    getFieldDecorator(field.name, {
-                      initialValue: field.defaultValue,
-                      rules: field.rules || [],
-                      valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
-                    })(FieldBuilder(field))
-                  }
-                </Form.Item>
-              </Col>
-            </div>
-          ))
-        }
-        <Divider orientation="left">Status: Active</Divider>
-        {
-          fields_2.map((field, index) => (
-            <div key={index}>
-              <Col span={12} key={field.name}>
-                <Form.Item label={field.label}>
-                  {
-                    getFieldDecorator(field.name, {
-                      initialValue: field.defaultValue,
-                      rules: field.rules || [],
-                      valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
-                    })(FieldBuilder(field))
-                  }
-                </Form.Item>
-              </Col>
-            </div>
-          ))
-        }
-        <Divider orientation="left">Parent Contact</Divider>
-        {
-          fields_3.map((field, index) => (
-            <div key={index}>
-              <Col span={12} key={field.name}>
-                <Form.Item label={field.label}>
-                  {
-                    getFieldDecorator(field.name, {
-                      initialValue: field.defaultValue,
-                      rules: field.rules || [],
-                      valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
-                    })(FieldBuilder(field))
-                  }
-                </Form.Item>
-              </Col>
+              {
+                group_field.student_inf.map((field, index) => (
+                  <div key={index}>
+                    <Col span={12} key={field.name}>
+                      <Form.Item label={field.label}>
+                        {
+                          getFieldDecorator(field.name, {
+                            initialValue: field.defaultValue,
+                            rules: field.rules || [],
+                            valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
+                          })(FieldBuilder(field))
+                        }
+                      </Form.Item>
+                    </Col>
+                    {console.log(field.name)}
+                  </div>
+                ))
+              }
+
+              <Divider orientation="left">Address</Divider>
+              {
+                group_field.address_inf.map((field, index) => (
+                  <div key={index}>
+                    <Col span={12} key={field.name}>
+                      <Form.Item label={field.label}>
+                        {
+                          getFieldDecorator(field.name, {
+                            initialValue: field.defaultValue,
+                            rules: field.rules || [],
+                            valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
+                          })(FieldBuilder(field))
+                        }
+                      </Form.Item>
+                    </Col>
+                    {console.log(field.name)}
+                  </div>
+                ))
+              }
+              <Divider orientation="left">Status: Active</Divider>
+              {
+                group_field.status_inf.map((field, index) => (
+                  <div key={index}>
+                    <Col span={12} key={field.name}>
+                      <Form.Item label={field.label}>
+                        {
+                          getFieldDecorator(field.name, {
+                            initialValue: field.defaultValue,
+                            rules: field.rules || [],
+                            valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
+                          })(FieldBuilder(field))
+                        }
+                      </Form.Item>
+                    </Col>
+                    {console.log(field.name)}
+                  </div>
+                ))
+              }
+              
+              <Divider orientation="left">Parent Contact</Divider>
+              {
+                group_field.parent_inf.map((field, index) => (
+                  <div key={index}>
+                    <Col span={12} key={field.name}>
+                      <Form.Item label={field.label}>
+                        {
+                          getFieldDecorator(field.name, {
+                            initialValue: field.defaultValue,
+                            rules: field.rules || [],
+                            valuePropName: field.type === 'CHECKBOX' ? 'checked' : 'value',
+                          })(FieldBuilder(field))
+                        }
+                      </Form.Item>
+                    </Col>
+                    {console.log(field.name)}
+                  </div>
+                ))
+              }
             </div>
           ))
         }

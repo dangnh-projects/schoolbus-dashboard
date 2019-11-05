@@ -16,6 +16,9 @@ const BusForm = lazy(() => import('./views/Dashboard/Bus/Form'));
 const Driver = lazy(() => import('./views/Dashboard/Driver'));
 const DriverForm = lazy(() => import('./views/Dashboard/Driver/Form'));
 
+const Student = lazy(() => import('./views/Dashboard/Student'));
+const StudentForm = lazy(() => import('./views/Dashboard/Student/Form'));
+
 const WaitingComponent = ({ Component, ...props }) => (
   <Suspense maxDuration={1500} fallback={<Loading />}>
     <Component {...props} />
@@ -38,6 +41,10 @@ function App() {
           <WaitingComponent Component={Driver} path="driver" />
           <WaitingComponent Component={DriverForm} path="driver/new" />
           <WaitingComponent Component={DriverForm} path="driver/:id" />
+
+          <WaitingComponent Component={Student} path="student" />
+          <WaitingComponent Component={StudentForm} path="student/new" />
+          <WaitingComponent Component={StudentForm} path="student/:id" />
         </WaitingComponent>
         <WaitingComponent Component={Dashboard} path="permission">
           {/* <WaitingComponent Component={User} path="user" />

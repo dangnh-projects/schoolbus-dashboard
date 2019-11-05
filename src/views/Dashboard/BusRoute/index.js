@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import { Card, Button, Popconfirm, Icon, Row, Table } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
-import DataTable from 'components/DataTable';
-import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
-
-const ButtonGroup = Button.Group;
-const { Column, ColumnGroup } = Table;
 
 export const Bus = props => {
   const columns = [

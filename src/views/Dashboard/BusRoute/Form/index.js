@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Col, Form, Input, Select, Tabs, Table } from 'antd';
+import { Card, Row, Col, Form, Input, Select, Tabs, Table, Icon } from 'antd';
 import MapRoutes from './MapRoutes';
 
 const { TabPane } = Tabs;
@@ -44,28 +44,94 @@ const BusRoute = props => {
           </Form>
         </Col>
       </Row>
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="Bus Stop" key="1" style={{ padding: 18 }}>
-          <MapRoutes />
+      <Tabs defaultActiveKey="pickup">
+        <TabPane tab="Pickup" key="pickup">
+          <Tabs defaultActiveKey="1" tabPosition="left">
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="branches" />
+                  Bus stop
+                </span>
+              }
+              key="1"
+              style={{ padding: 18 }}
+            >
+              <MapRoutes />
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="user" />
+                  Students
+                </span>
+              }
+              key="2"
+              style={{ padding: 18 }}
+            >
+              <Table
+                columns={[
+                  {
+                    title: 'Name',
+                    dataIndex: 'name',
+                  },
+                  {
+                    title: 'Class',
+                    dataIndex: 'class',
+                  },
+                  {
+                    title: 'Status',
+                    dataIndex: 'end_time',
+                    align: 'center',
+                  },
+                ]}
+              />
+            </TabPane>
+          </Tabs>
         </TabPane>
-        <TabPane tab="Students" key="2" style={{ padding: 18 }}>
-          <Table
-            columns={[
-              {
-                title: 'Name',
-                dataIndex: 'name',
-              },
-              {
-                title: 'Class',
-                dataIndex: 'class',
-              },
-              {
-                title: 'Status',
-                dataIndex: 'end_time',
-                align: 'center',
-              },
-            ]}
-          />
+        <TabPane tab="Drop off" key="dropoff">
+          <Tabs defaultActiveKey="1" tabPosition="left">
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="branches" />
+                  Bus stop
+                </span>
+              }
+              key="1"
+              style={{ padding: 18 }}
+            >
+              <MapRoutes />
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="user" />
+                  Students
+                </span>
+              }
+              key="2"
+              style={{ padding: 18 }}
+            >
+              <Table
+                columns={[
+                  {
+                    title: 'Name',
+                    dataIndex: 'name',
+                  },
+                  {
+                    title: 'Class',
+                    dataIndex: 'class',
+                  },
+                  {
+                    title: 'Status',
+                    dataIndex: 'end_time',
+                    align: 'center',
+                  },
+                ]}
+              />
+            </TabPane>
+          </Tabs>
         </TabPane>
       </Tabs>
     </Card>

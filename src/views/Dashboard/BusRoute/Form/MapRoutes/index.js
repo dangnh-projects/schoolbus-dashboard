@@ -96,7 +96,7 @@ const PositionItem = ({ name, dotType }) => (
       </Col>
       <Col>
         <Icon type="edit" style={{ marginLeft: 12 }} />{' '}
-        <Icon type="cross" style={{ color: 'red', marginLeft: 4 }} />
+        <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
         <Icon type="arrow-up" style={{ marginLeft: 12 }} />
         <Icon type="arrow-down" style={{ marginLeft: 8 }} />
       </Col>

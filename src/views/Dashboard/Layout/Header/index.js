@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import moment from 'moment';
 import { Layout, Menu, Avatar, Popover, List, Icon, Badge } from 'antd';
 import Bus from '../../../../assets/bus';
+import { navigate } from '@reach/router';
 const { Header } = Layout;
 const { SubMenu } = Menu;
 
@@ -41,7 +42,7 @@ const LayoutHeader = props => {
           alt="Page icon"
           style={{ fill: 'currentColor' }}
         /> */}
-        <Bus style={{ fill: 'white' }} />
+        <Bus style={{ fill: 'white', curser: 'pointer' }} />
         <div style={{ fontSize: 24, color: 'white' }}>
           Bus management system
         </div>

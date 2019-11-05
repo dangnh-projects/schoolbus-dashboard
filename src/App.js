@@ -14,12 +14,18 @@ const Bus = lazy(() => import('./views/Dashboard/Bus'));
 const BusForm = lazy(() => import('./views/Dashboard/Bus/Form'));
 
 const BusRoute = lazy(() => import('./views/Dashboard/BusRoute'));
+const BusRouteForm = lazy(() => import('./views/Dashboard/BusRoute/Form'));
 
 const Driver = lazy(() => import('./views/Dashboard/Driver'));
 const DriverForm = lazy(() => import('./views/Dashboard/Driver/Form'));
 
 const Parent = lazy(() => import('./views/Dashboard/Parent'));
 const ParentForm = lazy(() => import('./views/Dashboard/Parent/Form'));
+
+const BusSupervisor = lazy(() => import('./views/Dashboard/BusSupervisor'));
+const BusSupervisorForm = lazy(() =>
+  import('./views/Dashboard/BusSupervisor/Form')
+);
 
 const WaitingComponent = ({ Component, ...props }) => (
   <Suspense maxDuration={1500} fallback={<Loading />}>
@@ -39,7 +45,10 @@ function App() {
           <WaitingComponent Component={Bus} path="bus" />
           <WaitingComponent Component={BusForm} path="bus/new" />
           <WaitingComponent Component={BusForm} path="bus/:id" />
+
           <WaitingComponent Component={BusRoute} path="bus-route" />
+          <WaitingComponent Component={BusRouteForm} path="bus-route/new" />
+          <WaitingComponent Component={BusRouteForm} path="bus-route/:id" />
 
           <WaitingComponent Component={Driver} path="driver" />
           <WaitingComponent Component={DriverForm} path="driver/new" />
@@ -48,6 +57,16 @@ function App() {
           <WaitingComponent Component={Parent} path="parent" />
           <WaitingComponent Component={ParentForm} path="parent/new" />
           <WaitingComponent Component={ParentForm} path="parent/:id" />
+
+          <WaitingComponent Component={BusSupervisor} path="bus-supervisor" />
+          <WaitingComponent
+            Component={BusSupervisorForm}
+            path="bus-supervisor/new"
+          />
+          <WaitingComponent
+            Component={BusSupervisorForm}
+            path="bus-supervisor/:id"
+          />
         </WaitingComponent>
         <WaitingComponent Component={Dashboard} path="permission">
           {/* <WaitingComponent Component={User} path="user" />

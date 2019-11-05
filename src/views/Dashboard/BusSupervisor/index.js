@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Button, Popconfirm, Icon, Row, Table } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
@@ -7,58 +7,45 @@ import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 const ButtonGroup = Button.Group;
-const { Column, ColumnGroup } = Table;
 
 export const Bus = props => {
+  const [viewType, setViewType] = useState('LIST');
   const columns = [
     {
-      title: 'Route name',
-      render: (_, i) => <a>{i.name}</a>,
+      title: 'First name',
+      dataIndex: 'first_name',
+    },
+    {
+      title: 'Last name',
+      dataIndex: 'last_name',
+    },
+    {
+      title: 'Phone number',
+      dataIndex: 'phone_nummber',
+    },
+    {
+      title: 'Username',
+      dataIndex: 'username',
+    },
+    {
+      title: 'Start working date',
+      dataIndex: 'start_time',
+      align: 'center',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'end_time',
+      align: 'center',
     },
     {
       title: 'Bus number',
-      render: (_, i) => <a>{i.number}</a>,
-    },
-
-    {
-      title: 'Driver',
-      render: (_, i) => <a>{i.driver}</a>,
-    },
-
-    {
-      title: 'Bus supervisor',
-      render: (_, i) => <a>{i.bus_supervisor}</a>,
+      dataIndex: 'end_time',
+      align: 'center',
     },
     {
-      title: 'Pickup',
-      children: [
-        {
-          title: 'Number of stop',
-          dataIndex: 'pickup_stop_no',
-          align: 'center',
-        },
-        {
-          title: 'Number of student',
-          dataIndex: 'pickup_student_no',
-          align: 'center',
-        },
-      ],
-    },
-
-    {
-      title: 'Drop off',
-      children: [
-        {
-          title: 'Number of stop',
-          dataIndex: 'dropoff_stop_no',
-          align: 'center',
-        },
-        {
-          title: 'Number of student',
-          dataIndex: 'dropoff_student_no',
-          align: 'center',
-        },
-      ],
+      title: 'Address',
+      dataIndex: 'end_time',
+      align: 'center',
     },
     {
       title: 'Action',
@@ -96,33 +83,23 @@ export const Bus = props => {
 
   return (
     <Card
-      title="Manage bus route"
+      title="Manage bus supervisor"
+      style={{ width: '100%', background: 'none' }}
+      headStyle={{ backgroundColor: 'white' }}
+      bodyStyle={{
+        padding: viewType === 'CARD' && 0,
+        backgroundColor: viewType === 'LIST' && 'white',
+      }}
       extra={[
         <Button
           key="add-new"
-          onClick={() => navigate('/dashboard/bus-route/new')}
+          onClick={() => navigate('/dashboard/bus-supervisor/new')}
         >
           Add
         </Button>,
       ]}
     >
-      <Table
-        columns={columns}
-        bordered
-        size="middle"
-        dataSource={[
-          {
-            name: 'District 7 - Hong Bang',
-            number: 'Bus 02',
-            driver: 'Hung Vo',
-            bus_supervisor: 'Thao Hoang',
-            pickup_stop_no: 20,
-            pickup_student_no: 22,
-            dropoff_stop_no: 20,
-            dropoff_student_no: 22,
-          },
-        ]}
-      />
+      <DataTable columns={columns} url="/r/batches/" />
     </Card>
   );
 };

@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { Link } from '@reach/router';
 import { Badge, Card, Col, Row, Icon } from 'antd';
 import { Line } from 'react-chartjs-2';
-import Family from 'assets/family';
 import './style.scss';
 
 const DashboardItem = ({ i, theme = '', Component }) => {
   return (
     <Col
-      xs={12}
-      sm={8}
-      md={6}
+      xs={24}
+      sm={12}
+      md={8}
+      lg={6}
       className="dashboard__col"
       style={{ borderRadius: 2 }}
     >
@@ -182,7 +182,6 @@ function monthCellRender(value) {
 }
 
 const Home = () => {
-  const [type, setType] = useState('STAFF');
   return (
     <Col type="flex" style={{ flex: 1, padding: 24 }}>
       {/* {type === 'STAFF' && (

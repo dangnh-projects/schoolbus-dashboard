@@ -1,55 +1,119 @@
 import React, { useState } from 'react';
 import { Row, Col, Timeline, Icon, Button, Modal, Input, Form } from 'antd';
 import GoogleMapReact from 'google-map-react';
-import { DebounceInput } from 'react-debounce-input';
 
 const Item = Form.Item;
 
-const getPaces = async (map, searchStr) => {
-  console.log(map);
-  console.log('go on search');
+const ADDRESS_TYPES = {
+  STREET_NUMBER: 'street_number',
+  ROUTE: 'route',
+  WARD: 'sublocality_level_1',
+  DISTRICT: 'administrative_area_level_2',
+};
+
+const getRoutes = (map, from, to) => {
+  const directionsService = new map.maps.DirectionsService();
   var request = {
-    query: searchStr,
-    fields: ['name', 'geometry'],
+    origin: `${from.lat},${from.lng}`,
+    destination: `${to.lat},${to.lng}`,
+    travelMode: 'DRIVING',
   };
 
-  var service = new map.maps.places.PlacesService(map.map);
+  return new Promise((res, rej) => {
+    directionsService.route(request, function(response, status) {
+      if (status === 'OK') {
+        res(response);
+        return;
+      }
 
-  service.findPlaceFromQuery(request, function(results, status) {
-    if (status === map.maps.places.PlacesServiceStatus.OK) {
-      console.log(results);
-    }
+      rej(status);
+    });
   });
 };
 
-const MapRouteModal = ({ visible = false, setShowAddRoutePosition, map }) => {
+const MapRouteModal = ({
+  visible = false,
+  setShowAddRoutePosition,
+  map,
+  handleAddPoint,
+}) => {
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [addressObj, setAddressObj] = useState(null);
+  const [point, setPoint] = useState(null);
+
+  const getSearchPlace = async () => {
+    const geocoder = new map.maps.Geocoder();
+    const places = await new Promise((res, rej) => {
+      geocoder.geocode({ address }, function(results, status) {
+        if (status === 'OK') {
+          res(results);
+        } else {
+          // alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    });
+
+    if (places && places.length > 0) {
+      const [place] = places;
+      const { address_components, geometry, formatted_address } = place;
+      const addObj = {};
+
+      address_components.forEach(component => {
+        if (component && component.types && component.types.length > 0) {
+          if (component.types.indexOf(ADDRESS_TYPES.STREET_NUMBER) > -1) {
+            addObj['number'] = component.long_name;
+            return;
+          }
+
+          if (component.types.indexOf(ADDRESS_TYPES.ROUTE) > -1) {
+            addObj['street'] = component.long_name;
+            return;
+          }
+
+          if (component.types.indexOf(ADDRESS_TYPES.WARD) > -1) {
+            addObj['ward'] = component.long_name;
+            return;
+          }
+
+          if (component.types.indexOf(ADDRESS_TYPES.DISTRICT) > -1) {
+            addObj['district'] = component.long_name;
+            return;
+          }
+        }
+      });
+      setAddress(formatted_address);
+      setAddressObj(addObj);
+      setPoint({
+        lng: geometry.location.lng(),
+        lat: geometry.location.lat(),
+      });
+    }
+  };
+
+  const handleOnSubmit = async () => {
+    await handleAddPoint(
+      Object.assign({}, point, addressObj, { address, name })
+    );
+    setShowAddRoutePosition(false);
+  };
   return (
-    <Modal visible={visible} onCancel={() => setShowAddRoutePosition(false)}>
+    <Modal
+      visible={visible}
+      onCancel={() => setShowAddRoutePosition(false)}
+      onOk={handleOnSubmit}
+    >
       <Form>
         <Item label="Name">
-          {/* <DebounceInput
-            minLength={2}
-            debounceTimeout={300}
-            element={Input}
-            onChange={e => getPaces(map, e.target.value)}
-          /> */}
-          <Input />
+          <Input onChange={e => setName(e.target.value)} />
         </Item>
         <Item label="Address">
-          <Input />
+          <Input
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            suffix={<Icon type="search" onClick={getSearchPlace} />}
+          />
         </Item>
-        <Row type="flex" justify="space-between">
-          <Col>
-            <Item label="Latitude">
-              <Input />
-            </Item>
-          </Col>
-          <Col>
-            <Item label="Longitude">
-              <Input />
-            </Item>
-          </Col>
-        </Row>
         <Item label="Time to next destination (0 if this is final position)">
           <Input />
         </Item>
@@ -67,7 +131,11 @@ const buildDot = type => {
 
   if (type === 'end') {
     return (
-      <Icon type="close-circle" style={{ fontSize: '16px', color: 'red' }} />
+      <Icon
+        type="stop"
+        theme="filled"
+        style={{ fontSize: '16px', color: 'red' }}
+      />
     );
   }
 
@@ -129,7 +197,42 @@ const BusRouteSetting = props => {
     setPoints([...points]);
   };
 
+  const handleAddPoint = async pt => {
+    const { lat, lng } = pt;
+
+    if (points.length > 0) {
+      const curPt = { ...points[points.length - 1] };
+      const directions = await getRoutes(
+        map,
+        { lat: curPt.lat, lng: curPt.lng },
+        { lat, lng }
+      );
+      const { routes } = directions;
+      if (routes.length > 0) {
+        const { overview_polyline } = routes[0];
+        const pts = map.maps.geometry.encoding
+          .decodePath(overview_polyline)
+          .map(point => ({ lat: point.lat(), lng: point.lng() }));
+        console.log(pts);
+        var flightPath = new map.maps.Polyline({
+          path: [curPt, ...pts],
+          geodesic: true,
+          strokeColor: '#88191d',
+          strokeOpacity: 1,
+          strokeWeight: 5,
+        });
+
+        flightPath.setMap(map.map);
+      }
+    }
+    points.push(pt);
+
+    setPoints([...points]);
+  };
+
   const handleGoogleMapApi = map => setMap(map);
+  const st = [...points];
+  const end = st.pop();
   return (
     <Row gutter={16} type="flex">
       {showAddRoutePosition && (
@@ -137,6 +240,7 @@ const BusRouteSetting = props => {
           visible={showAddRoutePosition}
           setShowAddRoutePosition={setShowAddRoutePosition}
           map={map}
+          handleAddPoint={handleAddPoint}
         />
       )}
       <Col span={8}>
@@ -148,33 +252,41 @@ const BusRouteSetting = props => {
           Positions
         </Row>
         <Timeline>
-          <PositionItem
+          {st &&
+            st.length > 0 &&
+            st.map((pt, idx) => (
+              <PositionItem
+                name="Đại học Quốc tế Hồng Bàng cơ sở Điện Biên Phủ"
+                dotType={idx === 0 && 'start'}
+              />
+            ))}
+          {/* <PositionItem
             name="Đại học Quốc tế Hồng Bàng cơ sở Điện Biên Phủ"
             dotType="start"
           />
           <PositionItem name="Vòng xoay Điện Biên Phủ" />
           <PositionItem name="Võ Thị Sáu" />
-          <PositionItem name="Phạm Ngọc Thạch" />
-          <Timeline.Item
-            dot={
-              <Icon
-                type="close-circle"
-                style={{ fontSize: '16px', color: 'red' }}
-              />
-            }
-          >
-            <Row type="flex" align="top" justify="space-between">
-              <Col style={{ flex: 1 }}>
-                49 Phạm Ngọc Thạch Quận 3 TP Hồ Chí Minh Việt Nam
-              </Col>
-              <Col>
-                <Icon type="edit" style={{ marginLeft: 12 }} />{' '}
-                <Icon type="cross" style={{ color: 'red', marginLeft: 4 }} />
-                <Icon type="arrow-up" style={{ marginLeft: 12 }} />
-                <Icon type="arrow-down" style={{ marginLeft: 8 }} />
-              </Col>
-            </Row>
-          </Timeline.Item>
+          <PositionItem name="Phạm Ngọc Thạch" /> */}
+          {end && (
+            <Timeline.Item
+              dot={
+                <Icon
+                  type="close-circle"
+                  style={{ fontSize: '16px', color: 'red' }}
+                />
+              }
+            >
+              <Row type="flex" align="top" justify="space-between">
+                <Col style={{ flex: 1 }}>{end.name}</Col>
+                <Col>
+                  <Icon type="edit" style={{ marginLeft: 12 }} />{' '}
+                  <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
+                  <Icon type="arrow-up" style={{ marginLeft: 12 }} />
+                  <Icon type="arrow-down" style={{ marginLeft: 8 }} />
+                </Col>
+              </Row>
+            </Timeline.Item>
+          )}
         </Timeline>
         <Row type="flex" justify="center">
           <Button
@@ -194,6 +306,7 @@ const BusRouteSetting = props => {
             lat: 10.8000835,
             lng: 106.7042577,
           }}
+          center={end ? { lat: end.lat, lng: end.lng } : null}
           defaultZoom={17}
           layerTypes={['TrafficLayer']}
           onClick={handleOnClick}

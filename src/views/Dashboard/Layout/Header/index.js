@@ -37,15 +37,8 @@ const LayoutHeader = props => {
       }}
     >
       <div style={{ display: 'flex' }}>
-        {/* <img
-          src="/images/bus.svg"
-          height="100%"
-          width="auto"
-          alt="Page icon"
-          style={{ fill: 'currentColor' }}
-        /> */}
-        <Bus style={{ fill: 'white', curser: 'pointer' }} />
-        <div style={{ fontSize: 24, color: 'white' }}>
+        {/* <Bus style={{ fill: 'white', curser: 'pointer' }} /> */}
+        <div style={{ fontSize: 24, color: 'white', paddingLeft: 24 }}>
           Bus management system
         </div>
       </div>

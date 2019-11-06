@@ -8,45 +8,47 @@ const { Content, Footer } = Layout;
 const Dashboard = ({ children, location }) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header />
-
-      <Content
-        style={{
-          margin: '0px 16px',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div
+      <SliderMenu location={location} />
+      <Layout>
+        <Header />
+        <Content
           style={{
+            margin: '0px 16px',
             display: 'flex',
-            flex: 1,
-            // overflowY: 'scroll',
             flexDirection: 'column',
-            padding: 12,
           }}
         >
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <a href="/dashboard">Dashboard</a>
-            </Breadcrumb.Item>
-            {/* <Breadcrumb.Item>User</Breadcrumb.Item> */}
-          </Breadcrumb>
-          {/* content here */}
-          {children}
-        </div>
-      </Content>
-      <Footer
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: 50,
-          padding: 8,
-        }}
-      >
-        ©2019 Powered by Nguyen Hoang Group
-      </Footer>
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              // overflowY: 'scroll',
+              flexDirection: 'column',
+              padding: 12,
+            }}
+          >
+            <Breadcrumb>
+              <Breadcrumb.Item>
+                <a href="/dashboard">Dashboard</a>
+              </Breadcrumb.Item>
+              {/* <Breadcrumb.Item>User</Breadcrumb.Item> */}
+            </Breadcrumb>
+            {/* content here */}
+            {children}
+          </div>
+        </Content>
+        <Footer
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 50,
+            padding: 8,
+          }}
+        >
+          ©2019 Powered by Nguyen Hoang Group
+        </Footer>
+      </Layout>
     </Layout>
   );
 };

@@ -63,7 +63,7 @@ export const Student = props =>{
         },
     ]
 
-    return(
+    return (
         <Card
             title="Manage Students"
             style={{width: '100%', background: 'none',}}

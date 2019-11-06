@@ -80,7 +80,7 @@ const FieldBuilder = ({ type, options }) => {
   }
 };
 
-const BaseForm = props => {
+const BaseFormStudent = props => {
   const { getFieldDecorator } = props.form;
   const { group_field } = props;
   const handleSubmit = e => {
@@ -123,7 +123,6 @@ const BaseForm = props => {
           </div>
         </Col>
         
-        
         {
           group_field.map((group_field, index) => (
             <div key={index}>
@@ -145,7 +144,6 @@ const BaseForm = props => {
                   </div>
                 ))
               }
-
               <Divider orientation="left">Address</Divider>
               {
                 group_field.address_inf.map((field, index) => (
@@ -184,7 +182,6 @@ const BaseForm = props => {
                   </div>
                 ))
               }
-              
               <Divider orientation="left">Parent Contact</Divider>
               {
                 group_field.parent_inf.map((field, index) => (
@@ -212,6 +209,6 @@ const BaseForm = props => {
   );
 };
 
-const WrappedRegistrationForm = Form.create({ name: 'form' })(BaseForm);
+const WrappedRegistrationForm = Form.create({ name: 'form' })(BaseFormStudent);
 
 export default WrappedRegistrationForm;

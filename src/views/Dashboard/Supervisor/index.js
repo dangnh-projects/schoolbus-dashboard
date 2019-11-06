@@ -6,7 +6,7 @@ import DataTable from 'components/DataTable';
 import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
-export const Student = props =>{
+export const Supervisor = props =>{
     const [viewType, setViewType] = useState('LIST');
     const columns = [
         {
@@ -78,4 +78,4 @@ const mapStateToProps = state => state.dataTable;
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Student);
+)(Supervisor);

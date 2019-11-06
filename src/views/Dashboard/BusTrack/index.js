@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Card, Button, Popconfirm, Icon, Row, Table } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Table, Tabs, Tag } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
+const { TabPane } = Tabs;
+
 export const Bus = props => {
   const columns = [
-    {
-      title: 'Route name',
-      render: (_, i) => <a>{i.name}</a>,
-    },
     {
       title: 'Bus number',
       render: (_, i) => <a>{i.number}</a>,
@@ -25,99 +23,137 @@ export const Bus = props => {
       render: (_, i) => <a>{i.bus_supervisor}</a>,
     },
     {
-      title: 'Pickup',
-      children: [
-        {
-          title: 'Number of stop',
-          dataIndex: 'pickup_stop_no',
-          align: 'center',
-        },
-        {
-          title: 'Number of student',
-          dataIndex: 'pickup_student_no',
-          align: 'center',
-        },
-      ],
-    },
-
-    {
-      title: 'Drop off',
-      children: [
-        {
-          title: 'Number of stop',
-          dataIndex: 'dropoff_stop_no',
-          align: 'center',
-        },
-        {
-          title: 'Number of student',
-          dataIndex: 'dropoff_student_no',
-          align: 'center',
-        },
-      ],
+      title: 'Start time',
+      key: 'start_time',
     },
     {
-      title: 'Action',
-      align: 'center',
-      render: (_, record) => {
-        return (
-          <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              style={{ marginRight: 16 }}
-              onClick={() => navigate(`/dashboard/batch/${record.id}`)}
-            >
-              <Icon type="form" />
-            </Button>
-            <Popconfirm
-              placement="top"
-              title={'Delete row?'}
-              onConfirm={() =>
-                props.deleteItem({
-                  url: `/r/batches/${record.id}/`,
-                  afterDelete: () => props.getList({ url: '/r/batches/' }),
-                })
-              }
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="danger">
-                <Icon type="delete" />
-              </Button>
-            </Popconfirm>
-          </Row>
-        );
-      },
+      title: 'Next stop',
+      render: (_, i) => <a>{i.next_stop}</a>,
+    },
+    {
+      title: 'No. of onboarding',
+      render: (_, i) => <a>{i.no_onboarding}</a>,
+    },
+    {
+      title: 'No. remaining',
+      render: (_, i) => <a>{i.no_remaining}</a>,
+    },
+    {
+      title: 'End time',
+      render: (_, i) => <a>{i.end_time}</a>,
     },
   ];
 
   return (
-    <Card
-      title="Manage bus route"
-      extra={[
-        <Button
-          key="add-new"
-          onClick={() => navigate('/dashboard/bus-route/new')}
+    <Card>
+      <Tabs>
+        <TabPane
+          tab={
+            <span>
+              Moving Buses
+              <Tag color="#87d068" style={{ marginLeft: 12 }}>
+                10
+              </Tag>
+            </span>
+          }
+          key="on-going"
         >
-          Add
-        </Button>,
-      ]}
-    >
-      <Table
-        columns={columns}
-        bordered
-        size="middle"
-        dataSource={[
-          {
-            name: 'District 7 - Hong Bang',
-            number: 'Bus 02',
-            driver: 'Hung Vo',
-            bus_supervisor: 'Thao Hoang',
-            pickup_stop_no: 20,
-            pickup_student_no: 22,
-            dropoff_stop_no: 20,
-            dropoff_student_no: 22,
-          },
-        ]}
-      />
+          <Tabs tabPosition="left">
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="arrow-up" />
+                  Pickup
+                  <Tag color="#87d068" style={{ marginLeft: 12 }}>
+                    10
+                  </Tag>
+                </span>
+              }
+              key="Pickup"
+            >
+              <Table
+                columns={columns}
+                bordered
+                size="middle"
+                dataSource={[
+                  {
+                    name: 'District 7 - Hong Bang',
+                    number: 'Bus 02',
+                    driver: 'Hung Vo',
+                    bus_supervisor: 'Thao Hoang',
+                    start_time: '08:00',
+                    next_stop: 'Điện Biên Phủ',
+                    no_onboarding: 20,
+                    no_remaining: 22,
+                    end_time: '08:30',
+                  },
+                ]}
+              />
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <Icon type="arrow-down" />
+                  Drop off
+                  <Tag color="#87d068" style={{ marginLeft: 12 }}>
+                    3
+                  </Tag>
+                </span>
+              }
+              key="drop-off"
+            >
+              <Table
+                columns={columns}
+                bordered
+                size="middle"
+                dataSource={[
+                  {
+                    name: 'District 7 - Hong Bang',
+                    number: 'Bus 02',
+                    driver: 'Hung Vo',
+                    bus_supervisor: 'Thao Hoang',
+                    start_time: '08:00',
+                    next_stop: 'Điện Biên Phủ',
+                    no_onboarding: 20,
+                    no_remaining: 22,
+                    end_time: '08:30',
+                  },
+                ]}
+              />
+            </TabPane>
+          </Tabs>
+        </TabPane>
+        <TabPane
+          tab={
+            <span>
+              All Buses{' '}
+              <Tag color="gray" style={{ marginLeft: 12 }}>
+                20
+              </Tag>
+            </span>
+          }
+          key="all"
+        >
+          <Table
+            columns={columns}
+            bordered
+            size="middle"
+            dataSource={[
+              {
+                name: 'District 7 - Hong Bang',
+                number: 'Bus 02',
+                driver: 'Hung Vo',
+                bus_supervisor: 'Thao Hoang',
+                start_time: '08:00',
+                next_stop: 'Điện Biên Phủ',
+                no_onboarding: 20,
+                no_remaining: 22,
+                end_time: '08:30',
+              },
+            ]}
+          />
+        </TabPane>
+      </Tabs>
     </Card>
   );
 };

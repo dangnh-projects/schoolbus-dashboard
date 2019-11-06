@@ -13,9 +13,9 @@ const Dashboard = ({ children, location }) => {
         <Header />
         <Content
           style={{
-            margin: '0px 16px',
             display: 'flex',
             flexDirection: 'column',
+            // backgroundColor: 'white',
           }}
         >
           <div

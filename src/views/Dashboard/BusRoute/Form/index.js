@@ -1,5 +1,16 @@
 import React from 'react';
-import { Card, Row, Col, Form, Input, Select, Tabs, Table, Icon } from 'antd';
+import {
+  Card,
+  Row,
+  Col,
+  Form,
+  Input,
+  Select,
+  Tabs,
+  Table,
+  Icon,
+  Tag,
+} from 'antd';
 import MapRoutes from './MapRoutes';
 
 const { TabPane } = Tabs;
@@ -45,7 +56,7 @@ const BusRoute = props => {
         </Col>
       </Row>
       <Tabs defaultActiveKey="pickup">
-        <TabPane tab="Pickup" key="pickup">
+        <TabPane tab="Pick-up" key="pickup">
           <Tabs defaultActiveKey="1" tabPosition="left">
             <TabPane
               tab={

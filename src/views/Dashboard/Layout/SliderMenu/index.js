@@ -4,6 +4,7 @@ import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import { checkPermission } from 'utils/permission';
 import Bus from '../../../../assets/bus';
+import './style.scss';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -135,24 +136,32 @@ const SliderMenu = ({ location, permissions, groups }) => {
           title={
             <span>
               <Icon type="branches" />
-              <span>Bus</span>
+              <span>Bus Operation</span>
             </span>
           }
           style={{ color: 'white' }}
         >
           <Menu.Item
-            key="student"
-            onClick={() => navigate('/dashboard/student')}
+            key="bus"
+            onClick={() => navigate('/dashboard/bus')}
             style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
-            Student
+            Bus
           </Menu.Item>
           <Menu.Item
-            key="parent"
-            onClick={() => navigate('/dashboard/parent')}
+            key="bus-route"
+            onClick={() => navigate('/dashboard/bus-route')}
             style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
-            Parent
+            Routes
+          </Menu.Item>
+
+          <Menu.Item
+            key="bus-track"
+            onClick={() => navigate('/dashboard/bus-track')}
+            style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
+          >
+            Routes
           </Menu.Item>
         </SubMenu>
         {/* <SubMenu

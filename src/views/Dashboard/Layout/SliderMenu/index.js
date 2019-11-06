@@ -39,7 +39,7 @@ const SliderMenu = ({ location, permissions, groups }) => {
       collapsible
       collapsed={collapsed}
       onCollapse={setColapsed}
-      style={{ height: '100vh', backgroundColor: '#3e8247' }}
+      style={{ height: '100vh', backgroundColor: '#07551e' }}
       breakpoint="md"
     >
       <div
@@ -59,14 +59,15 @@ const SliderMenu = ({ location, permissions, groups }) => {
         defaultOpenKeys={[group]}
         mode="inline"
         style={{
-          backgroundColor: '#07551e',
-          border: 'none',
+          // backgroundColor: '#f0f2f5',
+          // border: 'none',
+          height: '100%',
         }}
       >
         <Menu.Item
           key="dashboard"
           onClick={() => navigate('/dashboard')}
-          style={{ color: 'white' }}
+          // style={{ color: 'white' }}
         >
           <Icon type="home" />
           <span>Dashboard</span>
@@ -79,57 +80,36 @@ const SliderMenu = ({ location, permissions, groups }) => {
               <span>Manage</span>
             </span>
           }
-          style={{ color: 'white' }}
+          // style={{ color: 'white' }}
         >
           <Menu.Item
             key="student"
             onClick={() => navigate('/dashboard/student')}
-            style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
+            // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
             Student
           </Menu.Item>
           <Menu.Item
             key="parent"
             onClick={() => navigate('/dashboard/parent')}
-            style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
+            // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
             Parent
           </Menu.Item>
           <Menu.Item
             key="supervisor"
             onClick={() => navigate('/dashboard/bus-supervisor')}
-            style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
+            // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
             Supervisor
           </Menu.Item>
           <Menu.Item
             key="driver"
             onClick={() => navigate('/dashboard/driver')}
-            style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
+            // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
             Driver
           </Menu.Item>
-
-          {/* {renderManageItem(checker, 'Course', 'course')}
-          {checker &&
-            checker('course')(
-              <Menu.Item
-                key={'major'}
-                onClick={() => navigate('/dashboard/major')}
-              >
-                Major
-              </Menu.Item>
-            )}
-          {renderManageItem(checker, 'Major', 'major')}
-          {renderManageItem(checker, 'Faculty', 'faculty')}
-          {renderManageItem(checker, 'Batch', 'batch')}
-          {renderManageItem(checker, 'Subject', 'subject')}
-          {renderManageItem(checker, 'Student', 'student')}
-          {renderManageItem(checker, 'Semester', 'semester')}
-          {renderManageItem(checker, 'Room', 'room')}
-          <Menu.Item key="class" onClick={() => navigate('/dashboard/class')}>
-            Class
-          </Menu.Item> */}
         </SubMenu>
         <SubMenu
           key="bus-management"
@@ -139,19 +119,19 @@ const SliderMenu = ({ location, permissions, groups }) => {
               <span>Bus Operation</span>
             </span>
           }
-          style={{ color: 'white' }}
+          // style={{ color: 'white' }}
         >
           <Menu.Item
             key="bus"
             onClick={() => navigate('/dashboard/bus')}
-            style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
+            // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
             Bus
           </Menu.Item>
           <Menu.Item
             key="bus-route"
             onClick={() => navigate('/dashboard/bus-route')}
-            style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
+            // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
             Routes
           </Menu.Item>
@@ -159,7 +139,7 @@ const SliderMenu = ({ location, permissions, groups }) => {
           <Menu.Item
             key="bus-track"
             onClick={() => navigate('/dashboard/bus-track')}
-            style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
+            // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
             Routes
           </Menu.Item>
@@ -181,23 +161,8 @@ const SliderMenu = ({ location, permissions, groups }) => {
             Groups
           </Menu.Item>
         </SubMenu> */}
-        {groups && groups.indexOf('admin') > -1 && (
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <Icon type="area-chart" />
-                <span>Report</span>
-              </span>
-            }
-            style={{ color: 'white' }}
-          >
-            <Menu.Item key="6">Users</Menu.Item>
-            <Menu.Item key="8">Groups</Menu.Item>
-            <Menu.Item key="8">Permissions</Menu.Item>
-          </SubMenu>
-        )}
-        <Menu.Item key="9" style={{ color: 'white' }}>
+
+        <Menu.Item key="9">
           <Icon type="setting" />
           <span>Settings</span>
         </Menu.Item>

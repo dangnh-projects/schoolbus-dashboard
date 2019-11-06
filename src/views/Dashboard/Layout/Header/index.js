@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import moment from 'moment';
 import { Layout, Menu, Avatar, Popover, List, Icon, Badge } from 'antd';
 import Bus from '../../../../assets/bus';
+import { navigate } from '@reach/router';
+import { useSelector } from 'react-redux';
 const { Header } = Layout;
 const { SubMenu } = Menu;
 
@@ -21,6 +23,7 @@ const notifications = [
 ];
 
 const LayoutHeader = props => {
+  const user = useSelector(state => state.user && state.user.user);
   return (
     <Header
       style={{
@@ -34,16 +37,9 @@ const LayoutHeader = props => {
       }}
     >
       <div style={{ display: 'flex' }}>
-        {/* <img
-          src="/images/bus.svg"
-          height="100%"
-          width="auto"
-          alt="Page icon"
-          style={{ fill: 'currentColor' }}
-        /> */}
-        <Bus style={{ fill: 'white' }} />
-        <div style={{ fontSize: 24, color: 'white' }}>
-          Hệ thống quản lý xe bus
+        {/* <Bus style={{ fill: 'white', curser: 'pointer' }} /> */}
+        <div style={{ fontSize: 24, color: 'white', paddingLeft: 24 }}>
+          Bus management system
         </div>
       </div>
 
@@ -101,7 +97,7 @@ const LayoutHeader = props => {
             title={
               <Fragment>
                 <span style={{ marginRight: 4 }}>Hi,</span>
-                <span>{'Hung'}</span>
+                <span>{user.username}</span>
                 <Avatar
                   style={{ marginLeft: 8 }}
                   src="/images/octagon-icon.png"

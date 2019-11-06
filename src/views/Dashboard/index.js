@@ -1,5 +1,6 @@
 import React from 'react';
 import { Layout, Breadcrumb } from 'antd';
+import { navigate } from '@reach/router';
 import SliderMenu from './Layout/SliderMenu';
 import Header from './Layout/Header';
 const { Content, Footer } = Layout;
@@ -7,10 +8,9 @@ const { Content, Footer } = Layout;
 const Dashboard = ({ children, location }) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      {/* <SliderMenu location={location} /> */}
-      <Layout style={{ height: '100vh' }}>
+      <SliderMenu location={location} />
+      <Layout>
         <Header />
-
         <Content
           style={{
             margin: '0px 16px',
@@ -22,15 +22,17 @@ const Dashboard = ({ children, location }) => {
             style={{
               display: 'flex',
               flex: 1,
-              overflowY: 'scroll',
+              // overflowY: 'scroll',
               flexDirection: 'column',
               padding: 12,
             }}
           >
-            {/* <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>Manage</Breadcrumb.Item>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-            </Breadcrumb> */}
+            <Breadcrumb>
+              <Breadcrumb.Item>
+                <a href="/dashboard">Dashboard</a>
+              </Breadcrumb.Item>
+              {/* <Breadcrumb.Item>User</Breadcrumb.Item> */}
+            </Breadcrumb>
             {/* content here */}
             {children}
           </div>

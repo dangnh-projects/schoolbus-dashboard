@@ -11,8 +11,9 @@ const errMessage = {
     'Something went wrong, please try again or contact admin for infomation!',
 };
 
-const loginRequest = buildRequest('/r/authenticate/login/', {
+const loginRequest = buildRequest('/auth/api/login', {
   method: 'POST',
+  'Content-Type': 'multipart/form-data',
 });
 
 const editProfileRequest = buildRequest('/user', {
@@ -25,17 +26,21 @@ const registerRequest = buildRequest('/user/register', {
 
 function* login(action) {
   try {
+    var bodyFormData = new FormData();
+    bodyFormData.set('username', action.payload.username);
+    bodyFormData.set('password', action.payload.password);
     const { body } = yield call(
       loginRequest.request,
       {
-        data: action.payload,
+        data: bodyFormData,
         method: 'POST',
       },
       false
     );
-    const { user, token } = body;
-    localStorage.setItem('utk', token);
-    yield put(actionCreator.loginSuccess(user));
+    console.log(body);
+    const { user, token } = body.data;
+    // localStorage.setItem('utk', token);
+    yield put(actionCreator.loginSuccess({ user, token }));
     notification.success({
       message: 'Login success!',
       duration: 0.5,

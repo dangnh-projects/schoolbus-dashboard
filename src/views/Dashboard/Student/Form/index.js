@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from 'react'
-import { Card, notification, Button, Modal } from 'antd'
-import { navigate } from '@reach/router'
-import DataTable from 'components/DataTable'
-import BaseForm from 'components/StudentForm'
-import GridView from 'components/GridView'
+import { Button, Modal } from 'antd'
+import {
+    Card,
+    notification,
+    Form,
+    Col,
+    Row,
+    Input,
+    Divider,
+    Table,
+    DatePicker,
+    Upload,
+    Icon,
+  } from 'antd';
 import { connect } from 'react-redux'
 import { actionCreator } from 'store/dataTable/dataTable.meta'
 import { API } from 'api/metaData'
+//import { navigate } from '@reach/router'
 
-
+const Item = Form.Item;
 
 const StudentForm = ({ formSave, updateItem, id, data }) => {
     const [item, setItem] = useState(null);
     const [courses, setCourses] = useState([]);
-    const [viewType, setViewType] = useState('LIST');
     const [showParent, setShowParent] = useState(false);
+    const [showBusRoute, setShowBusRoute] = useState(false);
 
     const getCourses = async () => {
         const { body } = await API.getCourse();
@@ -42,213 +52,170 @@ const StudentForm = ({ formSave, updateItem, id, data }) => {
         }
     }, [item, data, id]);
     
-    const showModal = () => {
+    const showModalParent = () => {
         setShowParent(!showParent);
     };
 
-    const handleOk = () => {
+    const handleOkParent = () => {
         setShowParent(!showParent);
     };
 
-    const handleCancel = () => {
+    const handleCancelParent = () => {
         setShowParent(!showParent);
     };
 
-    const columns = [
-        {
-            title: 'Full Name',
-            dataIndex: 'fullname'
-        },
-        {
-            title: 'Class',
-            dataIndex: 'class'
-        },
-        {
-            title: 'Bus Registered Date',
-            dataIndex: 'busregistereddate'
-        },
-    ]
+    const showModalBusRoute = () => {
+        setShowBusRoute(!showBusRoute);
+    };
+
+    const handleOkBusRoute = () => {
+        setShowBusRoute(!showBusRoute);
+    };
+
+    const handleCancelBusRoute = () => {
+        setShowBusRoute(!showBusRoute);
+    };
 
     return (
         <div>
-        
             <Card title={id ? 'Update Student' : 'Create New Student'}>
-                <BaseForm
-                    group_field = {
-                        [
-                            {
-                                student_inf: [
-                                    {
-                                        type: 'TEXT',
-                                        label: 'First Name',
-                                        name: 'firstname',
-                                        rules: [
-                                        {
-                                            required: true,
-                                            message: 'First name is required',
-                                        },
-                                        ],
-                                    },
-                                    {
-                                        type: 'TEXT',
-                                        label: 'Last Name',
-                                        name: 'lastname',
-                                        rules: [
-                                            {
-                                                required: true,
-                                                message: 'Last name is required',
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        type: 'DATE_PICKER',
-                                        label: 'Birthday',
-                                        name: 'Birthday',
-                                    },
-                                    {
-                                        type: 'TEXT',
-                                        label: 'School',
-                                        name: 'School',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        type: 'TEXT',
-                                        label: 'Class',
-                                        name: 'class',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        type: 'DATE_PICKER',
-                                        label: 'Bus Registered Date',
-                                        name: 'busregistereddate',
-                                    },
-                                ],
-                                address_inf: [
-                                    {
-                                        type: 'TEXT',
-                                        label: 'No',
-                                        name: 'no',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        type: 'TEXT',
-                                        label: 'District',
-                                        name: 'district',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        type: 'TEXT',
-                                        label: 'Ward',
-                                        name: 'ward',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        type: 'TEXT',
-                                        label: 'Province',
-                                        name: 'province',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                ],
-                                status_inf: [
-                                    {
-                                        type: 'CHECKBOX',
-                                        label: 'To School',
-                                        name: 'toschool',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        type: 'CHECKBOX',
-                                        label: 'To Home',
-                                        name: 'tohome',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                ],
-                                parent_inf: [
-                                    {
-                                        type: 'SELECT',
-                                        label: 'Parent',
-                                        name: 'parent',
-                                        options: courses.map(course => ({
-                                            value: '',
-                                            title: course.name,
-                                        })),
-                                    },
-                                    {
-                                        type: 'TEXT',
-                                        label: 'Mobile',
-                                        name: 'mobile',
-                                        rules: [
-                                            {
-                                                required: false,
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                        ]
-                }
-                
-                handleSubmit= { handleSubmit }
-            />
-            </Card>
-            <Card
-                title="Sibling"
-                style={{width: '100%', background: 'none',}}
-                headStyle={{backgroundColor: 'white',}}
-                bodyStyle={{
-                    padding: viewType === 'CARD' && 0,
-                    backgroundColor: viewType === 'LIST' && 'white',
-                }}
-                extra={[
-                    <Button key="add-new" onClick={showModal}>
-                        (+) Add Parent
-                    </Button>
-                ]}
-            >
-                <Modal
-                    title="Add Parent"
-                    visible= {showParent}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                >
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                </Modal>
-                {viewType === 'LIST' && <DataTable columns={columns} />}
-                {viewType === 'CARD' && <GridView />}
+            <Form style={{ padding: 16 }} layout="horizontal">
+                <Row gutter={16}>
+                    <Col offset={3} md={10}>
+                        <Row gutter={16}>
+                        <Col md={12}>
+                            <Item label="First name" style={{ marginBottom: 12 }}>
+                            <Input />
+                            </Item>
+                        </Col>
+                        <Col md={12}>
+                            <Item label="Last name">
+                            <Input />
+                            </Item>
+                        </Col>
+                        </Row>
+                        <Row gutter={16}>
+                        <Col md={12}>
+                            <Item label="Birthday">
+                            <DatePicker onChange={console.log} />
+                            </Item>
+                        </Col>
+                        </Row>
+                        <Row gutter={16}>
+                        <Col md={12}>
+                            <Item label="School">
+                            <Input />
+                            </Item>
+                        </Col>
+                        <Col md={12}>
+                            <Item label="Class">
+                            <Input />
+                            </Item>
+                        </Col>
+                        </Row>
+                        <Row gutter={16}>
+                        <Col md={12}>
+                            <Item label="Bus Registered Date">
+                            <DatePicker onChange={console.log} />
+                            </Item>
+                        </Col>
+                        </Row>
+                        <Divider orientation="left">Address</Divider>
+                        <Row gutter={16}>
+                        <Col md={12}>
+                            <Item label="Home number">
+                            <Input />
+                            </Item>
+                        </Col>
+                        <Col md={12}>
+                            <Item label="Street">
+                            <Input />
+                            </Item>
+                        </Col>
+                        </Row>
+                        <Row gutter={16}>
+                        <Col md={12}>
+                            <Item label="Ward">
+                            <Input />
+                            </Item>
+                        </Col>
+                        <Col md={12}>
+                            <Item label="District">
+                            <Input />
+                            </Item>
+                        </Col>
+                        </Row>
+                        <Row gutter={16}>
+                        <Col md={12}>
+                            <Item label="Province">
+                            <Input />
+                            </Item>
+                        </Col>
+                        </Row>
+                        <div style={{ textAlign: 'right' }}>
+                            <Button key="add-new" onClick={showModalBusRoute}>
+                                Find Bus Route
+                            </Button>
+                        </div>
+                        <Modal
+                            title="Find Bus Route"
+                            visible= {showBusRoute}
+                            onOk={handleOkBusRoute}
+                            onCancel={handleCancelBusRoute}
+                        >
+                            <p>Some contents...</p>
+                            <p>Some contents...</p>
+                            <p>Some contents...</p>
+                        </Modal>
+                        <br />
+                        <Row gutter={16}>
+                        <Col md={12} style={{ textAlign: 'left' }}>
+                            <Button type="primary" htmlType="submit" style={{ width: '100px'}}>
+                                Save
+                            </Button>
+                        </Col>
+                        <Col md={12} style={{ textAlign: 'right' }}>
+                            <Button key="add-new" onClick={showModalParent}>
+                                (+) Add Parent
+                            </Button>
+                        </Col>
+                        </Row>
+                        <Modal
+                            title="Add Parent"
+                            visible= {showParent}
+                            onOk={handleOkParent}
+                            onCancel={handleCancelParent}
+                        >
+                            <p>Some contents...</p>
+                            <p>Some contents...</p>
+                            <p>Some contents...</p>
+                        </Modal>
+                        <Divider orientation="left">Sibling</Divider>
+                        <Table
+                        columns={[
+                            { title: 'Student', key: 'student' },
+                            { title: 'Class', key: 'class' },
+                        ]}
+                        />
+                    </Col>
+                    <Col md={6} style={{ paddingLeft: 24 }}>
+                        <Upload
+                        name="avatar"
+                        listType="picture-card"
+                        className="avatar-uploader"
+                        showUploadList={false}
+                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        // beforeUpload={beforeUpload}
+                        // onChange={this.handleChange}
+                        >
+                        <div>
+                            <Icon type={'plus'} />
+                            <div className="ant-upload-text">Avatar</div>
+                        </div>
+                        </Upload>
+                    </Col>
+                </Row>
+            </Form>
             </Card>
         </div>
     );

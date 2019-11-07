@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { Router } from '@reach/router';
 import 'antd/dist/antd.css';
 import './App.css';
+import './app.scss';
 import Loading from './views/Loading';
 
 const NotFound = lazy(() => import('./views/NotFound'));

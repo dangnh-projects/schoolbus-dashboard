@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { actionCreator } from 'store/dataTable/dataTable.meta'
 import { API } from 'api/metaData'
 
-const BatchForm = ({ formSave, updateItem, id, data }) => {
+const SupervisorForm = ({ formSave, updateItem, id, data }) => {
     const [item, setItem] = useState(null);
     const [courses, setCourses] = useState([]);
 
@@ -173,4 +173,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BatchForm);
+)(SupervisorForm);

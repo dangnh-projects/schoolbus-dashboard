@@ -10,7 +10,7 @@ import { API } from 'api/metaData'
 
 
 
-const BatchForm = ({ formSave, updateItem, id, data }) => {
+const StudentForm = ({ formSave, updateItem, id, data }) => {
     const [item, setItem] = useState(null);
     const [courses, setCourses] = useState([]);
     const [viewType, setViewType] = useState('LIST');
@@ -264,4 +264,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BatchForm);
+)(StudentForm);

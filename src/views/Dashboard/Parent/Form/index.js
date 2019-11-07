@@ -21,7 +21,7 @@ import { API } from 'api/metaData';
 
 const Item = Form.Item;
 
-const BatchForm = ({ formSave, updateItem, id, data }) => {
+const ParentForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);
   const [courses, setCourses] = useState([]);
 
@@ -213,4 +213,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BatchForm);
+)(ParentForm);

@@ -6,74 +6,46 @@ import DataTable from 'components/DataTable';
 import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
-const ButtonGroup = Button.Group;
-
-export const Bus = props => {
+export const Parent = props => {
   const [viewType, setViewType] = useState('LIST');
   const columns = [
     {
-      title: 'First name',
-      dataIndex: 'first_name',
+      title: 'No',
+      dataIndex: 'no',
     },
     {
-      title: 'Last name',
-      dataIndex: 'last_name',
+      title: 'Picture',
+      dataIndex: 'picture',
     },
     {
-      title: 'Phone number',
-      dataIndex: 'phone_nummber',
+      title: 'First Name',
+      dataIndex: 'firstname',
+    },
+    {
+      title: 'Last Name',
+      dataIndex: 'lastname',
+    },
+    {
+      title: 'Phone Number',
+      dataIndex: 'phonenumber',
     },
     {
       title: 'Username',
       dataIndex: 'username',
     },
     {
-      title: 'Children',
-      dataIndex: 'start_time',
-      align: 'center',
+      title: 'Chilren',
+      dataIndex: 'chilren',
     },
     {
       title: 'Status',
-      dataIndex: 'end_time',
-      align: 'center',
-    },
-    {
-      title: 'Action',
-      align: 'center',
-      render: (_, record) => {
-        return (
-          <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              style={{ marginRight: 16 }}
-              onClick={() => navigate(`/dashboard/batch/${record.id}`)}
-            >
-              <Icon type="form" />
-            </Button>
-            <Popconfirm
-              placement="top"
-              title={'Delete row?'}
-              onConfirm={() =>
-                props.deleteItem({
-                  url: `/r/batches/${record.id}/`,
-                  afterDelete: () => props.getList({ url: '/r/batches/' }),
-                })
-              }
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="danger">
-                <Icon type="delete" />
-              </Button>
-            </Popconfirm>
-          </Row>
-        );
-      },
+      dataIndex: 'status',
     },
   ];
 
   return (
     <Card
-      title="Manage parent"
+      title="Manage Parents"
       style={{ width: '100%', background: 'none' }}
       headStyle={{ backgroundColor: 'white' }}
       bodyStyle={{
@@ -86,7 +58,8 @@ export const Bus = props => {
         </Button>,
       ]}
     >
-      <DataTable columns={columns} url="/r/batches/" />
+      {viewType === 'LIST' && <DataTable columns={columns} />}
+      {viewType === 'CARD' && <GridView />}
     </Card>
   );
 };
@@ -101,4 +74,4 @@ const mapStateToProps = state => state.dataTable;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Bus);
+)(Parent);

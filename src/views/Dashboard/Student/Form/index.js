@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { Card, notification } from 'antd'
-//import { navigate } from '@reach/router'
-import BaseForm from 'components/Form'
+import { Card, notification, Button, Modal } from 'antd'
+import { navigate } from '@reach/router'
+import DataTable from 'components/DataTable'
+import BaseForm from 'components/StudentForm'
+import GridView from 'components/GridView'
 import { connect } from 'react-redux'
 import { actionCreator } from 'store/dataTable/dataTable.meta'
 import { API } from 'api/metaData'
 
-const BatchForm = ({ formSave, updateItem, id, data }) => {
+
+
+const StudentForm = ({ formSave, updateItem, id, data }) => {
     const [item, setItem] = useState(null);
     const [courses, setCourses] = useState([]);
+    const [viewType, setViewType] = useState('LIST');
+    const [showParent, setShowParent] = useState(false);
 
     const getCourses = async () => {
         const { body } = await API.getCourse();
@@ -35,68 +41,216 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
             setItem(found);
         }
     }, [item, data, id]);
+    
+    const showModal = () => {
+        setShowParent(!showParent);
+    };
+
+    const handleOk = () => {
+        setShowParent(!showParent);
+    };
+
+    const handleCancel = () => {
+        setShowParent(!showParent);
+    };
+
+    const columns = [
+        {
+            title: 'Full Name',
+            dataIndex: 'fullname'
+        },
+        {
+            title: 'Class',
+            dataIndex: 'class'
+        },
+        {
+            title: 'Bus Registered Date',
+            dataIndex: 'busregistereddate'
+        },
+    ]
 
     return (
-        <Card title={id ? 'Update Student' : 'Create New Student'}>
-          <BaseForm
-            fields={[
-                {
-                    type: 'TEXT',
-                    label: 'Code',
-                    name: 'code',
-                    rules: [
-                    {
-                        required: true,
-                        message: 'Code is required',
-                    },
-                    ],
-                    defaultValue: item ? item.name : '',
-                },
-                {
-                    type: 'TEXT',
-                    label: 'Full name',
-                    name: 'fullname',
-                    rules: [
-                    {
-                            required: true,
-                            message: 'Name is required',
-                    },
-                    ],
-                    defaultValue: item ? item.code : '',
-                },
-                {
-                    type: 'SELECT',
-                    label: 'License plate',
-                    name: 'license_plate',
-                    options: courses.map(course => ({
-                        value: '',
-                        title: course.name,
-                    })),
-                    defaultValue: item
-                        ? item.course_id
-                        : '',
-                },
-                {
-                    type: 'SELECT',
-                    label: 'Permission',
-                    name: 'permission',
-                    options: courses.map(course => ({
-                        value: '',
-                        title: course.name,
-                    })),
-                    defaultValue: item
-                        ? item.course_id
-                        : '',
-                },
-                {
-                    type: 'DATE_PICKER',
-                    label: 'Birthday',
-                    name: 'Birthday',
-                },
-            ]}
-            handleSubmit={ handleSubmit }
-          />
-        </Card>
+        <div>
+        
+            <Card title={id ? 'Update Student' : 'Create New Student'}>
+                <BaseForm
+                    group_field = {
+                        [
+                            {
+                                student_inf: [
+                                    {
+                                        type: 'TEXT',
+                                        label: 'First Name',
+                                        name: 'firstname',
+                                        rules: [
+                                        {
+                                            required: true,
+                                            message: 'First name is required',
+                                        },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Last Name',
+                                        name: 'lastname',
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: 'Last name is required',
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'DATE_PICKER',
+                                        label: 'Birthday',
+                                        name: 'Birthday',
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'School',
+                                        name: 'School',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Class',
+                                        name: 'class',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'DATE_PICKER',
+                                        label: 'Bus Registered Date',
+                                        name: 'busregistereddate',
+                                    },
+                                ],
+                                address_inf: [
+                                    {
+                                        type: 'TEXT',
+                                        label: 'No',
+                                        name: 'no',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'District',
+                                        name: 'district',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Ward',
+                                        name: 'ward',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Province',
+                                        name: 'province',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                ],
+                                status_inf: [
+                                    {
+                                        type: 'CHECKBOX',
+                                        label: 'To School',
+                                        name: 'toschool',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        type: 'CHECKBOX',
+                                        label: 'To Home',
+                                        name: 'tohome',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                ],
+                                parent_inf: [
+                                    {
+                                        type: 'SELECT',
+                                        label: 'Parent',
+                                        name: 'parent',
+                                        options: courses.map(course => ({
+                                            value: '',
+                                            title: course.name,
+                                        })),
+                                    },
+                                    {
+                                        type: 'TEXT',
+                                        label: 'Mobile',
+                                        name: 'mobile',
+                                        rules: [
+                                            {
+                                                required: false,
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ]
+                }
+                
+                handleSubmit= { handleSubmit }
+            />
+            </Card>
+            <Card
+                title="Sibling"
+                style={{width: '100%', background: 'none',}}
+                headStyle={{backgroundColor: 'white',}}
+                bodyStyle={{
+                    padding: viewType === 'CARD' && 0,
+                    backgroundColor: viewType === 'LIST' && 'white',
+                }}
+                extra={[
+                    <Button key="add-new" onClick={showModal}>
+                        (+) Add Parent
+                    </Button>
+                ]}
+            >
+                <Modal
+                    title="Add Parent"
+                    visible= {showParent}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                >
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                </Modal>
+                {viewType === 'LIST' && <DataTable columns={columns} />}
+                {viewType === 'CARD' && <GridView />}
+            </Card>
+        </div>
     );
 }
 
@@ -110,4 +264,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BatchForm);
+)(StudentForm);

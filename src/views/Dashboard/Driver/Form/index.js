@@ -7,7 +7,7 @@ import BaseForm from 'components/Form';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { API } from 'api/metaData';
 
-const BatchForm = ({ formSave, updateItem, id, data }) => {
+const DriverForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);
   const [courses, setCourses] = useState([]);
 
@@ -120,4 +120,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BatchForm);
+)(DriverForm);

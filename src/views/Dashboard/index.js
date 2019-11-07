@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout, Breadcrumb } from 'antd';
-import { navigate } from '@reach/router';
 import SliderMenu from './Layout/SliderMenu';
 import Header from './Layout/Header';
 const { Content, Footer } = Layout;

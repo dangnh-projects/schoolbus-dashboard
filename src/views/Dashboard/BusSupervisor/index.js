@@ -9,32 +9,41 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 const ButtonGroup = Button.Group;
 
 export const Bus = props => {
-  console.log('Bus view');
   const [viewType, setViewType] = useState('LIST');
   const columns = [
     {
-      title: 'Id',
-      dataIndex: 'id',
+      title: 'First name',
+      dataIndex: 'first_name',
     },
     {
-      title: 'BKS',
-      dataIndex: 'name',
+      title: 'Last name',
+      dataIndex: 'last_name',
     },
     {
-      title: 'Code',
-      dataIndex: 'code',
+      title: 'Phone number',
+      dataIndex: 'phone_nummber',
     },
     {
-      title: 'Driver',
-      dataIndex: 'course_name',
+      title: 'Username',
+      dataIndex: 'username',
     },
     {
-      title: 'Giám sinh',
+      title: 'Start working date',
       dataIndex: 'start_time',
       align: 'center',
     },
     {
       title: 'Status',
+      dataIndex: 'end_time',
+      align: 'center',
+    },
+    {
+      title: 'Bus number',
+      dataIndex: 'end_time',
+      align: 'center',
+    },
+    {
+      title: 'Address',
       dataIndex: 'end_time',
       align: 'center',
     },
@@ -74,7 +83,7 @@ export const Bus = props => {
 
   return (
     <Card
-      title="Manage bus"
+      title="Manage bus supervisor"
       style={{ width: '100%', background: 'none' }}
       headStyle={{ backgroundColor: 'white' }}
       bodyStyle={{
@@ -82,27 +91,15 @@ export const Bus = props => {
         backgroundColor: viewType === 'LIST' && 'white',
       }}
       extra={[
-        <ButtonGroup style={{ marginRight: 12 }} key="action-list">
-          <Button
-            type={viewType === 'LIST' ? 'primary' : 'default'}
-            onClick={() => setViewType('LIST')}
-          >
-            <Icon type="unordered-list" />
-          </Button>
-          <Button
-            type={viewType === 'CARD' ? 'primary' : 'default'}
-            onClick={() => setViewType('CARD')}
-          >
-            <Icon type="appstore" />
-          </Button>
-        </ButtonGroup>,
-        <Button key="add-new" onClick={() => navigate('/dashboard/bus/new')}>
+        <Button
+          key="add-new"
+          onClick={() => navigate('/dashboard/bus-supervisor/new')}
+        >
           Add
         </Button>,
       ]}
     >
-      {viewType === 'LIST' && <DataTable columns={columns} url="/r/batches/" />}
-      {viewType === 'CARD' && <GridView url="/r/batches/" />}
+      <DataTable columns={columns} url="/r/batches/" />
     </Card>
   );
 };

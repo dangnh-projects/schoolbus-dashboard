@@ -10,9 +10,9 @@ const Bus = props => (
     viewBox="0 0 410.52 410.52"
     // style="enable-background:new 0 0 410.52 410.52;"
     style={{
-      width: 'auto',
       height: '100%',
       fill: 'white',
+      width: 100,
     }}
   >
     <g>

@@ -21,7 +21,7 @@ import { API } from 'api/metaData';
 
 const Item = Form.Item;
 
-const ParentForm = ({ formSave, updateItem, id, data }) => {
+const BatchForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);
   const [courses, setCourses] = useState([]);
 
@@ -65,7 +65,7 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
   }, [item, data, id]);
 
   return (
-    <Card title={id ? 'Update parent' : 'Create New Parent'}>
+    <Card title={id ? 'Update Bus Supervisor' : 'Create New Bus Supervisor'}>
       {/* <BaseForm
         fields={[
           {
@@ -123,6 +123,12 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
       <Form style={{ padding: 16 }} layout="horizontal">
         <Row gutter={16}>
           <Col offset={3} md={10}>
+            <Divider
+              orientation="left"
+              style={{ marginBottom: 0, marginTop: 0 }}
+            >
+              Basic information
+            </Divider>
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="First name" style={{ marginBottom: 12 }}>
@@ -147,7 +153,21 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
                 </Item>
               </Col>
             </Row>
-            <Divider orientation="left">Address</Divider>
+            <Row gutter={16}>
+              <Col md={12}>
+                <Item label="Bus number">
+                  <Input />
+                </Item>
+              </Col>
+              <Col md={12}>
+                <Item label="Start working date">
+                  <DatePicker onChange={console.log} />
+                </Item>
+              </Col>
+            </Row>
+            <Divider orientation="left" style={{ marginBottom: 0 }}>
+              Address
+            </Divider>
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="Home number">
@@ -172,16 +192,8 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
                 </Item>
               </Col>
             </Row>
-            <Divider orientation="left">Children</Divider>
-            <Table
-              columns={[
-                { title: 'Name', key: 'name' },
-                { title: 'Class', key: 'name' },
-                { title: 'Bus registered date', key: 'name' },
-              ]}
-            />
           </Col>
-          <Col md={6} style={{ paddingLeft: 24 }}>
+          <Col md={6} style={{ paddingLeft: 24, marginTop: 24 }}>
             <Upload
               name="avatar"
               listType="picture-card"
@@ -213,4 +225,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ParentForm);
+)(BatchForm);

@@ -13,14 +13,22 @@ const Home = lazy(() => import('./views/Dashboard/Home'));
 const Bus = lazy(() => import('./views/Dashboard/Bus'));
 const BusForm = lazy(() => import('./views/Dashboard/Bus/Form'));
 
+const BusRoute = lazy(() => import('./views/Dashboard/BusRoute'));
+const BusRouteForm = lazy(() => import('./views/Dashboard/BusRoute/Form'));
+const BusTrack = lazy(() => import('./views/Dashboard/BusTrack'));
+
 const Driver = lazy(() => import('./views/Dashboard/Driver'));
 const DriverForm = lazy(() => import('./views/Dashboard/Driver/Form'));
 
-const Student = lazy(() => import('./views/Dashboard/Student'));
-const StudentForm = lazy(() => import('./views/Dashboard/Student/Form'));
-
 const Parent = lazy(() => import('./views/Dashboard/Parent'));
 const ParentForm = lazy(() => import('./views/Dashboard/Parent/Form'));
+
+const BusSupervisor = lazy(() => import('./views/Dashboard/BusSupervisor'));
+const BusSupervisorForm = lazy(() =>
+  import('./views/Dashboard/BusSupervisor/Form')
+);
+const Student = lazy(() => import('./views/Dashboard/Student'));
+const StudentForm = lazy(() => import('./views/Dashboard/Student/Form'));
 
 const Supervisor = lazy(() => import('./views/Dashboard/Supervisor'));
 const SupervisorForm = lazy(() => import('./views/Dashboard/Supervisor/Form'));
@@ -45,22 +53,35 @@ function App() {
           <WaitingComponent Component={BusForm} path="bus/new" />
           <WaitingComponent Component={BusForm} path="bus/:id" />
 
+          <WaitingComponent Component={BusRoute} path="bus-route" />
+          <WaitingComponent Component={BusRouteForm} path="bus-route/new" />
+          <WaitingComponent Component={BusRouteForm} path="bus-route/:id" />
+          <WaitingComponent Component={BusTrack} path="bus-track" />
+
           <WaitingComponent Component={Driver} path="driver" />
           <WaitingComponent Component={DriverForm} path="driver/new" />
           <WaitingComponent Component={DriverForm} path="driver/:id" />
 
+          <WaitingComponent Component={Parent} path="parent" />
+          <WaitingComponent Component={ParentForm} path="parent/new" />
+          <WaitingComponent Component={ParentForm} path="parent/:id" />
+
+          <WaitingComponent Component={BusSupervisor} path="bus-supervisor" />
+          <WaitingComponent
+            Component={BusSupervisorForm}
+            path="bus-supervisor/new"
+          />
+          <WaitingComponent
+            Component={BusSupervisorForm}
+            path="bus-supervisor/:id"
+          />
           <WaitingComponent Component={Student} path="student" />
           <WaitingComponent Component={StudentForm} path="student/new" />
           <WaitingComponent Component={StudentForm} path="student/:id" />
 
-          <WaitingComponent Component={Parent} path="parent" />
-          <WaitingComponent Component={ParentForm} path="parent/new" />
-          <WaitingComponent Component={ParentForm} path="parent/:id" />
-          
           <WaitingComponent Component={Supervisor} path="supervisor" />
           <WaitingComponent Component={SupervisorForm} path="supervisor/new" />
           <WaitingComponent Component={SupervisorForm} path="supervisor/:id" />
-
         </WaitingComponent>
         <WaitingComponent Component={Dashboard} path="permission">
           {/* <WaitingComponent Component={User} path="user" />

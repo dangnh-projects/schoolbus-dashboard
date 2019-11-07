@@ -15,6 +15,7 @@ const DataTable = ({
   const getTableData = () => {
     url && getList({ url });
   };
+
   useEffect(() => {
     setPage(1);
     getTableData();
@@ -38,6 +39,7 @@ const DataTable = ({
       columns={columns}
       dataSource={data}
       rowKey="id"
+      bordered
       pagination={{
         total: count,
       }}

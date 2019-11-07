@@ -1,0 +1,62 @@
+$hard-green-color: rgb(7, 85, 30);
+
+.ant-layout-sider-trigger {
+  background: $hard-green-color;
+}
+
+.ant-menu-submenu-selected {
+  color: $hard-green-color;
+}
+
+.ant-menu-item-selected {
+  color: $hard-green-color;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: rgba(61, 130, 71, 0.2);
+
+  &:after {
+    border-right: 3px solid $hard-green-color;
+  }
+}
+
+.ant-menu-submenu-title:hover {
+  color: $hard-green-color;
+}
+
+.ant-menu-item {
+  &:hover {
+    color: $hard-green-color;
+  }
+}
+
+.ant-menu-submenu-inline
+  > .ant-menu-submenu-title:hover
+  .ant-menu-submenu-arrow::before {
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from($hard-green-color),
+    to($hard-green-color)
+  );
+  background: linear-gradient(to right, $hard-green-color, $hard-green-color);
+}
+
+.ant-menu-submenu-inline
+  > .ant-menu-submenu-title:hover
+  .ant-menu-submenu-arrow::after {
+  background: linear-gradient(to right, $hard-green-color, $hard-green-color);
+}
+
+.ant-menu-vertical .ant-menu-submenu-selected {
+  color: $hard-green-color;
+}
+
+// .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+//   background-color: rgb(7, 85, 30);
+// }
+
+// .ant-menu-submenu-title:active {
+//   background-color: rgb(7, 85, 30);
+// }

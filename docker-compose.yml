@@ -1,9 +1,9 @@
 version: "3"
 services:
-  erp_fe:
-    container_name: erp_fe
+  schoolbus-fe:
+    container_name: schoolbus-fe
     restart: always
-    image: erp_fe:0.0.1
+    image: schoolbus-fe:0.0.1
     build:
       context: ./
     ports:

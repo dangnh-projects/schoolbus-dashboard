@@ -1,42 +1,59 @@
 import React, { useState } from 'react';
-import { Card, Button, Popconfirm, Icon, Row } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Table } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
-import DataTable from 'components/DataTable';
-import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
-const ButtonGroup = Button.Group;
-
 export const Bus = props => {
-  console.log('Bus view');
-  const [viewType, setViewType] = useState('LIST');
   const columns = [
     {
-      title: 'Id',
-      dataIndex: 'id',
+      title: 'Route name',
+      render: (_, i) => <a>{i.name}</a>,
     },
     {
-      title: 'BKS',
-      dataIndex: 'name',
+      title: 'Bus number',
+      render: (_, i) => <a>{i.number}</a>,
     },
-    {
-      title: 'Code',
-      dataIndex: 'code',
-    },
+
     {
       title: 'Driver',
-      dataIndex: 'course_name',
+      render: (_, i) => <a>{i.driver}</a>,
+    },
+
+    {
+      title: 'Bus supervisor',
+      render: (_, i) => <a>{i.bus_supervisor}</a>,
     },
     {
-      title: 'Giám sinh',
-      dataIndex: 'start_time',
-      align: 'center',
+      title: 'Pickup',
+      children: [
+        {
+          title: 'Number of stop',
+          dataIndex: 'pickup_stop_no',
+          align: 'center',
+        },
+        {
+          title: 'Number of student',
+          dataIndex: 'pickup_student_no',
+          align: 'center',
+        },
+      ],
     },
+
     {
-      title: 'Status',
-      dataIndex: 'end_time',
-      align: 'center',
+      title: 'Drop off',
+      children: [
+        {
+          title: 'Number of stop',
+          dataIndex: 'dropoff_stop_no',
+          align: 'center',
+        },
+        {
+          title: 'Number of student',
+          dataIndex: 'dropoff_student_no',
+          align: 'center',
+        },
+      ],
     },
     {
       title: 'Action',
@@ -74,35 +91,33 @@ export const Bus = props => {
 
   return (
     <Card
-      title="Manage bus"
-      style={{ width: '100%', background: 'none' }}
-      headStyle={{ backgroundColor: 'white' }}
-      bodyStyle={{
-        padding: viewType === 'CARD' && 0,
-        backgroundColor: viewType === 'LIST' && 'white',
-      }}
+      title="Manage bus route"
       extra={[
-        <ButtonGroup style={{ marginRight: 12 }} key="action-list">
-          <Button
-            type={viewType === 'LIST' ? 'primary' : 'default'}
-            onClick={() => setViewType('LIST')}
-          >
-            <Icon type="unordered-list" />
-          </Button>
-          <Button
-            type={viewType === 'CARD' ? 'primary' : 'default'}
-            onClick={() => setViewType('CARD')}
-          >
-            <Icon type="appstore" />
-          </Button>
-        </ButtonGroup>,
-        <Button key="add-new" onClick={() => navigate('/dashboard/bus/new')}>
+        <Button
+          key="add-new"
+          onClick={() => navigate('/dashboard/bus-route/new')}
+        >
           Add
         </Button>,
       ]}
     >
-      {viewType === 'LIST' && <DataTable columns={columns} url="/r/batches/" />}
-      {viewType === 'CARD' && <GridView url="/r/batches/" />}
+      <Table
+        columns={columns}
+        bordered
+        size="middle"
+        dataSource={[
+          {
+            name: 'District 7 - Hong Bang',
+            number: 'Bus 02',
+            driver: 'Hung Vo',
+            bus_supervisor: 'Thao Hoang',
+            pickup_stop_no: 20,
+            pickup_student_no: 22,
+            dropoff_stop_no: 20,
+            dropoff_student_no: 22,
+          },
+        ]}
+      />
     </Card>
   );
 };

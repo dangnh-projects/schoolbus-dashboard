@@ -49,6 +49,10 @@ $hard-green-color: rgb(7, 85, 30);
   background: linear-gradient(to right, $hard-green-color, $hard-green-color);
 }
 
+.ant-menu-vertical .ant-menu-submenu-selected {
+  color: $hard-green-color;
+}
+
 // .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
 //   background-color: rgb(7, 85, 30);
 // }

@@ -3,7 +3,7 @@ services:
   schoolbus-fe:
     container_name: schoolbus-fe
     restart: always
-    image: schoolbus-fe:0.0.1
+    #image: schoolbus-fe:0.0.1
     build:
       context: ./
     ports:

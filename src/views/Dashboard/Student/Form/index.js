@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal } from 'antd'
 import {
+    Button, 
+    Modal,
     Card,
     notification,
     Form,

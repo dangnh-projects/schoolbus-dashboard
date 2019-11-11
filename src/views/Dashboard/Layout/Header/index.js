@@ -97,7 +97,6 @@ const LayoutHeader = props => {
             title={
               <Fragment>
                 <span style={{ marginRight: 4 }}>Hi,</span>
-                <span>{user.username}</span>
                 <Avatar
                   style={{ marginLeft: 8 }}
                   src="/images/octagon-icon.png"

@@ -56,52 +56,90 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
         fields={[
           {
             type: 'TEXT',
-            label: 'License plate',
-            name: 'name',
+            label: 'License Plate',
+            name: 'licenseplate',
             rules: [
               {
                 required: true,
                 message: 'Name is required',
               },
             ],
-            defaultValue: item ? item.name : '',
+            defaultValue: item ? item.licenseplate : '',
           },
           {
             type: 'TEXT',
-            label: 'Code',
-            name: 'code',
+            label: 'Number',
+            name: 'number',
             rules: [
               {
                 required: true,
-                message: 'Code is required',
+                message: 'Number is required',
               },
             ],
-            defaultValue: item ? item.code : '',
+            defaultValue: item ? item.number : '',
+          },
+          {
+            type: 'SELECT',
+            label: 'Route Name',
+            name: 'routename',
+            options: courses.map(course => ({
+              value: course.id,
+              title: course.name,
+            })),
+            defaultValue: item
+              ? item.routename
+              : courses.length > 0 && courses[0].id,
+          },
+          {
+            type: 'TEXT',
+            label: 'Transportation Brand',
+            name: 'transportationbrand',
+            rules: [
+              {
+                required: false,
+              },
+            ],
+            defaultValue: item ? item.transportationbrand : '',
           },
           {
             type: 'SELECT',
             label: 'Driver',
-            name: 'course_id',
+            name: 'driver',
             options: courses.map(course => ({
               value: course.id,
               title: course.name,
             })),
             defaultValue: item
-              ? item.course_id
+              ? item.driver
               : courses.length > 0 && courses[0].id,
           },
-
           {
             type: 'SELECT',
-            label: 'Quản sinh',
-            name: 'course_id',
+            label: 'Bus Supervisor',
+            name: 'bussupervisor',
             options: courses.map(course => ({
               value: course.id,
               title: course.name,
             })),
             defaultValue: item
-              ? item.course_id
+              ? item.bussupervisor
               : courses.length > 0 && courses[0].id,
+          },
+          {
+            type: 'DATE_PICKER',
+            label: 'Start Working Day',
+            name: 'startworkingday',
+          },
+          {
+            type: 'TEXT',
+            label: 'No of Seat',
+            name: 'noofseat',
+            rules: [
+              {
+                required: false,
+              },
+            ],
+            defaultValue: item ? item.noofseat : '',
           },
         ]}
         handleSubmit={handleSubmit}

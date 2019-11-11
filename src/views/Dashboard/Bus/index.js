@@ -13,62 +13,49 @@ export const Bus = props => {
   const [viewType, setViewType] = useState('LIST');
   const columns = [
     {
-      title: 'Id',
-      dataIndex: 'id',
+      title: 'No',
+      dataIndex: 'no',
+      align: 'center',
     },
     {
-      title: 'BKS',
-      dataIndex: 'name',
+      title: 'License Plate',
+      dataIndex: 'licenseplate',
+      align: 'center',
     },
     {
-      title: 'Code',
-      dataIndex: 'code',
+      title: 'Number',
+      dataIndex: 'number',
+      align: 'center',
+    },
+    {
+      title: 'Route Name',
+      dataIndex: 'routename',
+      align: 'center',
+    },
+    {
+      title: 'Transportation Brand',
+      dataIndex: 'transportationbrand',
+      align: 'center',
     },
     {
       title: 'Driver',
-      dataIndex: 'course_name',
-    },
-    {
-      title: 'Giám sinh',
-      dataIndex: 'start_time',
+      dataIndex: 'driver',
       align: 'center',
     },
     {
-      title: 'Status',
-      dataIndex: 'end_time',
+      title: 'Bus Supervisor',
+      dataIndex: 'bussupervisor',
       align: 'center',
     },
     {
-      title: 'Action',
+      title: 'Start Working Day',
+      dataIndex: 'startworkingday',
       align: 'center',
-      render: (_, record) => {
-        return (
-          <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              style={{ marginRight: 16 }}
-              onClick={() => navigate(`/dashboard/batch/${record.id}`)}
-            >
-              <Icon type="form" />
-            </Button>
-            <Popconfirm
-              placement="top"
-              title={'Delete row?'}
-              onConfirm={() =>
-                props.deleteItem({
-                  url: `/r/batches/${record.id}/`,
-                  afterDelete: () => props.getList({ url: '/r/batches/' }),
-                })
-              }
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="danger">
-                <Icon type="delete" />
-              </Button>
-            </Popconfirm>
-          </Row>
-        );
-      },
+    },
+    {
+      title: 'No of Seat',
+      dataIndex: 'No of Seat',
+      align: 'center',
     },
   ];
 

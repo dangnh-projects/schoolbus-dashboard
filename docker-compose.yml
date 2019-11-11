@@ -1,7 +1,7 @@
 version: "3"
 services:
   schoolbus-fe:
-    container_name: schoolbus-fe
+    container_name: schoolbus-dashboard
     restart: always
     #image: schoolbus-fe:0.0.1
     build:

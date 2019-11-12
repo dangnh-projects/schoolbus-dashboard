@@ -46,7 +46,7 @@ function* login(action) {
       duration: 0.5,
     });
     setTimeout(() => {
-      navigate('/dashboard');
+      navigate('/dashboard/bus-track');
     }, 500);
   } catch (error) {
     if (

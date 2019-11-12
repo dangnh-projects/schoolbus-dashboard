@@ -141,7 +141,7 @@ const SliderMenu = ({ location, permissions, groups }) => {
             onClick={() => navigate('/dashboard/bus-track')}
             // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
-            Routes
+            Bus track
           </Menu.Item>
         </SubMenu>
         {/* <SubMenu

@@ -9,8 +9,6 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 const ButtonGroup = Button.Group;
 
 export const Bus = props => {
-  console.log('Bus view');
-  const [viewType, setViewType] = useState('LIST');
   const columns = [
     {
       title: 'No',
@@ -62,34 +60,14 @@ export const Bus = props => {
   return (
     <Card
       title="Manage bus"
-      style={{ width: '100%', background: 'none' }}
       headStyle={{ backgroundColor: 'white' }}
-      bodyStyle={{
-        padding: viewType === 'CARD' && 0,
-        backgroundColor: viewType === 'LIST' && 'white',
-      }}
       extra={[
-        <ButtonGroup style={{ marginRight: 12 }} key="action-list">
-          <Button
-            type={viewType === 'LIST' ? 'primary' : 'default'}
-            onClick={() => setViewType('LIST')}
-          >
-            <Icon type="unordered-list" />
-          </Button>
-          <Button
-            type={viewType === 'CARD' ? 'primary' : 'default'}
-            onClick={() => setViewType('CARD')}
-          >
-            <Icon type="appstore" />
-          </Button>
-        </ButtonGroup>,
         <Button key="add-new" onClick={() => navigate('/dashboard/bus/new')}>
           Add
         </Button>,
       ]}
     >
-      {viewType === 'LIST' && <DataTable columns={columns} url="/r/batches/" />}
-      {viewType === 'CARD' && <GridView url="/r/batches/" />}
+      <DataTable columns={columns} url="/r/batches/" />
     </Card>
   );
 };

@@ -10,7 +10,7 @@ const initialState = {
 
 const getListSuccess = (state, action) => ({
   ...state,
-  data: action.payload.results,
+  data: action.payload.data,
   count: action.payload.count,
 });
 

@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Table } from 'antd';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
-const DataTable = ({
-  columns = [],
-  data = [],
-  count = 0,
-  getList,
-  url,
-  setPage,
-  loading,
-}) => {
+const DataTable = ({ columns = [], url, setPage }) => {
+  const { data = [], count = 0, loading } = useSelector(
+    state => state.dataTable
+  );
+  const dispatch = useDispatch();
   const getTableData = () => {
-    url && getList({ url });
+    url && dispatch(actionCreator.getList({ url }));
   };
 
   useEffect(() => {
-    setPage(1);
+    dispatch(actionCreator.setPage(1));
     getTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, true);
@@ -44,7 +40,7 @@ const DataTable = ({
         total: count,
       }}
       onChange={pagination => {
-        setPage(pagination.current);
+        dispatch(actionCreator.setPage(pagination.current));
         getTableData();
       }}
       size="small"
@@ -60,15 +56,4 @@ const DataTable = ({
   );
 };
 
-const mapDispatchToProps = {
-  getList: actionCreator.getList,
-  deleteItem: actionCreator.deleteItem,
-  setPage: actionCreator.setPage,
-};
-
-const mapStateToProps = state => state.dataTable;
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DataTable);
+export default DataTable;

@@ -37,7 +37,6 @@ function* login(action) {
       },
       false
     );
-    console.log(body);
     const { user, token } = body.data;
     // localStorage.setItem('utk', token);
     yield put(actionCreator.loginSuccess({ user, token }));

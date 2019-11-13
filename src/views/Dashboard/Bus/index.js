@@ -1,23 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Button, Popconfirm, Icon, Row } from 'antd';
 import { navigate } from '@reach/router';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import DataTable from 'components/DataTable';
-import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
-const ButtonGroup = Button.Group;
-
 export const Bus = props => {
+  const dispatch = useDispatch();
   const columns = [
     {
-      title: 'No',
-      dataIndex: 'no',
-      align: 'center',
-    },
-    {
       title: 'License Plate',
-      dataIndex: 'licenseplate',
+      dataIndex: 'vehicle_registration_plate',
       align: 'center',
     },
     {
@@ -27,33 +20,59 @@ export const Bus = props => {
     },
     {
       title: 'Route Name',
-      dataIndex: 'routename',
+      dataIndex: 'name',
       align: 'center',
     },
     {
       title: 'Transportation Brand',
-      dataIndex: 'transportationbrand',
-      align: 'center',
-    },
-    {
-      title: 'Driver',
-      dataIndex: 'driver',
-      align: 'center',
-    },
-    {
-      title: 'Bus Supervisor',
-      dataIndex: 'bussupervisor',
+      dataIndex: 'brand',
       align: 'center',
     },
     {
       title: 'Start Working Day',
-      dataIndex: 'startworkingday',
+      dataIndex: 'start_working_date',
       align: 'center',
     },
     {
       title: 'No of Seat',
-      dataIndex: 'No of Seat',
+      dataIndex: 'number_of_seat',
       align: 'center',
+    },
+
+    {
+      title: 'Action',
+      align: 'center',
+      render: (_, record) => {
+        return (
+          <Row style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              style={{ marginRight: 16 }}
+              onClick={() => navigate(`/dashboard/bus/${record.id}`)}
+            >
+              <Icon type="form" />
+            </Button>
+            <Popconfirm
+              placement="top"
+              title={'Delete row?'}
+              onConfirm={() =>
+                dispatch(
+                  actionCreator.deleteItem({
+                    url: `/core/api/bus/${record.id}`,
+                    afterDelete: () =>
+                      dispatch(actionCreator.getList({ url: '/core/api/bus' })),
+                  })
+                )
+              }
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="danger">
+                <Icon type="delete" />
+              </Button>
+            </Popconfirm>
+          </Row>
+        );
+      },
     },
   ];
 
@@ -67,19 +86,9 @@ export const Bus = props => {
         </Button>,
       ]}
     >
-      <DataTable columns={columns} url="/r/batches/" />
+      <DataTable columns={columns} url="/core/api/bus" />
     </Card>
   );
 };
 
-const mapDispatchToProps = {
-  getList: actionCreator.getList,
-  deleteItem: actionCreator.deleteItem,
-};
-
-const mapStateToProps = state => state.dataTable;
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Bus);
+export default Bus;

@@ -1,6 +1,7 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { notification } from 'antd';
 import { types, actionCreator } from './dataTable.meta';
+import { navigate } from '@reach/router';
 
 import { buildRequest } from 'api';
 
@@ -11,6 +12,11 @@ function* getList(action) {
   yield put(actionCreator.getListSuccess({ count: 0, results: [] }));
   try {
     const page = yield select(store => store.dataTable.page) || 1;
+    const user = yield select(store => store.user);
+    if (!user || !user.token || !user.token.access) {
+      yield call(navigate, '/login');
+      return;
+    }
 
     const { limit = 10 } = action.payload;
     const params = {
@@ -21,6 +27,9 @@ function* getList(action) {
     const { body } = yield call(apiRequest.request, {
       url: action.payload.url,
       params,
+      headers: {
+        Authorization: `Bearer ${user.token.access}`,
+      },
     });
     yield put(actionCreator.getListSuccess(body));
   } catch (error) {
@@ -38,11 +47,20 @@ function* getList(action) {
 
 function* formSave({ payload }) {
   yield put(actionCreator.setLoading(true));
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
   try {
     yield call(apiRequest.request, {
       url: payload.url,
       data: payload.data,
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${user.token.access}`,
+        // 'Content-Type': 'multipart/form-data',
+      },
     });
 
     if (payload.afterSave) {
@@ -63,11 +81,21 @@ function* formSave({ payload }) {
 
 function* updateItem({ payload }) {
   yield put(actionCreator.setLoading(true));
+
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+
   try {
     yield call(apiRequest.request, {
-      url: payload.alternativeURL || `${payload.url}${payload.data.id}/`,
+      url: payload.alternativeURL || `${payload.url}${payload.data.id}`,
       data: payload.data,
       method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${user.token.access}`,
+      },
     });
 
     if (payload.afterSave) {
@@ -88,10 +116,20 @@ function* updateItem({ payload }) {
 
 function* deleteItem({ payload }) {
   yield put(actionCreator.setLoading(true));
+
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+
   try {
     yield call(apiRequest.request, {
       url: payload.url,
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${user.token.access}`,
+      },
     });
     const page = yield select(store => store.dataTable.page);
     const items = yield select(store => store.dataTable.data);

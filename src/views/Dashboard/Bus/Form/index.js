@@ -9,46 +9,33 @@ import { API } from 'api/metaData';
 
 const BusForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);
-  const [courses, setCourses] = useState([]);
-
-  const getCourses = async () => {
-    const { body } = await API.getCourse();
-    setCourses(body.results);
-  };
 
   const handleSubmit = fields => {
-    if (fields.start_time > fields.end_time) {
-      notification.error({
-        message: 'End time must not be set before start time',
-      });
-      return;
-    }
-
-    fields.start_time = fields.start_time.format('YYYY-MM-DD');
-    fields.end_time = fields.end_time.format('YYYY-MM-DD');
+    fields.start_working_date = fields.start_working_date.format('YYYY-MM-DD');
     if (id) {
       fields.id = id;
       updateItem({
-        url: '/r/batches/',
+        url: '/core/api/bus/',
         data: fields,
-        afterSave: () => navigate('/dashboard/batch'),
+        afterSave: () => navigate('/dashboard/bus'),
       });
     } else {
       formSave({
-        url: '/r/batches/',
+        url: '/core/api/bus',
         data: fields,
-        afterSave: () => navigate('/dashboard/batch'),
+        afterSave: () => navigate('/dashboard/bus'),
       });
     }
   };
   id = parseInt(id);
   useEffect(() => {
-    getCourses();
     if (id) {
       const found = data.find(item => item.id === id);
       setItem(found);
     }
   }, [item, data, id]);
+
+  console.log(item);
 
   return (
     <Card title={id ? 'Update Bus' : 'Create New Bus'}>
@@ -57,18 +44,18 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
           {
             type: 'TEXT',
             label: 'License Plate',
-            name: 'licenseplate',
+            name: 'vehicle_registration_plate',
             rules: [
               {
                 required: true,
                 message: 'Name is required',
               },
             ],
-            defaultValue: item ? item.licenseplate : '',
+            defaultValue: item ? item.vehicle_registration_plate : '',
           },
           {
             type: 'TEXT',
-            label: 'Number',
+            label: 'Bus Number',
             name: 'number',
             rules: [
               {
@@ -79,67 +66,44 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
             defaultValue: item ? item.number : '',
           },
           {
-            type: 'SELECT',
+            type: 'TEXT',
             label: 'Route Name',
-            name: 'routename',
-            options: courses.map(course => ({
-              value: course.id,
-              title: course.name,
-            })),
-            defaultValue: item
-              ? item.routename
-              : courses.length > 0 && courses[0].id,
+            name: 'name',
+            rules: [
+              {
+                required: true,
+                message: 'Number is required',
+              },
+            ],
+            defaultValue: item ? item.number : '',
           },
           {
             type: 'TEXT',
             label: 'Transportation Brand',
-            name: 'transportationbrand',
+            name: 'brand',
             rules: [
               {
                 required: false,
               },
             ],
-            defaultValue: item ? item.transportationbrand : '',
-          },
-          {
-            type: 'SELECT',
-            label: 'Driver',
-            name: 'driver',
-            options: courses.map(course => ({
-              value: course.id,
-              title: course.name,
-            })),
-            defaultValue: item
-              ? item.driver
-              : courses.length > 0 && courses[0].id,
-          },
-          {
-            type: 'SELECT',
-            label: 'Bus Supervisor',
-            name: 'bussupervisor',
-            options: courses.map(course => ({
-              value: course.id,
-              title: course.name,
-            })),
-            defaultValue: item
-              ? item.bussupervisor
-              : courses.length > 0 && courses[0].id,
+            defaultValue: item ? item.brand : '',
           },
           {
             type: 'DATE_PICKER',
             label: 'Start Working Day',
-            name: 'startworkingday',
+            name: 'start_working_date',
+            defaultValue: item ? moment(item.start_working_date) : '',
           },
           {
             type: 'TEXT',
             label: 'No of Seat',
-            name: 'noofseat',
+            name: 'number_of_seat',
             rules: [
               {
                 required: false,
               },
             ],
-            defaultValue: item ? item.noofseat : '',
+            defaultValue: item ? item.number_of_seat : '',
           },
         ]}
         handleSubmit={handleSubmit}

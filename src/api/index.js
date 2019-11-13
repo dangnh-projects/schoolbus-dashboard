@@ -19,10 +19,10 @@ export function buildRequest(url, requestConfig = {}) {
     instance,
     request: async function(payload = {}, authenticated = true) {
       if (!payload.headers) payload.headers = {};
-      if (authenticated)
-        payload.headers['Authorization'] = `Token ${localStorage.getItem(
-          'utk'
-        )}`;
+      // if (authenticated)
+      //   payload.headers['Authorization'] = `Token ${localStorage.getItem(
+      //     'utk'
+      //   )}`;
 
       const res = await instance(payload);
       const { data: body, status: httpStatus } = res;

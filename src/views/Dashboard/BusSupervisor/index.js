@@ -99,7 +99,7 @@ export const Bus = props => {
         </Button>,
       ]}
     >
-      <DataTable columns={columns} url="/r/batches/" />
+      <DataTable columns={columns} url="/core/api/supervisor" />
     </Card>
   );
 };

@@ -7,6 +7,12 @@ import { buildRequest } from 'api';
 
 export const apiRequest = buildRequest('/');
 
+const convertObjectToFormData = obj => {
+  const formData = new FormData();
+  Object.keys(obj).forEach(key => formData.append(key, obj[key]));
+  return formData;
+};
+
 function* getList(action) {
   yield put(actionCreator.setLoading(true));
   yield put(actionCreator.getListSuccess({ count: 0, results: [] }));
@@ -53,9 +59,10 @@ function* formSave({ payload }) {
     return;
   }
   try {
+    const formData = convertObjectToFormData(payload.data);
     yield call(apiRequest.request, {
       url: payload.url,
-      data: payload.data,
+      data: formData,
       method: 'POST',
       headers: {
         Authorization: `Bearer ${user.token.access}`,
@@ -89,9 +96,10 @@ function* updateItem({ payload }) {
   }
 
   try {
+    const formData = convertObjectToFormData(payload.data);
     yield call(apiRequest.request, {
       url: payload.alternativeURL || `${payload.url}${payload.data.id}`,
-      data: payload.data,
+      data: formData,
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${user.token.access}`,

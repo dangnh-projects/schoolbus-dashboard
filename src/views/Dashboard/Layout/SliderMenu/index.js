@@ -39,7 +39,7 @@ const SliderMenu = ({ location, permissions, groups }) => {
       collapsible
       collapsed={collapsed}
       onCollapse={setColapsed}
-      style={{ height: '100vh', backgroundColor: '#07551e' }}
+      style={{ minHeight: '100vh', backgroundColor: '#07551e' }}
       breakpoint="md"
     >
       <div

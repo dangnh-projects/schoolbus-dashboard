@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Popconfirm, Icon, Row } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Tag } from 'antd';
 import { navigate } from '@reach/router';
 import { connect, useDispatch } from 'react-redux';
 import DataTable from 'components/DataTable';
@@ -10,7 +10,8 @@ export const Bus = props => {
   const columns = [
     {
       title: 'License Plate',
-      dataIndex: 'vehicle_registration_plate',
+      // dataIndex: 'vehicle_registration_plate',
+      render: (_, item) => <Tag>{item.vehicle_registration_plate}</Tag>,
       align: 'center',
     },
     {

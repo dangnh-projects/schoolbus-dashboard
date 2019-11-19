@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Button, Popconfirm, Icon, Row } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
-import GridView from 'components/GridView';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 //const ButtonGroup = Button.Group;
 
 export const Driver = props => {
-  const [viewType, setViewType] = useState('LIST');
   const columns = [
     {
       title: 'Id',
@@ -17,20 +15,15 @@ export const Driver = props => {
     },
     {
       title: 'Name',
-      dataIndex: 'name',
+      render: (_, record) => `${record.first_name} ${record.last_name}`,
     },
     {
       title: 'Birthday',
-      dataIndex: 'code',
+      dataIndex: 'birthday',
     },
     {
-      title: 'Driver',
-      dataIndex: 'course_name',
-    },
-    {
-      title: 'Giám sinh',
-      dataIndex: 'start_time',
-      align: 'center',
+      title: 'Start working date',
+      dataIndex: 'start_working_date',
     },
     {
       title: 'Status',
@@ -45,7 +38,7 @@ export const Driver = props => {
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button
               style={{ marginRight: 16 }}
-              onClick={() => navigate(`/dashboard/batch/${record.id}`)}
+              onClick={() => navigate(`/dashboard/driver/${record.id}`)}
             >
               <Icon type="form" />
             </Button>
@@ -54,8 +47,8 @@ export const Driver = props => {
               title={'Delete row?'}
               onConfirm={() =>
                 props.deleteItem({
-                  url: `/r/batches/${record.id}/`,
-                  afterDelete: () => props.getList({ url: '/r/batches/' }),
+                  url: `/core/api/driver/${record.id}`,
+                  afterDelete: () => props.getList({ url: '/core/api/driver' }),
                 })
               }
               okText="Yes"
@@ -74,34 +67,13 @@ export const Driver = props => {
   return (
     <Card
       title="Manage Driver"
-      style={{ width: '100%', background: 'none' }}
-      headStyle={{ backgroundColor: 'white' }}
-      bodyStyle={{
-        padding: viewType === 'CARD' && 0,
-        backgroundColor: viewType === 'LIST' && 'white',
-      }}
       extra={[
-        // <ButtonGroup style={{ marginRight: 12 }} key="action-list">
-        //   <Button
-        //     type={viewType === 'LIST' ? 'primary' : 'default'}
-        //     onClick={() => setViewType('LIST')}
-        //   >
-        //     <Icon type="unordered-list" />
-        //   </Button>
-        //   <Button
-        //     type={viewType === 'CARD' ? 'primary' : 'default'}
-        //     onClick={() => setViewType('CARD')}
-        //   >
-        //     <Icon type="appstore" />
-        //   </Button>
-        // </ButtonGroup>,
         <Button key="add-new" onClick={() => navigate('/dashboard/driver/new')}>
           Add
         </Button>,
       ]}
     >
-      {viewType === 'LIST' && <DataTable columns={columns} url="/r/batches/" />}
-      {viewType === 'CARD' && <GridView url="/r/batches/" />}
+      <DataTable columns={columns} url="/core/api/driver" />
     </Card>
   );
 };

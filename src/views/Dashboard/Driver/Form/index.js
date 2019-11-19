@@ -1,111 +1,254 @@
 import React, { useState, useEffect } from 'react';
-import { Card, notification } from 'antd';
-//import moment from 'moment';
+import {
+  Card,
+  notification,
+  Form,
+  Col,
+  Row,
+  Input,
+  Divider,
+  DatePicker,
+  Upload,
+  Icon,
+  message,
+  Button,
+} from 'antd';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
-import BaseForm from 'components/Form';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
-import { API } from 'api/metaData';
+
+const Item = Form.Item;
 
 const DriverForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);
-  const [courses, setCourses] = useState([]);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [birthday, setBirthday] = useState();
+  const [idNumber, setIdNumber] = useState();
+  const [phone, setPhone] = useState();
+  const [startDate, setStartDate] = useState();
 
-  const getCourses = async () => {
-    const { body } = await API.getCourse();
-    setCourses(body.results);
-  };
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
 
-  const handleSubmit = fields => {
-    if (fields.start_time > fields.end_time) {
+  const [address, setAdress] = useState();
+  const [avatar, setAvatar] = useState();
+  const [imgVal, setImgVal] = useState();
+
+  const handleSubmit = () => {
+    const fields = {
+      first_name: firstName,
+      last_name: lastName,
+      id_number: idNumber,
+      birthday,
+      phone,
+      start_working_date: startDate,
+      address,
+      username,
+      password,
+    };
+    if (avatar) {
+      fields.image = avatar;
+    }
+    if (birthday > moment()) {
       notification.error({
-        message: 'End time must not be set before start time',
+        message: 'Birthday must not be after current date',
       });
       return;
     }
 
-    fields.start_time = fields.start_time.format('YYYY-MM-DD');
-    fields.end_time = fields.end_time.format('YYYY-MM-DD');
+    fields.birthday = fields.birthday.format('YYYY-MM-DD');
+    fields.start_working_date = fields.start_working_date.format('YYYY-MM-DD');
     if (id) {
       fields.id = id;
       updateItem({
-        url: '/r/batches/',
+        url: '/core/api/driver/',
         data: fields,
-        afterSave: () => navigate('/dashboard/batch'),
+        afterSave: () => navigate('/dashboard/driver'),
       });
     } else {
       formSave({
-        url: '/r/batches/',
+        url: '/core/api/driver',
         data: fields,
-        afterSave: () => navigate('/dashboard/batch'),
+        afterSave: () => navigate('/dashboard/driver'),
       });
     }
   };
   id = parseInt(id);
+
   useEffect(() => {
-    getCourses();
     if (id) {
       const found = data.find(item => item.id === id);
       setItem(found);
+      setFirstName(found.first_name);
+      setLastName(found.last_name);
+      setIdNumber(found.id_number);
+      setBirthday(moment(found.birthday));
+      setFirstName(found.first_name);
+      setPhone(found.phone);
+      setStartDate(moment(found.start_working_date));
+      setAdress(found.address);
+      if (found.image) {
+        setImgVal(process.env.REACT_APP_BACKEND_URL + found.image);
+      }
     }
   }, [item, data, id]);
 
+  const beforeUpload = file => {
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+
+    return false;
+  };
+  const handleChange = info => {
+    // Get this url from response in real world.
+
+    const reader = new FileReader();
+    reader.addEventListener('load', e => {
+      if (e && e.target) setImgVal(e.target.result);
+    });
+    reader.readAsDataURL(info.file);
+
+    setAvatar(info.file);
+  };
+
   return (
     <Card title={id ? 'Update Driver' : 'Create New Driver'}>
-      <BaseForm
-        fields={[
-          {
-            type: 'TEXT',
-            label: 'Code',
-            name: 'code',
-            rules: [
-              {
-                required: true,
-                message: 'Code is required',
-              },
-            ],
-            defaultValue: item ? item.name : '',
-          },
-          {
-            type: 'TEXT',
-            label: 'Full name',
-            name: 'fullname',
-            rules: [
-              {
-                required: true,
-                message: 'Name is required',
-              },
-            ],
-            defaultValue: item ? item.code : '',
-          },
-          {
-            type: 'SELECT',
-            label: 'License plate',
-            name: 'license_plate',
-            options: courses.map(course => ({
-              value: course.id,
-              title: course.name,
-            })),
-            defaultValue: item
-              ? item.course_id
-              : courses.length > 0 && courses[0].id,
-          },
+      <Form style={{ padding: 16 }} layout="horizontal">
+        <Row gutter={16}>
+          <Col offset={3} md={10}>
+            <Divider
+              orientation="left"
+              style={{ marginBottom: 0, marginTop: 0 }}
+            >
+              Basic information
+            </Divider>
+            <Row gutter={16}>
+              <Col md={12}>
+                <Item label="First name" style={{ marginBottom: 12 }}>
+                  <Input
+                    onChange={e => setFirstName(e.target.value)}
+                    value={firstName}
+                  />
+                </Item>
+              </Col>
+              <Col md={12}>
+                <Item label="Last name">
+                  <Input
+                    onChange={e => setLastName(e.target.value)}
+                    value={lastName}
+                  />
+                </Item>
+              </Col>
+            </Row>
 
-          {
-            type: 'SELECT',
-            label: 'Permission',
-            name: 'permission',
-            options: courses.map(course => ({
-              value: course.id,
-              title: course.name,
-            })),
-            defaultValue: item
-              ? item.course_id
-              : courses.length > 0 && courses[0].id,
-          },
-        ]}
-        handleSubmit={handleSubmit}
-      />
+            <Row gutter={16}>
+              <Col md={12}>
+                <Item label="ID number">
+                  <Input
+                    value={idNumber}
+                    onChange={e => setIdNumber(e.target.value)}
+                  />
+                </Item>
+              </Col>
+              <Col md={12}>
+                <Item label="Phone">
+                  <Input
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                  />
+                </Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col md={12}>
+                <Item label="Birthday">
+                  <DatePicker
+                    value={birthday}
+                    onChange={val => setBirthday(val)}
+                  />
+                </Item>
+              </Col>
+              <Col md={12}>
+                <Item label="Start working date">
+                  <DatePicker
+                    value={startDate}
+                    onChange={val => setStartDate(val)}
+                  />
+                </Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col md={24}>
+                <Item label="Address">
+                  <Input
+                    value={address}
+                    onChange={e => setAdress(e.target.value)}
+                  />
+                </Item>
+              </Col>
+            </Row>
+            {!item && (
+              <div>
+                <Divider orientation="left" style={{ marginBottom: 0 }}>
+                  Account information
+                </Divider>
+                <Row gutter={16}>
+                  <Col md={12}>
+                    <Item label="Username">
+                      <Input onChange={e => setUsername(e.target.value)} />
+                    </Item>
+                  </Col>
+                  <Col md={12}>
+                    <Item label="Password">
+                      <Input
+                        type="password"
+                        onChange={e => setPassword(e.target.value)}
+                      />
+                    </Item>
+                  </Col>
+                </Row>
+              </div>
+            )}
+          </Col>
+          <Col md={6} style={{ paddingLeft: 24, marginTop: 24 }}>
+            <Upload
+              name="avatar"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              beforeUpload={beforeUpload}
+              onChange={handleChange}
+            >
+              {imgVal ? (
+                <img src={imgVal} alt="avatar" style={{ width: '100%' }} />
+              ) : (
+                <div>
+                  <Icon type={'plus'} />
+                  <div className="ant-upload-text">Avatar</div>
+                </div>
+              )}
+            </Upload>
+          </Col>
+        </Row>
+        <Col
+          span={24}
+          style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}
+        >
+          <Button
+            type="primary"
+            htmlType="button"
+            onClick={handleSubmit}
+            style={{ marginRight: 24 }}
+          >
+            Save
+          </Button>
+          <Button onClick={() => window.history.back()}>Cancel</Button>
+        </Col>
+      </Form>
     </Card>
   );
 };

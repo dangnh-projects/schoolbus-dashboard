@@ -4,7 +4,6 @@ import { Card, notification } from 'antd';
 import BaseForm from 'components/Form';
 import { connect } from 'react-redux';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
-import { API } from 'api/metaData';
 
 const SupervisorForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);

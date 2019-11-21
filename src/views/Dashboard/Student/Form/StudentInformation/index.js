@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, memo } from 'react';
 import {
   Form,
   Col,
@@ -25,7 +25,7 @@ const Information = props => {
   const [name, setName] = useState('');
   const [altName, setAltName] = useState('');
   const [dob, setDob] = useState(moment());
-  const [school, setSchool] = useState('');
+  const [school] = useState('');
   const [classroom, setClassRoom] = useState('');
   const [imgVal, setImgVal] = useState('');
   const [avatar, setAvatar] = useState('');
@@ -43,14 +43,13 @@ const Information = props => {
       // last_name: lastName,
       name,
       alternative_name: altName,
-      dob,
+      dob: dob.format('YYYY-MM-DD'),
       school,
       classroom,
       image: avatar,
       home_number: homeNumber,
       street,
       ward,
-      dispatch,
       province,
     };
 

@@ -1,32 +1,114 @@
-import React from 'react';
-import { Form, Row, Col, Button, Divider, Table } from 'antd';
+import React, { memo } from 'react';
+import {
+  Form,
+  Row,
+  Col,
+  Button,
+  Divider,
+  Table,
+  Input,
+  Descriptions,
+} from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionCreator } from 'store/student/student.meta';
+
+const { Search } = Input;
+
+const IdSearchBar = memo(props => {
+  const dispatch = useDispatch();
+
+  const handleOnSearch = idNumber => {
+    dispatch(actionCreator.searchParent({ idNumber }));
+  };
+
+  return (
+    <Row
+      type="flex"
+      justify="center"
+      align="center"
+      style={{ alignItems: 'center' }}
+    >
+      <Col md={10}>Search by ID number:</Col>
+      <Col md={12}>
+        <Search onSearch={handleOnSearch} />
+      </Col>
+    </Row>
+  );
+});
+
+const ParentData = memo(({ parent, siblings, student }) => {
+  const dispatch = useDispatch();
+  const handleOnNext = () => {
+    const data = { id: student.id, parent_id: parent.info };
+    dispatch(actionCreator.updateStudent({ data }));
+  };
+  return (
+    <Row>
+      <Divider orientation="left">Parent</Divider>
+      <Descriptions>
+        <Descriptions.Item label="Image">
+          <img
+            src={process.env.REACT_APP_BACKEND_URL + parent.avatar}
+            alt="Parent"
+            style={{ width: 150, height: 'auto' }}
+          />
+        </Descriptions.Item>
+        <Descriptions.Item label="Fullname">
+          {parent.first_name} {parent.last_name}
+        </Descriptions.Item>
+        <Descriptions.Item label="ID number">
+          {parent.id_number}
+        </Descriptions.Item>
+      </Descriptions>
+      <Divider orientation="left">Sibling</Divider>
+      <Table
+        columns={[
+          { title: 'Student', key: 'student' },
+          { title: 'Class', key: 'class' },
+        ]}
+        dataSource={siblings || []}
+      />
+      <Row type="flex" align="center" style={{ marginTop: 24 }}>
+        <Button
+          onClick={() => dispatch(actionCreator.changeStage(0))}
+          type="primary"
+        >
+          Back
+        </Button>
+        <Button onClick={handleOnNext} type="primary">
+          Next
+        </Button>
+      </Row>
+    </Row>
+  );
+});
 
 const ParentInfo = props => {
+  const { parent, siblings, student } = useSelector(state => state.student);
   return (
     <div>
       <Form style={{ padding: 16 }} layout="horizontal">
         <Row gutter={16}>
-          <Col>
-            <Row gutter={16}>
-              <Col md={12} style={{ textAlign: 'left' }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  style={{ width: '100px' }}
-                >
-                  Save
-                </Button>
-              </Col>
-            </Row>
-
-            <Divider orientation="left">Sibling</Divider>
-            <Table
-              columns={[
-                { title: 'Student', key: 'student' },
-                { title: 'Class', key: 'class' },
-              ]}
-            />
-          </Col>
+          <Row type="flex" gutter={18} style={{ alignItems: 'center' }}>
+            <Col md={10}>
+              <IdSearchBar />
+            </Col>
+            <Col md={4} style={{ textAlign: 'center' }}>
+              <Divider>or</Divider>
+            </Col>
+            <Col md={10}>
+              <Button>Add new</Button>
+            </Col>
+          </Row>
+          {parent && (
+            <Col>
+              <ParentData
+                parent={parent}
+                siblings={siblings}
+                student={student}
+              />
+            </Col>
+          )}
         </Row>
       </Form>
     </div>

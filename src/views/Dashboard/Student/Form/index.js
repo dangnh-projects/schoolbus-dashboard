@@ -1,235 +1,93 @@
-import React, { useState, useEffect } from 'react'
-import {
-    Button, 
-    Modal,
-    Card,
-    notification,
-    Form,
-    Col,
-    Row,
-    Input,
-    Divider,
-    Table,
-    DatePicker,
-    Upload,
-    Icon,
-  } from 'antd';
-import { connect } from 'react-redux'
-import { actionCreator } from 'store/dataTable/dataTable.meta'
-import { API } from 'api/metaData'
-//import { navigate } from '@reach/router'
+import React, { useState, useEffect, lazy, Suspense, memo } from 'react';
+import { Card, Row, Icon, Steps, Spin } from 'antd';
+import { useSelector } from 'react-redux';
 
-const Item = Form.Item;
+const StudentInfomation = lazy(() => import('./StudentInformation'));
+const ParentInformation = lazy(() => import('./ParentInfo'));
 
-const StudentForm = ({ formSave, updateItem, id, data }) => {
-    const [item, setItem] = useState(null);
-    const [courses, setCourses] = useState([]);
-    const [showParent, setShowParent] = useState(false);
-    const [showBusRoute, setShowBusRoute] = useState(false);
+const { Step } = Steps;
 
-    const getCourses = async () => {
-        const { body } = await API.getCourse();
-        setCourses(body.results);
-    };
+const getStatus = (step, current = 0) => {
+  if (step < current) {
+    return 'done';
+  }
 
-    const handleSubmit = fields => {
-        if (fields.start_time > fields.end_time) {
-          notification.error({
-            message: 'End time must not be set before start time',
-          });
-          return;
-        }
-    
-        fields.start_time = fields.start_time.format('YYYY-MM-DD');
-        fields.end_time = fields.end_time.format('YYYY-MM-DD');
-    };
+  if (step === current) {
+    return 'process';
+  }
 
-    id = parseInt(id);
-    useEffect(() => {
-        //getCourses();
-        if (id) {
-            const found = data.find(item => item.id === id);
-            setItem(found);
-        }
-    }, [item, data, id]);
-    
-    const showModalParent = () => {
-        setShowParent(!showParent);
-    };
-
-    const handleOkParent = () => {
-        setShowParent(!showParent);
-    };
-
-    const handleCancelParent = () => {
-        setShowParent(!showParent);
-    };
-
-    const showModalBusRoute = () => {
-        setShowBusRoute(!showBusRoute);
-    };
-
-    const handleOkBusRoute = () => {
-        setShowBusRoute(!showBusRoute);
-    };
-
-    const handleCancelBusRoute = () => {
-        setShowBusRoute(!showBusRoute);
-    };
-
-    return (
-        <div>
-            <Card title={id ? 'Update Student' : 'Create New Student'}>
-            <Form style={{ padding: 16 }} layout="horizontal">
-                <Row gutter={16}>
-                    <Col offset={3} md={10}>
-                        <Row gutter={16}>
-                        <Col md={12}>
-                            <Item label="First name" style={{ marginBottom: 12 }}>
-                            <Input />
-                            </Item>
-                        </Col>
-                        <Col md={12}>
-                            <Item label="Last name">
-                            <Input />
-                            </Item>
-                        </Col>
-                        </Row>
-                        <Row gutter={16}>
-                        <Col md={12}>
-                            <Item label="Birthday">
-                            <DatePicker onChange={console.log} />
-                            </Item>
-                        </Col>
-                        </Row>
-                        <Row gutter={16}>
-                        <Col md={12}>
-                            <Item label="School">
-                            <Input />
-                            </Item>
-                        </Col>
-                        <Col md={12}>
-                            <Item label="Class">
-                            <Input />
-                            </Item>
-                        </Col>
-                        </Row>
-                        <Row gutter={16}>
-                        <Col md={12}>
-                            <Item label="Bus Registered Date">
-                            <DatePicker onChange={console.log} />
-                            </Item>
-                        </Col>
-                        </Row>
-                        <Divider orientation="left">Address</Divider>
-                        <Row gutter={16}>
-                        <Col md={12}>
-                            <Item label="Home number">
-                            <Input />
-                            </Item>
-                        </Col>
-                        <Col md={12}>
-                            <Item label="Street">
-                            <Input />
-                            </Item>
-                        </Col>
-                        </Row>
-                        <Row gutter={16}>
-                        <Col md={12}>
-                            <Item label="Ward">
-                            <Input />
-                            </Item>
-                        </Col>
-                        <Col md={12}>
-                            <Item label="District">
-                            <Input />
-                            </Item>
-                        </Col>
-                        </Row>
-                        <Row gutter={16}>
-                        <Col md={12}>
-                            <Item label="Province">
-                            <Input />
-                            </Item>
-                        </Col>
-                        </Row>
-                        <div style={{ textAlign: 'right' }}>
-                            <Button key="add-new" onClick={showModalBusRoute}>
-                                Find Bus Route
-                            </Button>
-                        </div>
-                        <Modal
-                            title="Find Bus Route"
-                            visible= {showBusRoute}
-                            onOk={handleOkBusRoute}
-                            onCancel={handleCancelBusRoute}
-                        >
-                            <p>Some contents...</p>
-                            <p>Some contents...</p>
-                            <p>Some contents...</p>
-                        </Modal>
-                        <br />
-                        <Row gutter={16}>
-                        <Col md={12} style={{ textAlign: 'left' }}>
-                            <Button type="primary" htmlType="submit" style={{ width: '100px'}}>
-                                Save
-                            </Button>
-                        </Col>
-                        <Col md={12} style={{ textAlign: 'right' }}>
-                            <Button key="add-new" onClick={showModalParent}>
-                                (+) Add Parent
-                            </Button>
-                        </Col>
-                        </Row>
-                        <Modal
-                            title="Add Parent"
-                            visible= {showParent}
-                            onOk={handleOkParent}
-                            onCancel={handleCancelParent}
-                        >
-                            <p>Some contents...</p>
-                            <p>Some contents...</p>
-                            <p>Some contents...</p>
-                        </Modal>
-                        <Divider orientation="left">Sibling</Divider>
-                        <Table
-                        columns={[
-                            { title: 'Student', key: 'student' },
-                            { title: 'Class', key: 'class' },
-                        ]}
-                        />
-                    </Col>
-                    <Col md={6} style={{ paddingLeft: 24 }}>
-                        <Upload
-                        name="avatar"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        // beforeUpload={beforeUpload}
-                        // onChange={this.handleChange}
-                        >
-                        <div>
-                            <Icon type={'plus'} />
-                            <div className="ant-upload-text">Avatar</div>
-                        </div>
-                        </Upload>
-                    </Col>
-                </Row>
-            </Form>
-            </Card>
-        </div>
-    );
-}
-
-const mapStateToProps = state => state.dataTable;
-
-const mapDispatchToProps = {
-  formSave: actionCreator.formSave,
-  updateItem: actionCreator.updateItem,
+  return 'wait';
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StudentForm);
+const steps = [
+  {
+    icon: 'info-circle',
+    title: 'Student Information',
+  },
+  {
+    icon: 'user',
+    title: 'Parent information',
+  },
+  {
+    icon: 'car',
+    title: 'Bus information',
+  },
+  {
+    icon: 'circle-check',
+    title: 'Done',
+  },
+];
+
+const StudentForm = ({ formSave, updateItem, id, data }) => {
+  const [item, setItem] = useState(null);
+  const { stage = 0 } = useSelector(state => state.student);
+
+  id = parseInt(id);
+  useEffect(() => {
+    //getCourses();
+    if (id) {
+      const found = data.find(item => item.id === id);
+      setItem(found);
+    }
+  }, [item, data, id]);
+
+  return (
+    <div>
+      <Card title={id ? 'Update Student' : 'Create New Student'}>
+        <Steps>
+          {steps.map((step, idx) => (
+            <Step
+              icon={<Icon type={idx < stage ? 'check-circle' : step.icon} />}
+              title={step.title}
+              status={getStatus(idx, stage)}
+            />
+          ))}
+        </Steps>
+        <Row style={{ padding: 12 }}>
+          {stage === 0 && (
+            <Suspense fallback={<Spin />}>
+              <StudentInfomation />
+            </Suspense>
+          )}
+          {stage === 1 && (
+            <Suspense fallback={<Spin />}>
+              <ParentInformation />
+            </Suspense>
+          )}
+          {stage === 2 && (
+            <Suspense fallback={<Spin />}>
+              <StudentInfomation />
+            </Suspense>
+          )}
+          {stage === 3 && (
+            <Suspense fallback={<Spin />}>
+              <StudentInfomation />
+            </Suspense>
+          )}
+        </Row>
+      </Card>
+    </div>
+  );
+};
+
+export default memo(StudentForm);

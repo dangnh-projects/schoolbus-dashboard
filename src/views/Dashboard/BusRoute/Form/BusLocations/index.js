@@ -1,5 +1,5 @@
 import React, { useState, lazy, Suspense } from 'react';
-import { Row, Col, Timeline, Icon, Button, Spin } from 'antd';
+import { Row, Col, Icon, Spin } from 'antd';
 import GoogleMapReact from 'google-map-react';
 import AddLocationModal from './AddLocationModal';
 
@@ -24,56 +24,6 @@ const getRoutes = (map, from, to) => {
     });
   });
 };
-
-const buildDot = type => {
-  if (type === 'start') {
-    return (
-      <Icon type="play-circle" style={{ fontSize: '16px', color: '#52c41a' }} />
-    );
-  }
-
-  if (type === 'end') {
-    return (
-      <Icon
-        type="stop"
-        theme="filled"
-        style={{ fontSize: '16px', color: 'red' }}
-      />
-    );
-  }
-
-  return <Icon type="clock-circle-o" style={{ fontSize: '16px' }} />;
-};
-
-const PositionItem = ({ name, dotType }) => (
-  <Timeline.Item dot={buildDot(dotType)}>
-    <Row type="flex" align="top" justify="space-between">
-      <Col style={{ flex: 1 }}>
-        {name}
-        {dotType !== 'end' && [
-          <br key="break" />,
-          <Row
-            key="time"
-            style={{
-              marginTop: 16,
-              fontSize: 12,
-              fontStyle: 'italic',
-              color: 'rgba(0,0,0,0.45)',
-            }}
-          >
-            20 min
-          </Row>,
-        ]}
-      </Col>
-      <Col>
-        <Icon type="edit" style={{ marginLeft: 12 }} />{' '}
-        <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
-        <Icon type="arrow-up" style={{ marginLeft: 12 }} />
-        <Icon type="arrow-down" style={{ marginLeft: 8 }} />
-      </Col>
-    </Row>
-  </Timeline.Item>
-);
 
 const BusRouteSetting = props => {
   const [points, setPoints] = useState([]);

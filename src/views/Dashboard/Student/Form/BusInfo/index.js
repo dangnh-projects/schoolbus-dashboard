@@ -111,13 +111,30 @@ const BusRouteSection = memo(props => {
           </Col>
           {currentRoute && (
             <Col span={24}>
-              <Descriptions>
+              <Descriptions
+                column={1}
+                title="Route information"
+                bordered
+                size="small"
+              >
+                <Descriptions.Item label="Bus">
+                  {currentRoute &&
+                    currentRoute.bus &&
+                    currentRoute.bus.vehicle_registration_plate}
+                </Descriptions.Item>
                 <Descriptions.Item label="Driver">
                   {currentRoute &&
                     currentRoute.driver &&
                     currentRoute.driver.first_name +
                       ' ' +
                       currentRoute.driver.last_name}
+                </Descriptions.Item>
+                <Descriptions.Item label="Supervisor">
+                  {currentRoute &&
+                    currentRoute.bus_supervisor &&
+                    currentRoute.bus_supervisor.first_name +
+                      ' ' +
+                      currentRoute.bus_supervisor.last_name}
                 </Descriptions.Item>
               </Descriptions>
             </Col>

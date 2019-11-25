@@ -20,14 +20,16 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 const Item = Form.Item;
 
-const DriverForm = ({ formSave, updateItem, id, data }) => {
+const DriverForm = ({ formSave, updateItem, id, data, form }) => {
+  const { getFieldDecorator } = form;
+
   const [item, setItem] = useState(null);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
   const [birthday, setBirthday] = useState();
-  const [idNumber, setIdNumber] = useState();
+  const [id_number, setIdNumber] = useState();
   const [phone, setPhone] = useState();
-  const [startDate, setStartDate] = useState();
+  const [start_working_date, setStartDate] = useState();
 
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -36,14 +38,25 @@ const DriverForm = ({ formSave, updateItem, id, data }) => {
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState();
 
+  const handleSubmitCheck = e => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      if (err) {
+        return;
+      } else {
+        handleSubmit && handleSubmit(fieldsValue);
+      }
+    });
+  };
+
   const handleSubmit = () => {
     const fields = {
-      first_name: firstName,
-      last_name: lastName,
-      id_number: idNumber,
+      first_name,
+      last_name,
+      id_number,
       birthday,
       phone,
-      start_working_date: startDate,
+      start_working_date,
       address,
       username,
       password,
@@ -85,7 +98,6 @@ const DriverForm = ({ formSave, updateItem, id, data }) => {
       setLastName(found.last_name);
       setIdNumber(found.id_number);
       setBirthday(moment(found.birthday));
-      setFirstName(found.first_name);
       setPhone(found.phone);
       setStartDate(moment(found.start_working_date));
       setAdress(found.address);
@@ -129,18 +141,28 @@ const DriverForm = ({ formSave, updateItem, id, data }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="First name" style={{ marginBottom: 12 }}>
-                  <Input
-                    onChange={e => setFirstName(e.target.value)}
-                    value={firstName}
-                  />
+                  {getFieldDecorator('first_name', {
+                    initialValue: first_name,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'First name is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setFirstName(e.target.value)} />)}
                 </Item>
               </Col>
               <Col md={12}>
                 <Item label="Last name">
-                  <Input
-                    onChange={e => setLastName(e.target.value)}
-                    value={lastName}
-                  />
+                  {getFieldDecorator('last_name', {
+                    initialValue: last_name,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Last name is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setLastName(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>
@@ -148,36 +170,56 @@ const DriverForm = ({ formSave, updateItem, id, data }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="ID number">
-                  <Input
-                    value={idNumber}
-                    onChange={e => setIdNumber(e.target.value)}
-                  />
+                  {getFieldDecorator('id_number', {
+                    initialValue: id_number,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'ID number is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setIdNumber(e.target.value)} />)}
                 </Item>
               </Col>
               <Col md={12}>
                 <Item label="Phone">
-                  <Input
-                    value={phone}
-                    onChange={e => setPhone(e.target.value)}
-                  />
+                  {getFieldDecorator('phone', {
+                    initialValue: phone,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Phone is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setPhone(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="Birthday">
-                  <DatePicker
-                    value={birthday}
-                    onChange={val => setBirthday(val)}
-                  />
+                  {getFieldDecorator('birthday', {
+                    initialValue: birthday,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Birthday is required',
+                      },
+                    ],
+                  })(<DatePicker onChange={val => setBirthday(val)} />)}
                 </Item>
               </Col>
               <Col md={12}>
                 <Item label="Start working date">
-                  <DatePicker
-                    value={startDate}
-                    onChange={val => setStartDate(val)}
-                  />
+                  {getFieldDecorator('start_working_date', {
+                    initialValue: start_working_date,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Start working date is required',
+                      },
+                    ],
+                  })(<DatePicker onChange={val => setStartDate(val)} />)}
                 </Item>
               </Col>
             </Row>
@@ -199,15 +241,33 @@ const DriverForm = ({ formSave, updateItem, id, data }) => {
                 <Row gutter={16}>
                   <Col md={12}>
                     <Item label="Username">
-                      <Input onChange={e => setUsername(e.target.value)} />
+                      {getFieldDecorator('username', {
+                        initialValue: username,
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Username is required',
+                          },
+                        ],
+                      })(<Input onChange={e => setUsername(e.target.value)} />)}
                     </Item>
                   </Col>
                   <Col md={12}>
                     <Item label="Password">
-                      <Input
-                        type="password"
-                        onChange={e => setPassword(e.target.value)}
-                      />
+                      {getFieldDecorator('password', {
+                        initialValue: password,
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Password is required',
+                          },
+                        ],
+                      })(
+                        <Input
+                          type="password"
+                          onChange={e => setPassword(e.target.value)}
+                        />
+                      )}
                     </Item>
                   </Col>
                 </Row>
@@ -241,7 +301,7 @@ const DriverForm = ({ formSave, updateItem, id, data }) => {
           <Button
             type="primary"
             htmlType="button"
-            onClick={handleSubmit}
+            onClick={handleSubmitCheck}
             style={{ marginRight: 24 }}
           >
             Save
@@ -260,7 +320,9 @@ const mapDispatchToProps = {
   updateItem: actionCreator.updateItem,
 };
 
+const WrappedNormalDriverForm = Form.create({ name: 'driver' })(DriverForm);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DriverForm);
+)(WrappedNormalDriverForm);

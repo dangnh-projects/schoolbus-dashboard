@@ -21,35 +21,50 @@ import { API } from 'api/metaData';
 
 const Item = Form.Item;
 
-const BatchForm = ({ formSave, updateItem, id, data }) => {
+const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
+  const { getFieldDecorator } = form;
+
   const [item, setItem] = useState(null);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
   const [birthday, setBirthday] = useState();
-  const [phone, setPhone] = useState();
-  const [startDate, setStartDate] = useState();
+  const [phone_number, setPhoneNumber] = useState();
+  const [start_working_date, setStartWorkingDate] = useState();
 
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const [homeNumber, setHomeNumber] = useState();
-  const [homeWard, setHomeWard] = useState();
-  const [homeDistrict, setHomeDistrict] = useState();
-  const [homeProvince, setHomeProvince] = useState();
+  const [home_number, setHomeNumber] = useState();
+  const [street, setStreet] = useState();
+  const [ward, setWard] = useState();
+  const [district, setDistrict] = useState();
+  const [province, setProvince] = useState();
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState();
 
+  const handleSubmitCheck = e => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      if (err) {
+        return;
+      } else {
+        handleSubmit && handleSubmit(fieldsValue);
+      }
+    });
+  };
+
   const handleSubmit = () => {
     const fields = {
-      first_name: firstName,
-      last_name: lastName,
+      first_name,
+      last_name,
       birthday,
-      phone_number: phone,
-      start_working_date: startDate,
-      home_number: homeNumber,
-      ward: homeWard,
-      district: homeDistrict,
-      province: homeProvince,
+      phone_number,
+      start_working_date,
+      home_number,
+      //street: homeStreet,
+      ward,
+      district,
+      province,
       username,
       password,
     };
@@ -80,6 +95,7 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
       });
     }
   };
+
   id = parseInt(id);
 
   useEffect(() => {
@@ -90,12 +106,13 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
       setLastName(found.last_name);
       setBirthday(moment(found.birthday));
       setFirstName(found.first_name);
-      setPhone(found.phone_number);
-      setStartDate(moment(found.start_working_date));
+      setPhoneNumber(found.phone_number);
+      setStartWorkingDate(moment(found.start_working_date));
       setHomeNumber(found.home_number);
-      setHomeWard(found.ward);
-      setHomeDistrict(found.district);
-      setHomeProvince(found.province);
+      //setHomeNumber(found.home_street);
+      setWard(found.ward);
+      setDistrict(found.district);
+      setProvince(found.province);
       setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
     }
   }, [item, data, id]);
@@ -122,7 +139,11 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
 
   return (
     <Card title={id ? 'Update Bus Supervisor' : 'Create New Bus Supervisor'}>
-      <Form style={{ padding: 16 }} layout="horizontal">
+      <Form
+        onSubmit={handleSubmitCheck}
+        style={{ padding: 16 }}
+        layout="horizontal"
+      >
         <Row gutter={16}>
           <Col offset={3} md={10}>
             <Divider
@@ -134,46 +155,71 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="First name" style={{ marginBottom: 12 }}>
-                  <Input
-                    onChange={e => setFirstName(e.target.value)}
-                    value={firstName}
-                  />
+                  {getFieldDecorator('firstname', {
+                    initialValue: first_name,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'First name is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setFirstName(e.target.value)} />)}
                 </Item>
               </Col>
               <Col md={12}>
                 <Item label="Last name">
-                  <Input
-                    onChange={e => setLastName(e.target.value)}
-                    value={lastName}
-                  />
+                  {getFieldDecorator('lastname', {
+                    initialValue: last_name,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Last name is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setLastName(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="Birthday">
-                  <DatePicker
-                    value={birthday}
-                    onChange={val => setBirthday(val)}
-                  />
+                  {getFieldDecorator('email', {
+                    initialValue: birthday,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Birthday is required',
+                      },
+                    ],
+                  })(<DatePicker onChange={val => setBirthday(val)} />)}
                 </Item>
               </Col>
               <Col md={12}>
-                <Item label="Phone">
-                  <Input
-                    value={phone}
-                    onChange={e => setPhone(e.target.value)}
-                  />
+                <Item label="Phone number">
+                  {getFieldDecorator('phone_number', {
+                    initialValue: phone_number,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Phone number is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setPhoneNumber(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="Start working date">
-                  <DatePicker
-                    value={startDate}
-                    onChange={val => setStartDate(val)}
-                  />
+                  {getFieldDecorator('startworkingdate', {
+                    initialValue: start_working_date,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Start working date is required',
+                      },
+                    ],
+                  })(<DatePicker onChange={val => setStartWorkingDate(val)} />)}
                 </Item>
               </Col>
             </Row>
@@ -185,15 +231,33 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
                 <Row gutter={16}>
                   <Col md={12}>
                     <Item label="Username">
-                      <Input onChange={e => setUsername(e.target.value)} />
+                      {getFieldDecorator('username', {
+                        initialValue: username,
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Username is required',
+                          },
+                        ],
+                      })(<Input onChange={e => setUsername(e.target.value)} />)}
                     </Item>
                   </Col>
                   <Col md={12}>
                     <Item label="Password">
-                      <Input
-                        type="password"
-                        onChange={e => setPassword(e.target.value)}
-                      />
+                      {getFieldDecorator('password', {
+                        initialValue: password,
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Password is required',
+                          },
+                        ],
+                      })(
+                        <Input
+                          type="password"
+                          onChange={e => setPassword(e.target.value)}
+                        />
+                      )}
                     </Item>
                   </Col>
                 </Row>
@@ -207,34 +271,41 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
               <Col md={12}>
                 <Item label="Home number">
                   <Input
-                    value={homeNumber}
+                    value={home_number}
                     onChange={e => setHomeNumber(e.target.value)}
                   />
                 </Item>
               </Col>
               <Col md={12}>
-                <Item label="Ward">
+                <Item label="Street">
                   <Input
-                    value={homeWard}
-                    onChange={e => setHomeWard(e.target.value)}
+                    value={street}
+                    onChange={e => setStreet(e.target.value)}
                   />
                 </Item>
               </Col>
             </Row>
             <Row gutter={16}>
               <Col md={12}>
-                <Item label="District">
-                  <Input
-                    value={homeDistrict}
-                    onChange={e => setHomeDistrict(e.target.value)}
-                  />
+                <Item label="Ward">
+                  <Input value={ward} onChange={e => setWard(e.target.value)} />
                 </Item>
               </Col>
               <Col md={12}>
+                <Item label="District">
+                  <Input
+                    value={district}
+                    onChange={e => setDistrict(e.target.value)}
+                  />
+                </Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col md={12}>
                 <Item label="Province">
                   <Input
-                    value={homeProvince}
-                    onChange={e => setHomeProvince(e.target.value)}
+                    value={province}
+                    onChange={e => setProvince(e.target.value)}
                   />
                 </Item>
               </Col>
@@ -267,7 +338,7 @@ const BatchForm = ({ formSave, updateItem, id, data }) => {
           <Button
             type="primary"
             htmlType="button"
-            onClick={handleSubmit}
+            onClick={handleSubmitCheck}
             style={{ marginRight: 24 }}
           >
             Save
@@ -286,7 +357,11 @@ const mapDispatchToProps = {
   updateItem: actionCreator.updateItem,
 };
 
+const WrappedNormalLoginForm = Form.create({ name: 'bus_supervisor' })(
+  BusSupervisorForm
+);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BatchForm);
+)(WrappedNormalLoginForm);

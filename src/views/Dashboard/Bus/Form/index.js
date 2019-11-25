@@ -92,6 +92,12 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
             type: 'DATE_PICKER',
             label: 'Start Working Day',
             name: 'start_working_date',
+            rules: [
+              {
+                required: true,
+                message: 'Start working day is required',
+              },
+            ],
             defaultValue: item ? moment(item.start_working_date) : '',
           },
           {
@@ -100,7 +106,8 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
             name: 'number_of_seat',
             rules: [
               {
-                required: false,
+                required: true,
+                message: 'No of seat is required',
               },
             ],
             defaultValue: item ? item.number_of_seat : '',

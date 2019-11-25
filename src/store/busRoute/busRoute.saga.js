@@ -28,7 +28,7 @@ function* postRoute({ payload }) {
     });
 
     if (body && body.data) {
-      yield put(actionCreator.postRouteLocationSuccess(body.data));
+      yield put(actionCreator.postRouteSuccess(body.data));
     }
     notification.success({
       message: 'Save bus route information successfully',
@@ -61,18 +61,19 @@ function* postRouteLocation({ payload }) {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${user.token.access}`,
-        // 'Content-Type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
       },
     });
 
     if (body && body.data) {
-      yield put(actionCreator.postRouteLocationSuccess(body.data));
+      // yield put(actionCreator.postRouteLocationSuccess(body.data));
+      yield put(actionCreator.getRouteLocations(body.data.bus_route));
     }
+
     notification.success({
       message: 'Save bus route information successfully',
     });
   } catch (error) {
-    console.log(error);
     if (error.response && error.response.status === 403) {
       notification.error({
         message:

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon, Modal, Input, Form } from 'antd';
+import { Icon, Modal, Input, Form, Spin, Button, Row } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
 
@@ -18,6 +18,7 @@ const MapRouteModal = ({
   map,
   handleAddPoint,
 }) => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const busRoute = useSelector(state => state.busRoute);
   const { route, locations = [] } = busRoute;
@@ -31,6 +32,7 @@ const MapRouteModal = ({
   const [point, setPoint] = useState(null);
 
   const getSearchPlace = async () => {
+    setLoading(true);
     const geocoder = new map.maps.Geocoder();
     const places = await new Promise((res, rej) => {
       geocoder.geocode({ address }, function(results, status) {
@@ -77,6 +79,8 @@ const MapRouteModal = ({
         lat: geometry.location.lat(),
       });
     }
+
+    setLoading(false);
   };
 
   const handleOnSubmit = async () => {
@@ -87,13 +91,13 @@ const MapRouteModal = ({
       district: addressObj.district,
       lng: point.lng,
       lat: point.lat,
-      time_to_next_location: timeNextLoc || 0,
+      time_to_next_location: parseInt(timeNextLoc) || 0,
     };
 
-    if (locations.length === 0) {
-      data.route = route.id;
-    } else {
+    data.route = route.id;
+    if (locations.length > 0) {
       data.previous_location = locations[locations.length - 1].id;
+      data.order = locations[locations.length - 1].order + 1;
     }
 
     dispatch(actionCreator.postRouteLocation(data));
@@ -101,26 +105,41 @@ const MapRouteModal = ({
     // await handleAddPoint(
     //   Object.assign({}, point, addressObj, { address, name })
     // );
-    // setShowAddRoutePosition(false);
+    setShowAddRoutePosition(false);
   };
   return (
     <Modal
       visible={visible}
       onCancel={() => setShowAddRoutePosition(false)}
       onOk={handleOnSubmit}
+      footer={null}
     >
-      <Form>
-        <Item label="Address">
-          <Input
-            value={address}
-            onChange={e => setAddress(e.target.value)}
-            suffix={<Icon type="search" onClick={getSearchPlace} />}
-          />
-        </Item>
-        <Item label="Time to next destination (0 if this is final position)">
-          <Input onChange={e => setTimeNextLoc(e.target.value)} />
-        </Item>
-      </Form>
+      <Spin spinning={loading}>
+        <Form>
+          <Item label="Address">
+            <Input
+              value={address}
+              onChange={e => setAddress(e.target.value)}
+              suffix={<Icon type="search" onClick={getSearchPlace} />}
+            />
+          </Item>
+          <Item label="Time to next destination (0 if this is final position)">
+            <Input
+              value={timeNextLoc}
+              onChange={e => setTimeNextLoc(e.target.value)}
+            />
+          </Item>
+          <Row type="flex" justify="center">
+            <Button
+              onClick={handleOnSubmit}
+              htmlType="button"
+              disabled={!addressObj}
+            >
+              Submit
+            </Button>
+          </Row>
+        </Form>
+      </Spin>
     </Modal>
   );
 };

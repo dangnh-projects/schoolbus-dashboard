@@ -1,6 +1,7 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Spin, Card, Row, Tabs, Table, Icon } from 'antd';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 const BusLocations = lazy(() => import('./BusLocations'));
 const RouteForm = lazy(() => import('./RouteForm'));
@@ -8,6 +9,21 @@ const RouteForm = lazy(() => import('./RouteForm'));
 const { TabPane } = Tabs;
 
 const BusRoute = props => {
+  const dispatch = useDispatch();
+  const { data } = useSelector(store => store.dataTable);
+
+  useEffect(() => {
+    if (!props.id) {
+      dispatch(actionCreator.getRouteLocationSuccess([]));
+      dispatch(actionCreator.postRouteSuccess(null));
+      // dispatch(actionCreator.postRouteSuccess())
+    } else {
+      const found = data.find(item => item.id.toString() === props.id);
+      if (found) {
+        dispatch(actionCreator.postRouteSuccess(found));
+      }
+    }
+  });
   return (
     <Card title="Bus route">
       <Row>
@@ -27,7 +43,7 @@ const BusRoute = props => {
           style={{ padding: 18 }}
         >
           <Suspense fallback={<Spin />}>
-            <BusLocations />
+            <BusLocations id={props.id} />
           </Suspense>
         </TabPane>
         <TabPane
@@ -153,4 +169,4 @@ const BusRoute = props => {
   );
 };
 
-export default connect()(BusRoute);
+export default BusRoute;

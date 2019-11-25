@@ -75,7 +75,7 @@ const RouteForm = props => {
   };
   useEffect(() => {
     getMeta();
-    dispatch(actionCreator.getRouteLocations());
+    // dispatch(actionCreator.getRouteLocations());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -165,7 +165,7 @@ const RouteForm = props => {
             {drivers &&
               drivers.map(driver => (
                 <Option key={driver.id} value={driver.id}>
-                  {driver.first_name + ' ' + driver.last_name}
+                  {driver.name}
                 </Option>
               ))}
           </Select>

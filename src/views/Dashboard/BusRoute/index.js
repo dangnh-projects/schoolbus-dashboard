@@ -1,28 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Popconfirm, Icon, Row, Table } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 export const Bus = props => {
+  const { data = [] } = props;
+  console.log(data);
   const columns = [
     {
       title: 'Route name',
-      render: (_, i) => <a>{i.name}</a>,
+      dataIndex: 'name',
     },
     {
       title: 'Bus number',
-      render: (_, i) => <a>{i.number}</a>,
+      render: (_, i) =>
+        // <a href={`/dashboard/bus/${i.bus.id}`}>{i.bus.number}</a>
+        i.bus.number,
     },
 
     {
       title: 'Driver',
-      render: (_, i) => <a>{i.driver}</a>,
+      render: (_, i) =>
+        // <a href={`/dashboard/driver/${i.driver.id}`}>{i.driver.name}</a>
+        i.driver.name,
     },
 
     {
       title: 'Bus supervisor',
-      render: (_, i) => <a>{i.bus_supervisor}</a>,
+      render: (_, i) =>
+        // <a href={`/dashboard/bus-supervisor/${i.bus_supervisor.id}`}>
+        //   {i.bus_supervisor.first_name + ' ' + i.bus_supervisor.last_name}
+        // </a>
+        i.bus_supervisor.first_name + ' ' + i.bus_supervisor.last_name,
     },
     {
       title: 'Pickup',
@@ -63,7 +73,7 @@ export const Bus = props => {
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button
               style={{ marginRight: 16 }}
-              onClick={() => navigate(`/dashboard/batch/${record.id}`)}
+              onClick={() => navigate(`/dashboard/bus-route/${record.id}`)}
             >
               <Icon type="form" />
             </Button>
@@ -89,6 +99,11 @@ export const Bus = props => {
     },
   ];
 
+  useEffect(() => {
+    // get bus route
+    props.getList({ url: '/core/api/bus-route' });
+  }, []);
+
   return (
     <Card
       title="Manage bus route"
@@ -101,23 +116,7 @@ export const Bus = props => {
         </Button>,
       ]}
     >
-      <Table
-        columns={columns}
-        bordered
-        size="middle"
-        dataSource={[
-          {
-            name: 'District 7 - Hong Bang',
-            number: 'Bus 02',
-            driver: 'Hung Vo',
-            bus_supervisor: 'Thao Hoang',
-            pickup_stop_no: 20,
-            pickup_student_no: 22,
-            dropoff_stop_no: 20,
-            dropoff_student_no: 22,
-          },
-        ]}
-      />
+      <Table columns={columns} bordered size="middle" dataSource={data} />
     </Card>
   );
 };

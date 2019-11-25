@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 import {
   Row,
   Col,
@@ -31,39 +31,51 @@ const buildDot = type => {
   return <Icon type="clock-circle-o" style={{ fontSize: '16px' }} />;
 };
 
-const PositionItem = ({ name, dotType, time_to_next_location }) => (
-  <Timeline.Item dot={buildDot(dotType)}>
-    <Row type="flex" align="top" justify="space-between">
-      <Col style={{ flex: 1 }}>
-        {name}
-        {dotType !== 'end' && [
-          <br key="break" />,
-          <Row
-            key="time"
-            style={{
-              marginTop: 16,
-              fontSize: 12,
-              fontStyle: 'italic',
-              color: 'rgba(0,0,0,0.45)',
+const PositionItem = memo(
+  ({ id, route, name, dotType, time_to_next_location, dispatch }) => (
+    <Timeline.Item dot={buildDot(dotType)}>
+      <Row type="flex" align="top" justify="space-between">
+        <Col style={{ flex: 1 }}>
+          {name}
+          {dotType !== 'end' && [
+            <br key="break" />,
+            <Row
+              key="time"
+              style={{
+                marginTop: 16,
+                fontSize: 12,
+                fontStyle: 'italic',
+                color: 'rgba(0,0,0,0.45)',
+              }}
+            >
+              {time_to_next_location} min
+            </Row>,
+          ]}
+        </Col>
+        <Col>
+          <Icon type="edit" style={{ marginLeft: 12 }} />{' '}
+          <Popconfirm
+            title="Delete this location?"
+            onConfirm={() => {
+              console.log(route);
+              if (route) {
+                dispatch(
+                  actionCreator.removeRouteLocation({
+                    location: id,
+                    route,
+                  })
+                );
+              }
             }}
           >
-            {time_to_next_location} min
-          </Row>,
-        ]}
-      </Col>
-      <Col>
-        <Icon type="edit" style={{ marginLeft: 12 }} />{' '}
-        <Popconfirm
-          title="Delete this location?"
-          onConfirm={() => console.log('remove locations')}
-        >
-          <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
-        </Popconfirm>
-        <Icon type="arrow-up" style={{ marginLeft: 12 }} />
-        <Icon type="arrow-down" style={{ marginLeft: 8 }} />
-      </Col>
-    </Row>
-  </Timeline.Item>
+            <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
+          </Popconfirm>
+          <Icon type="arrow-up" style={{ marginLeft: 12 }} />
+          <Icon type="arrow-down" style={{ marginLeft: 8 }} />
+        </Col>
+      </Row>
+    </Timeline.Item>
+  )
 );
 
 const RouteTree = props => {
@@ -72,12 +84,12 @@ const RouteTree = props => {
 
   const { locations = [], route } = useSelector(store => store.busRoute);
 
-  useEffect(() => {
-    if (route) {
-      dispatch(actionCreator.getRouteLocations(route.id));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (route) {
+  //     dispatch(actionCreator.getRouteLocations(route.id));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const st = [...locations];
   const end = st.pop();
@@ -95,11 +107,15 @@ const RouteTree = props => {
           st.length > 0 &&
           st.map((loc, idx) => (
             <PositionItem
+              key={idx}
               name={loc.bus_location && loc.bus_location.address}
               time_to_next_location={
                 loc.bus_location && loc.bus_location.time_to_next_location
               }
               dotType={idx === 0 && 'start'}
+              dispatch={dispatch}
+              id={loc.bus_location && loc.bus_location.id}
+              route={loc.bus_route && loc.bus_route.id}
             />
           ))}
         {end && (

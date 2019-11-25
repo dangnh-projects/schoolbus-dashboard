@@ -18,12 +18,16 @@ const BusRoute = props => {
       dispatch(actionCreator.postRouteSuccess(null));
       // dispatch(actionCreator.postRouteSuccess())
     } else {
+      console.log('found =======');
       const found = data.find(item => item.id.toString() === props.id);
+      console.log(found);
       if (found) {
         dispatch(actionCreator.postRouteSuccess(found));
+        dispatch(actionCreator.getRouteLocations(found.id));
       }
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Card title="Bus route">
       <Row>

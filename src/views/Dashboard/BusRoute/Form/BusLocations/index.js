@@ -1,30 +1,30 @@
 import React, { useState, lazy, Suspense } from 'react';
-import { Row, Col, Icon, Spin } from 'antd';
+import { Row, Col, Spin } from 'antd';
 import GoogleMapReact from 'google-map-react';
 import AddLocationModal from './AddLocationModal';
 import { useSelector } from 'react-redux';
 
 const RouteTree = lazy(() => import('./RouteTree'));
 
-const getRoutes = (map, from, to) => {
-  const directionsService = new map.maps.DirectionsService();
-  var request = {
-    origin: `${from.lat},${from.lng}`,
-    destination: `${to.lat},${to.lng}`,
-    travelMode: 'DRIVING',
-  };
+// const getRoutes = (map, from, to) => {
+//   const directionsService = new map.maps.DirectionsService();
+//   var request = {
+//     origin: `${from.lat},${from.lng}`,
+//     destination: `${to.lat},${to.lng}`,
+//     travelMode: 'DRIVING',
+//   };
 
-  return new Promise((res, rej) => {
-    directionsService.route(request, function(response, status) {
-      if (status === 'OK') {
-        res(response);
-        return;
-      }
+//   return new Promise((res, rej) => {
+//     directionsService.route(request, function(response, status) {
+//       if (status === 'OK') {
+//         res(response);
+//         return;
+//       }
 
-      rej(status);
-    });
-  });
-};
+//       rej(status);
+//     });
+//   });
+// };
 
 const BusRouteSetting = props => {
   const { locations = [] } = useSelector(state => state.busRoute);
@@ -110,23 +110,25 @@ const BusRouteSetting = props => {
             lng: 106.7042577,
           }}
           center={end ? { lat: end.lat, lng: end.lng } : null}
-          defaultZoom={17}
+          defaultZoom={16}
           layerTypes={['TrafficLayer']}
           onClick={handleOnClick}
           onGoogleApiLoaded={handleGoogleMapApi}
+          yesIWantToUseGoogleMapApiInternals={true}
         >
           {locations.map(loc => {
             if (loc && loc.bus_location) {
               return (
-                <img
+                <div
                   lat={loc.bus_location.lat}
                   lng={loc.bus_location.lng}
                   key={loc.id}
-                  src="/images/bus.png"
-                  alt="pin"
-                />
+                >
+                  <img src="/images/bus.png" alt="pin" width={32} />
+                </div>
               );
             }
+            return null;
           })}
           {/* {points.map((point, idx) => (
     <AnyReactComponent lat={point.lat} lng={point.lng} key={idx} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Card, Button, Popconfirm, Icon, Row, Table } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
@@ -6,7 +6,6 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 export const Bus = props => {
   const { data = [] } = props;
-  console.log(data);
   const columns = [
     {
       title: 'Route name',
@@ -16,14 +15,14 @@ export const Bus = props => {
       title: 'Bus number',
       render: (_, i) =>
         // <a href={`/dashboard/bus/${i.bus.id}`}>{i.bus.number}</a>
-        i.bus.number,
+        i.bus && i.bus.number,
     },
 
     {
       title: 'Driver',
       render: (_, i) =>
         // <a href={`/dashboard/driver/${i.driver.id}`}>{i.driver.name}</a>
-        i.driver.name,
+        i.driver && i.driver.name,
     },
 
     {
@@ -32,39 +31,44 @@ export const Bus = props => {
         // <a href={`/dashboard/bus-supervisor/${i.bus_supervisor.id}`}>
         //   {i.bus_supervisor.first_name + ' ' + i.bus_supervisor.last_name}
         // </a>
+        i.bus_supervisor &&
         i.bus_supervisor.first_name + ' ' + i.bus_supervisor.last_name,
     },
     {
-      title: 'Pickup',
-      children: [
-        {
-          title: 'Number of stop',
-          dataIndex: 'pickup_stop_no',
-          align: 'center',
-        },
-        {
-          title: 'Number of student',
-          dataIndex: 'pickup_student_no',
-          align: 'center',
-        },
-      ],
+      title: 'Route type',
+      render: (_, i) => (i.type === 'P' ? 'Pickup' : 'Drop-off'),
     },
+    // {
+    //   title: 'Pickup',
+    //   children: [
+    //     {
+    //       title: 'Number of stop',
+    //       dataIndex: 'pickup_stop_no',
+    //       align: 'center',
+    //     },
+    //     {
+    //       title: 'Number of student',
+    //       dataIndex: 'pickup_student_no',
+    //       align: 'center',
+    //     },
+    //   ],
+    // },
 
-    {
-      title: 'Drop off',
-      children: [
-        {
-          title: 'Number of stop',
-          dataIndex: 'dropoff_stop_no',
-          align: 'center',
-        },
-        {
-          title: 'Number of student',
-          dataIndex: 'dropoff_student_no',
-          align: 'center',
-        },
-      ],
-    },
+    // {
+    //   title: 'Drop off',
+    //   children: [
+    //     {
+    //       title: 'Number of stop',
+    //       dataIndex: 'dropoff_stop_no',
+    //       align: 'center',
+    //     },
+    //     {
+    //       title: 'Number of student',
+    //       dataIndex: 'dropoff_student_no',
+    //       align: 'center',
+    //     },
+    //   ],
+    // },
     {
       title: 'Action',
       align: 'center',
@@ -82,8 +86,9 @@ export const Bus = props => {
               title={'Delete row?'}
               onConfirm={() =>
                 props.deleteItem({
-                  url: `/r/batches/${record.id}/`,
-                  afterDelete: () => props.getList({ url: '/r/batches/' }),
+                  url: `/core/api/bus-route/${record.id}`,
+                  afterDelete: () =>
+                    props.getList({ url: '/core/api/bus-route' }),
                 })
               }
               okText="Yes"
@@ -102,6 +107,7 @@ export const Bus = props => {
   useEffect(() => {
     // get bus route
     props.getList({ url: '/core/api/bus-route' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

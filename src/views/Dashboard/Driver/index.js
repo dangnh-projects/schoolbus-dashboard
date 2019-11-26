@@ -15,7 +15,7 @@ export const Driver = props => {
     },
     {
       title: 'Name',
-      render: (_, record) => `${record.first_name} ${record.last_name}`,
+      dataIndex: 'name',
     },
     {
       title: 'Birthday',

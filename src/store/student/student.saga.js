@@ -1,4 +1,11 @@
-import { takeLatest, select, put, call, all } from 'redux-saga/effects';
+import {
+  takeLatest,
+  select,
+  put,
+  call,
+  all,
+  takeEvery,
+} from 'redux-saga/effects';
 import { types, actionCreator } from './student.meta';
 import { convertObjectToFormData } from 'utils/requestUtil';
 import { notification } from 'antd';
@@ -134,11 +141,45 @@ function* updateStudent({ payload }) {
   yield put(actionCreator.setLoading(false));
 }
 
+function* addToLocation({ payload }) {
+  yield put(actionCreator.setLoading(true));
+
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+
+  try {
+    const formData = convertObjectToFormData(payload);
+    yield call(postStudentRequest.request, {
+      url: '/bus-route',
+      method: 'POST',
+      data: formData,
+      headers: {
+        Authorization: `Bearer ${user.token.access}`,
+      },
+    });
+
+    notification.success({ message: 'Student added successfully' });
+    // yield put(actionCreator.changeStage(3));
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 403) {
+      notification.error({
+        message:
+          "You don't have permission to perform this action, please try login again or contact administrator for more information",
+      });
+      return;
+    }
+    notification.error({ message: 'Request error' });
+  }
+  yield put(actionCreator.setLoading(false));
+}
+
 export default function* busRouteSaga() {
   yield takeLatest(types.POST_STUDENT, postStudent);
   yield takeLatest(types.SEARCH_PARENT, searchParent);
   yield takeLatest(types.UPDATE_STUDENT, updateStudent);
-  // yield takeLatest(TYPES.POST_ROUTE, postRoute);
-  // yield takeLatest(TYPES.POST_ROUTE_LOCATION, postRouteLocation);
-  // yield takeLatest(TYPES.GET_ROUTE_LOCATION, getRouteLocation);
+  yield takeEvery(types.ADD_STUDENT_TO_BUS_LOCATION, addToLocation);
 }

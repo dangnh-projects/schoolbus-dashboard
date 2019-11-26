@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
+import ParentForm from './ParentForm';
 
 const { Search } = Input;
 
@@ -98,10 +99,10 @@ const ParentInfo = props => {
               <Divider>or</Divider>
             </Col>
             <Col md={10}>
-              <Button>Add new</Button>
+              <Button onClick={() => setShowForm(true)}>Add new</Button>
             </Col>
           </Row>
-          {parent && (
+          {parent && !showForm && (
             <Col>
               <ParentData
                 parent={parent}
@@ -110,6 +111,7 @@ const ParentInfo = props => {
               />
             </Col>
           )}
+          {showForm && <ParentForm />}
         </Row>
       </Form>
     </div>

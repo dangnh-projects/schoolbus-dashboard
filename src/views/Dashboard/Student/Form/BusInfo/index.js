@@ -3,7 +3,6 @@ import {
   Form,
   Row,
   Col,
-  Divider,
   Button,
   notification,
   Card,
@@ -70,6 +69,7 @@ const BusRouteSection = memo(props => {
 
   useEffect(() => {
     getRoutes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -146,7 +146,6 @@ const BusRouteSection = memo(props => {
 });
 
 const BusInfo = props => {
-  // const []
   const dispatch = useDispatch();
   const { student } = useSelector(store => store.student);
   const [pickUpRoute, setPickupRoute] = useState();
@@ -156,28 +155,25 @@ const BusInfo = props => {
   const [dropOffLocation, setDropOffLocation] = useState();
 
   const handleOnSave = () => {
-    const data = {
-      pickUpRoute,
-      pickUpLocation,
-      dropOffRoute,
-      dropOffLocation,
-    };
+    if (pickUpLocation && pickUpLocation) {
+      dispatch(
+        actionCreator.addToLocation({
+          student: student.id,
+          route: pickUpRoute,
+          location: pickUpLocation,
+        })
+      );
+    }
 
-    dispatch(
-      actionCreator.addToLocation({
-        student: student.id,
-        route: pickUpRoute,
-        location: pickUpLocation,
-      })
-    );
-
-    dispatch(
-      actionCreator.addToLocation({
-        student: student.id,
-        route: dropOffRoute,
-        location: dropOffLocation,
-      })
-    );
+    if (dropOffRoute && dropOffLocation) {
+      dispatch(
+        actionCreator.addToLocation({
+          student: student.id,
+          route: dropOffRoute,
+          location: dropOffLocation,
+        })
+      );
+    }
   };
 
   return (

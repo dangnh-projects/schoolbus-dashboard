@@ -53,7 +53,7 @@ const StudentForm = ({ formSave, updateItem, id, data }) => {
     if (id) {
       const found = data.find(item => item.id === id);
       setItem(found);
-      dispatch(actionCreator.postParentSuccess(found));
+      // dispatch(actionCreator.postParentSuccess(found));
     } else {
       dispatch(actionCreator.postStudentSuccess(null));
     }

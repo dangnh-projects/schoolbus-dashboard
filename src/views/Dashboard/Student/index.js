@@ -57,9 +57,11 @@ export const Student = props => {
       render: (_, record) => {
         const { bus_routes } = record;
         if (bus_routes && bus_routes.length > 0) {
-          const found = bus_routes.find(item => item.route_type === 'P');
+          const found = bus_routes.find(
+            item => item.route && item.route.route_type === 'P'
+          );
           if (found) {
-            return found.name;
+            return found.route.name;
           }
         }
         return '';
@@ -70,9 +72,11 @@ export const Student = props => {
       render: (_, record) => {
         const { bus_routes } = record;
         if (bus_routes && bus_routes.length > 0) {
-          const found = bus_routes.find(item => item.route_type === 'D');
+          const found = bus_routes.find(
+            item => item.route && item.route.route_type === 'D'
+          );
           if (found) {
-            return found.name;
+            return found.route.name;
           }
         }
         return '';

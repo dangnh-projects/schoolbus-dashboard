@@ -10,14 +10,16 @@ export const Parent = props => {
   const columns = [
     {
       title: 'Avatar',
-      // dataIndex: 'avatar',
-      render: (_, record) => (
-        <img
-          alt="avatar"
-          style={{ width: '80px', height: '80px', textAlign: 'center' }}
-          src={process.env.REACT_APP_BACKEND_URL + record.avatar}
-        />
-      ),
+      render: (_, record) =>
+        record.avatar ? (
+          <img
+            alt="avatar"
+            style={{ width: '80px', height: '80px', textAlign: 'center' }}
+            src={process.env.REACT_APP_BACKEND_URL + record.avatar}
+          />
+        ) : (
+          ''
+        ),
     },
     {
       title: 'First name',
@@ -37,7 +39,9 @@ export const Parent = props => {
     },
     {
       title: 'Children',
-      dataIndex: 'children',
+      render: (_, record) =>
+        record.children &&
+        record.children.map(child => <Tag>{child.name}</Tag>),
     },
     {
       title: 'Status',

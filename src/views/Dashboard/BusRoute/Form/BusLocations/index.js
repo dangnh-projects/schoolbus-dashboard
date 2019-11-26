@@ -87,9 +87,7 @@ const BusRouteSetting = props => {
     locations[locations.length - 1].bus_location;
   return (
     <Row gutter={16} type="flex">
-      {modalVisible && (
-        <AddLocationModal map={map} handleAddPoint={handleAddPoint} />
-      )}
+      {modalVisible && <AddLocationModal map={map} />}
       <Col span={8}>
         <Suspense fallback={<Spin />}>
           <RouteTree setShowAddRoutePosition={setShowAddRoutePosition} />

@@ -70,7 +70,6 @@ const PositionItem = memo(
           <Popconfirm
             title="Delete this location?"
             onConfirm={() => {
-              console.log(route);
               if (route) {
                 dispatch(
                   actionCreator.removeRouteLocation({
@@ -83,8 +82,8 @@ const PositionItem = memo(
           >
             <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
           </Popconfirm>
-          <Icon type="arrow-up" style={{ marginLeft: 12 }} />
-          <Icon type="arrow-down" style={{ marginLeft: 8 }} />
+          {/* <Icon type="arrow-up" style={{ marginLeft: 12 }} />
+          <Icon type="arrow-down" style={{ marginLeft: 8 }} /> */}
         </Col>
       </Row>
     </Timeline.Item>
@@ -149,10 +148,28 @@ const RouteTree = props => {
                 {end.bus_location && end.bus_location.address}
               </Col>
               <Col>
-                <Icon type="edit" style={{ marginLeft: 12 }} />{' '}
-                <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
-                <Icon type="arrow-up" style={{ marginLeft: 12 }} />
-                <Icon type="arrow-down" style={{ marginLeft: 8 }} />
+                <Icon
+                  type="edit"
+                  style={{ marginLeft: 12 }}
+                  onClick={() => setCurrentLocation(end)}
+                />
+                <Popconfirm
+                  title="Delete this location?"
+                  onConfirm={() => {
+                    if (end.bus_route) {
+                      dispatch(
+                        actionCreator.removeRouteLocation({
+                          location: end.id,
+                          route: end.bus_route.id,
+                        })
+                      );
+                    }
+                  }}
+                >
+                  <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
+                </Popconfirm>
+                {/* <Icon type="arrow-up" style={{ marginLeft: 12 }} />
+                <Icon type="arrow-down" style={{ marginLeft: 8 }} /> */}
               </Col>
             </Row>
           </Timeline.Item>
@@ -168,8 +185,10 @@ const RouteTree = props => {
               });
               return;
             }
-            props.setShowAddRoutePosition &&
-              props.setShowAddRoutePosition(true);
+            // props.setShowAddRoutePosition &&
+            //   props.setShowAddRoutePosition(true);
+
+            dispatch(actionCreator.setCurrentLocation(null));
           }}
         >
           Add new position

@@ -85,11 +85,13 @@ const RouteForm = props => {
       setDriver(route.driver.id);
       setBus(route.bus.id);
       setStartTime(
-        route.start_time ? moment(route.start_time, 'HH:mm') : moment()
+        route.start_time ? moment(route.start_time, 'HH:mm:ss') : moment()
       );
 
-      setEndTime(route.end_time ? moment(route.end_time, 'HH:mm') : moment());
-      setType(route.type);
+      setEndTime(
+        route.end_time ? moment(route.end_time, 'HH:mm:ss') : moment()
+      );
+      setType(route.route_type);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
@@ -156,6 +158,7 @@ const RouteForm = props => {
 
         <FormItem label="Start time">
           <TimePicker
+            value={startTime}
             format="HH:mm"
             minuteStep={5}
             onChange={val => setStartTime(val)}
@@ -163,6 +166,7 @@ const RouteForm = props => {
         </FormItem>
         <FormItem label="End time">
           <TimePicker
+            value={endTime}
             format="HH:mm"
             minuteStep={5}
             onChange={val => setEndTime(val)}

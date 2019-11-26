@@ -79,6 +79,7 @@ function* postRouteLocation({ payload }) {
     notification.success({
       message: 'Save bus route information successfully',
     });
+    yield put(actionCreator.toggleModal());
   } catch (error) {
     if (error.response && error.response.status === 403) {
       notification.error({
@@ -195,7 +196,7 @@ function* updateRoute({ payload }) {
   yield put(actionCreator.setLoading(false));
 }
 
-function* updateLocation(payload) {
+function* updateLocation({ payload }) {
   yield put(actionCreator.setLoading(true));
   const user = yield select(store => store.user);
   if (!user || !user.token || !user.token.access) {
@@ -204,7 +205,7 @@ function* updateLocation(payload) {
   }
   try {
     const formData = convertObjectToFormData(payload);
-    const { body } = yield call(postRouteLocation.request, {
+    const { body } = yield call(postRouteLocationRequest.request, {
       url: '/' + payload.id,
       data: formData,
       method: 'PUT',
@@ -220,6 +221,8 @@ function* updateLocation(payload) {
     notification.success({
       message: 'Save bus location information successfully',
     });
+    yield put(actionCreator.toggleModal());
+    yield put(actionCreator.getRouteLocations(payload.route));
   } catch (error) {
     console.log(error);
     if (error.response && error.response.status === 403) {

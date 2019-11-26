@@ -31,7 +31,10 @@ const setCurrentLocation = (state, action) => ({
 
 const toggleModal = (state, action) => ({
   ...state,
-  modalVisible: !!(!state.modalVisible || action.payload),
+  modalVisible:
+    action.payload && !!action.payload.force
+      ? !!action.payload.val
+      : !state.modalVisible,
 });
 
 export default handleActions(

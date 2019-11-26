@@ -17,6 +17,7 @@ export const postRouteLocationRequest = buildRequest('/core/api/bus-location');
 export const getRouteLocationRequest = buildRequest('/core/api/bus-route');
 
 export const postStudentRequest = buildRequest('/core/api/student');
+export const postParentRequest = buildRequest('/core/api/parent');
 export const searchParentRequest = buildRequest(
   '/core/api/parent/by-id-number'
 );
@@ -127,7 +128,10 @@ function* updateStudent({ payload }) {
     });
 
     notification.success({ message: 'Student updated successfully' });
-    yield put(actionCreator.changeStage(2));
+    if (payload.afterSuccess) {
+      yield call(payload.afterSuccess);
+    }
+    // yield put(actionCreator.changeStage(2));
   } catch (error) {
     if (error.response && error.response.status === 403) {
       notification.error({
@@ -163,7 +167,54 @@ function* addToLocation({ payload }) {
 
     notification.success({ message: 'Student added successfully' });
     yield put(actionCreator.changeStage(0));
-    yield put(navigate, '/dashboard/student');
+    yield call(navigate, '/dashboard/student');
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 403) {
+      notification.error({
+        message:
+          "You don't have permission to perform this action, please try login again or contact administrator for more information",
+      });
+      return;
+    }
+    notification.error({ message: 'Request error' });
+  }
+  yield put(actionCreator.setLoading(false));
+}
+
+function* postParent({ payload }) {
+  const { student, data } = payload;
+  yield put(actionCreator.setLoading(true));
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+  try {
+    const formData = convertObjectToFormData(data);
+    const { body } = yield call(postParentRequest.request, {
+      data: formData,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${user.token.access}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (body && body.data) {
+      yield put(
+        actionCreator.updateStudent({
+          data: {
+            id: student.id,
+            parent_id: body.data.info,
+          },
+        })
+      );
+    }
+
+    notification.success({
+      message: 'Save parent information successfully',
+    });
   } catch (error) {
     console.log(error);
     if (error.response && error.response.status === 403) {
@@ -180,6 +231,7 @@ function* addToLocation({ payload }) {
 
 export default function* busRouteSaga() {
   yield takeLatest(types.POST_STUDENT, postStudent);
+  yield takeLatest(types.POST_PARENT, postParent);
   yield takeLatest(types.SEARCH_PARENT, searchParent);
   yield takeLatest(types.UPDATE_STUDENT, updateStudent);
   yield takeEvery(types.ADD_STUDENT_TO_BUS_LOCATION, addToLocation);

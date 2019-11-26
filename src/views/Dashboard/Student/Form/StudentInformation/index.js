@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import {
   Form,
   Col,
@@ -11,7 +11,7 @@ import {
   message,
   Button,
 } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
 
 import moment from 'moment';
@@ -21,6 +21,7 @@ const Item = Form.Item;
 
 const Information = props => {
   const dispatch = useDispatch();
+  const { student } = useSelector(store => store.student);
 
   const [name, setName] = useState('');
   const [altName, setAltName] = useState('');
@@ -49,12 +50,37 @@ const Information = props => {
       image: avatar,
       home_number: homeNumber,
       street,
+      district,
       ward,
       province,
     };
 
-    dispatch(actionCreator.postStudent(data));
+    if (student) {
+      data.id = student.id;
+      dispatch(
+        actionCreator.updateStudent({
+          data,
+          afterSuccess: () => dispatch(actionCreator.changeStage(1)),
+        })
+      );
+    } else {
+      dispatch(actionCreator.postStudent(data));
+    }
   };
+
+  useEffect(() => {
+    if (student) {
+      setName(student.name);
+      setAltName(student.alternative_name);
+      setDob(moment(student.dob, 'YYYY-MM-DD'));
+      setClassRoom(student.classroom);
+      setHomeNumber(student.home_number);
+      setStreet(student.street);
+      setDistrict(student.district);
+      setWard(student.ward);
+      setProvince(student.province);
+    }
+  }, [student]);
 
   const beforeUpload = file => {
     const isLt2M = file.size / 1024 / 1024 < 2;
@@ -161,6 +187,14 @@ const Information = props => {
           <Button type="primary" onClick={handleSubmit}>
             Save
           </Button>
+          {student && (
+            <Button
+              onClick={() => dispatch(actionCreator.changeStage(1))}
+              style={{ marginLeft: 12 }}
+            >
+              Next
+            </Button>
+          )}
         </Row>
       </Col>
       <Col md={6}>

@@ -3,7 +3,6 @@ import {
   Form,
   Row,
   Col,
-  Divider,
   Button,
   notification,
   Card,
@@ -33,9 +32,30 @@ const getMetaData = async (url, token) => {
 
 const Item = Form.Item;
 
+const RouteInfo = memo(({ currentRoute }) => (
+  <Col span={24}>
+    <Descriptions column={1} title="Route information" bordered size="small">
+      <Descriptions.Item label="Bus">
+        {currentRoute &&
+          currentRoute.bus &&
+          currentRoute.bus.vehicle_registration_plate}
+      </Descriptions.Item>
+      <Descriptions.Item label="Driver">
+        {currentRoute && currentRoute.driver && currentRoute.driver.name}
+      </Descriptions.Item>
+      <Descriptions.Item label="Supervisor">
+        {currentRoute &&
+          currentRoute.bus_supervisor &&
+          currentRoute.bus_supervisor.first_name +
+            ' ' +
+            currentRoute.bus_supervisor.last_name}
+      </Descriptions.Item>
+    </Descriptions>
+  </Col>
+));
+
 const BusRouteSection = memo(props => {
   const { token } = useSelector(store => store.user);
-  const [enable, setEnable] = useState(false);
   const [currentRoute, setCurrentRoute] = useState(false);
 
   const { access } = token;
@@ -70,19 +90,29 @@ const BusRouteSection = memo(props => {
 
   useEffect(() => {
     getRoutes();
-  }, []);
+    if (props.route) {
+      getLocations(props.route);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.route]);
 
   return (
     <Card
       title={props.name}
       bodyStyle={{ padding: 0 }}
-      extra={<Checkbox onChange={e => setEnable(e.target.checked)} />}
+      extra={
+        <Checkbox
+          onChange={e => props.toggleEnable(e.target.checked)}
+          checked={props.enable}
+        />
+      }
     >
-      {enable && (
+      {props.enable && (
         <Row gutter={16} style={{ padding: 24, transition: '0.5s' }}>
           <Col span={24}>
             <Item label="Bus route">
               <Select
+                defaultValue={props.route}
                 onChange={val => {
                   props.setRoute && props.setRoute(val);
                   getLocations(val);
@@ -100,6 +130,7 @@ const BusRouteSection = memo(props => {
           <Col span={24}>
             <Item label="Locations">
               <Select
+                defaultValue={props.location}
                 disabled={locations && locations.length === 0}
                 onChange={val => props.setLocation && props.setLocation(val)}
               >
@@ -111,34 +142,7 @@ const BusRouteSection = memo(props => {
               </Select>
             </Item>
           </Col>
-          {currentRoute && (
-            <Col span={24}>
-              <Descriptions
-                column={1}
-                title="Route information"
-                bordered
-                size="small"
-              >
-                <Descriptions.Item label="Bus">
-                  {currentRoute &&
-                    currentRoute.bus &&
-                    currentRoute.bus.vehicle_registration_plate}
-                </Descriptions.Item>
-                <Descriptions.Item label="Driver">
-                  {currentRoute &&
-                    currentRoute.driver &&
-                    currentRoute.driver.name}
-                </Descriptions.Item>
-                <Descriptions.Item label="Supervisor">
-                  {currentRoute &&
-                    currentRoute.bus_supervisor &&
-                    currentRoute.bus_supervisor.first_name +
-                      ' ' +
-                      currentRoute.bus_supervisor.last_name}
-                </Descriptions.Item>
-              </Descriptions>
-            </Col>
-          )}
+          {currentRoute && <RouteInfo currentRoute={currentRoute} />}
         </Row>
       )}
     </Card>
@@ -146,39 +150,60 @@ const BusRouteSection = memo(props => {
 });
 
 const BusInfo = props => {
-  // const []
   const dispatch = useDispatch();
   const { student } = useSelector(store => store.student);
+
+  const [pickupEnabled, setPickupEnabled] = useState(false);
   const [pickUpRoute, setPickupRoute] = useState();
   const [pickUpLocation, setPickupLocation] = useState();
 
+  const [dropOffEnable, setDropOffEnable] = useState(false);
   const [dropOffRoute, setDropOffRoute] = useState();
   const [dropOffLocation, setDropOffLocation] = useState();
 
   const handleOnSave = () => {
-    const data = {
-      pickUpRoute,
-      pickUpLocation,
-      dropOffRoute,
-      dropOffLocation,
-    };
+    if (pickUpLocation && pickUpLocation) {
+      dispatch(
+        actionCreator.addToLocation({
+          student: student.id,
+          route: pickUpRoute,
+          location: pickUpLocation,
+        })
+      );
+    }
 
-    dispatch(
-      actionCreator.addToLocation({
-        student: student.id,
-        route: pickUpRoute,
-        location: pickUpLocation,
-      })
-    );
-
-    dispatch(
-      actionCreator.addToLocation({
-        student: student.id,
-        route: dropOffRoute,
-        location: dropOffLocation,
-      })
-    );
+    if (dropOffRoute && dropOffLocation) {
+      dispatch(
+        actionCreator.addToLocation({
+          student: student.id,
+          route: dropOffRoute,
+          location: dropOffLocation,
+        })
+      );
+    }
   };
+
+  useEffect(() => {
+    if (student && student.bus_routes && student.bus_routes.length > 0) {
+      const pickup = student.bus_routes.find(
+        bus_route => bus_route.route && bus_route.route.route_type === 'P'
+      );
+
+      if (pickup) {
+        setPickupEnabled(true);
+        setPickupRoute(pickup.route.id);
+        setPickupLocation(pickup.location.id);
+      }
+      const dropOff = student.bus_routes.find(
+        bus_route => bus_route.route && bus_route.route.route_type === 'D'
+      );
+      if (dropOff) {
+        setDropOffEnable(true);
+        setDropOffRoute(dropOff.route.id);
+        setDropOffLocation(dropOff.location.id);
+      }
+    }
+  }, []);
 
   return (
     <div>
@@ -188,16 +213,24 @@ const BusInfo = props => {
             <BusRouteSection
               name="Pick up"
               type="P"
+              route={pickUpRoute}
+              location={pickUpLocation}
               setRoute={setPickupRoute}
               setLocation={setPickupLocation}
+              enable={pickupEnabled}
+              toggleEnable={setPickupEnabled}
             />
           </Col>
           <Col md={12}>
             <BusRouteSection
               name="Drop off"
               type="D"
+              route={dropOffRoute}
+              location={dropOffLocation}
               setRoute={setDropOffRoute}
               setLocation={setDropOffLocation}
+              enable={dropOffEnable}
+              toggleEnable={setDropOffEnable}
             />
           </Col>
           <Col

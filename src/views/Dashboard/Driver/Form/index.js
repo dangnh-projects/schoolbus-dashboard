@@ -24,16 +24,11 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
   const { getFieldDecorator } = form;
 
   const [item, setItem] = useState(null);
-  const [first_name, setFirstName] = useState('');
-  const [last_name, setLastName] = useState('');
+  const [name, setName] = useState('');
   const [birthday, setBirthday] = useState();
   const [id_number, setIdNumber] = useState();
   const [phone, setPhone] = useState();
   const [start_working_date, setStartDate] = useState();
-
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
-
   const [address, setAdress] = useState();
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState();
@@ -51,15 +46,12 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
 
   const handleSubmit = () => {
     const fields = {
-      first_name,
-      last_name,
+      name,
       id_number,
       birthday,
       phone,
       start_working_date,
       address,
-      username,
-      password,
     };
     if (avatar) {
       fields.image = avatar;
@@ -94,8 +86,7 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
     if (id) {
       const found = data.find(item => item.id === id);
       setItem(found);
-      setFirstName(found.first_name);
-      setLastName(found.last_name);
+      setName(found.name);
       setIdNumber(found.id_number);
       setBirthday(moment(found.birthday));
       setPhone(found.phone);
@@ -139,30 +130,17 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
               Basic information
             </Divider>
             <Row gutter={16}>
-              <Col md={12}>
+              <Col md={24}>
                 <Item label="First name" style={{ marginBottom: 12 }}>
                   {getFieldDecorator('first_name', {
-                    initialValue: first_name,
+                    initialValue: name,
                     rules: [
                       {
                         required: true,
                         message: 'First name is required',
                       },
                     ],
-                  })(<Input onChange={e => setFirstName(e.target.value)} />)}
-                </Item>
-              </Col>
-              <Col md={12}>
-                <Item label="Last name">
-                  {getFieldDecorator('last_name', {
-                    initialValue: last_name,
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Last name is required',
-                      },
-                    ],
-                  })(<Input onChange={e => setLastName(e.target.value)} />)}
+                  })(<Input onChange={e => setName(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>
@@ -233,46 +211,6 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
                 </Item>
               </Col>
             </Row>
-            {!item && (
-              <div>
-                <Divider orientation="left" style={{ marginBottom: 0 }}>
-                  Account information
-                </Divider>
-                <Row gutter={16}>
-                  <Col md={12}>
-                    <Item label="Username">
-                      {getFieldDecorator('username', {
-                        initialValue: username,
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Username is required',
-                          },
-                        ],
-                      })(<Input onChange={e => setUsername(e.target.value)} />)}
-                    </Item>
-                  </Col>
-                  <Col md={12}>
-                    <Item label="Password">
-                      {getFieldDecorator('password', {
-                        initialValue: password,
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Password is required',
-                          },
-                        ],
-                      })(
-                        <Input
-                          type="password"
-                          onChange={e => setPassword(e.target.value)}
-                        />
-                      )}
-                    </Item>
-                  </Col>
-                </Row>
-              </div>
-            )}
           </Col>
           <Col md={6} style={{ paddingLeft: 24, marginTop: 24 }}>
             <Upload

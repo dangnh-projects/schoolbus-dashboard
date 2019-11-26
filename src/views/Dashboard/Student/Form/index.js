@@ -1,6 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense, memo } from 'react';
 import { Card, Row, Icon, Steps, Spin } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionCreator } from 'store/student/student.meta';
 
 const StudentInfomation = lazy(() => import('./StudentInformation'));
 const ParentInformation = lazy(() => import('./ParentInfo'));
@@ -42,13 +43,19 @@ const steps = [
 const StudentForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);
   const { stage = 0 } = useSelector(state => state.student);
+  const dispatch = useDispatch();
 
   id = parseInt(id);
   useEffect(() => {
     //getCourses();
+    dispatch(actionCreator.changeStage(0));
+    dispatch(actionCreator.postParentSuccess(null));
     if (id) {
       const found = data.find(item => item.id === id);
       setItem(found);
+      dispatch(actionCreator.postParentSuccess(found));
+    } else {
+      dispatch(actionCreator.postStudentSuccess(null));
     }
   }, [item, data, id]);
 

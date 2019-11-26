@@ -15,6 +15,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { navigate } from '@reach/router';
 import axios from 'axios';
 
+import { actionCreator } from 'store/student/student.meta';
+
 const getMetaData = async (url, token) => {
   try {
     const response = await axios.get(process.env.REACT_APP_BACKEND_URL + url, {
@@ -103,7 +105,7 @@ const BusRouteSection = memo(props => {
               >
                 {locations.map(location => (
                   <Select.Option value={location.id} key={location.id}>
-                    {location.address}
+                    {location.bus_location && location.bus_location.address}
                   </Select.Option>
                 ))}
               </Select>
@@ -125,9 +127,7 @@ const BusRouteSection = memo(props => {
                 <Descriptions.Item label="Driver">
                   {currentRoute &&
                     currentRoute.driver &&
-                    currentRoute.driver.first_name +
-                      ' ' +
-                      currentRoute.driver.last_name}
+                    currentRoute.driver.name}
                 </Descriptions.Item>
                 <Descriptions.Item label="Supervisor">
                   {currentRoute &&
@@ -147,6 +147,8 @@ const BusRouteSection = memo(props => {
 
 const BusInfo = props => {
   // const []
+  const dispatch = useDispatch();
+  const { student } = useSelector(store => store.student);
   const [pickUpRoute, setPickupRoute] = useState();
   const [pickUpLocation, setPickupLocation] = useState();
 
@@ -160,7 +162,22 @@ const BusInfo = props => {
       dropOffRoute,
       dropOffLocation,
     };
-    console.log(data);
+
+    dispatch(
+      actionCreator.addToLocation({
+        student: student.id,
+        route: pickUpRoute,
+        location: pickUpLocation,
+      })
+    );
+
+    dispatch(
+      actionCreator.addToLocation({
+        student: student.id,
+        route: dropOffRoute,
+        location: dropOffLocation,
+      })
+    );
   };
 
   return (

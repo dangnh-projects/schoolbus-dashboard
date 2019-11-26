@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import {
   Form,
   Row,
@@ -84,6 +84,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
 });
 
 const ParentInfo = props => {
+  const [showForm, setShowForm] = useState(false);
   const { parent, siblings, student } = useSelector(state => state.student);
   return (
     <div>

@@ -1,7 +1,9 @@
 FROM mhart/alpine-node:11 AS builder
 WORKDIR /app
+COPY package*.json ./
+RUN yarn
 COPY . .
-RUN yarn && yarn build
+RUN yarn build
 
 FROM nginx
 COPY nginx.conf /etc/nginx/nginx.conf

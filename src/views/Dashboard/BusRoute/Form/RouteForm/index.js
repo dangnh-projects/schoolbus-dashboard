@@ -10,7 +10,7 @@ import {
   notification,
 } from 'antd';
 import moment from 'moment';
-import { useSelector, useDispatch, connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { navigate } from '@reach/router';
 import axios from 'axios';
 import { actionCreator } from 'store/busRoute/busRoute.meta';

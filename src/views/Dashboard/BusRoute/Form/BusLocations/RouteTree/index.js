@@ -32,11 +32,20 @@ const buildDot = type => {
 };
 
 const PositionItem = memo(
-  ({ id, route, name, dotType, time_to_next_location, dispatch }) => (
+  ({
+    id,
+    route,
+    name,
+    dotType,
+    time_to_next_location,
+    dispatch,
+    setCurrentLocation,
+    loc,
+  }) => (
     <Timeline.Item dot={buildDot(dotType)}>
       <Row type="flex" align="top" justify="space-between">
         <Col style={{ flex: 1 }}>
-          {name}
+          {loc.bus_location && loc.bus_location.address}
           {dotType !== 'end' && [
             <br key="break" />,
             <Row
@@ -53,7 +62,11 @@ const PositionItem = memo(
           ]}
         </Col>
         <Col>
-          <Icon type="edit" style={{ marginLeft: 12 }} />{' '}
+          <Icon
+            type="edit"
+            style={{ marginLeft: 12 }}
+            onClick={() => setCurrentLocation(loc)}
+          />
           <Popconfirm
             title="Delete this location?"
             onConfirm={() => {
@@ -81,6 +94,8 @@ const PositionItem = memo(
 const RouteTree = props => {
   console.log('Route tree render');
   const dispatch = useDispatch();
+  const setCurrentLocation = loc =>
+    dispatch(actionCreator.setCurrentLocation(loc));
 
   const { locations = [], route } = useSelector(store => store.busRoute);
 
@@ -107,6 +122,7 @@ const RouteTree = props => {
           st.length > 0 &&
           st.map((loc, idx) => (
             <PositionItem
+              loc={loc}
               key={idx}
               name={loc.bus_location && loc.bus_location.address}
               time_to_next_location={
@@ -116,6 +132,7 @@ const RouteTree = props => {
               dispatch={dispatch}
               id={loc.bus_location && loc.bus_location.id}
               route={loc.bus_route && loc.bus_route.id}
+              setCurrentLocation={setCurrentLocation}
             />
           ))}
         {end && (

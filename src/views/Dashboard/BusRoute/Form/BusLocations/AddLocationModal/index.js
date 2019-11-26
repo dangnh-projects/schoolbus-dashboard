@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Icon, Modal, Input, Form, Spin, Button, Row } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
@@ -13,15 +13,15 @@ const ADDRESS_TYPES = {
 };
 
 const MapRouteModal = ({
-  visible = false,
   setShowAddRoutePosition,
   map,
   handleAddPoint,
+  visible,
 }) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const busRoute = useSelector(state => state.busRoute);
-  const { route, locations = [] } = busRoute;
+  const { route, locations = [], currentLocation, modalVisible } = busRoute;
   // if (!route) {
   //   setShowAddRoutePosition(false);
   //   hand
@@ -83,6 +83,12 @@ const MapRouteModal = ({
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (currentLocation) {
+      setAddress(currentLocation.address);
+    }
+  }, [currentLocation]);
+
   const handleOnSubmit = async () => {
     const data = {
       address,
@@ -109,8 +115,8 @@ const MapRouteModal = ({
   };
   return (
     <Modal
-      visible={visible}
-      onCancel={() => setShowAddRoutePosition(false)}
+      visible={modalVisible}
+      onCancel={() => dispatch(actionCreator.toggleModal(false))}
       onOk={handleOnSubmit}
       footer={null}
     >

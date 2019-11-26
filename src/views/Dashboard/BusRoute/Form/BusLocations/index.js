@@ -27,7 +27,7 @@ const RouteTree = lazy(() => import('./RouteTree'));
 // };
 
 const BusRouteSetting = props => {
-  const { locations = [] } = useSelector(state => state.busRoute);
+  const { locations = [], modalVisible } = useSelector(state => state.busRoute);
   const [map, setMap] = useState(null);
   // const [points, setPoints] = useState([]);
 
@@ -87,13 +87,8 @@ const BusRouteSetting = props => {
     locations[locations.length - 1].bus_location;
   return (
     <Row gutter={16} type="flex">
-      {showAddRoutePosition && (
-        <AddLocationModal
-          visible={showAddRoutePosition}
-          setShowAddRoutePosition={setShowAddRoutePosition}
-          map={map}
-          handleAddPoint={handleAddPoint}
-        />
+      {modalVisible && (
+        <AddLocationModal map={map} handleAddPoint={handleAddPoint} />
       )}
       <Col span={8}>
         <Suspense fallback={<Spin />}>

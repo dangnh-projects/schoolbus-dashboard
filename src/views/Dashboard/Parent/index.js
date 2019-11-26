@@ -13,6 +13,7 @@ export const Parent = props => {
       // dataIndex: 'avatar',
       render: (_, record) => (
         <img
+          alt="avatar"
           style={{ width: '80px', height: '80px', textAlign: 'center' }}
           src={process.env.REACT_APP_BACKEND_URL + record.avatar}
         />

@@ -1,35 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Button, Popconfirm, Icon, Row } from 'antd';
 import { navigate } from '@reach/router';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 export const Student = props => {
+  const dispatch = useDispatch();
+
   const columns = [
-    {
-      title: 'No',
-      dataIndex: 'no',
-    },
     {
       title: 'Picture',
       dataIndex: 'picture',
     },
     {
-      title: 'First Name',
-      dataIndex: 'firstname',
+      title: 'Name',
+      dataIndex: 'name',
     },
     {
-      title: 'Last Name',
-      dataIndex: 'lastname',
+      title: 'Alternative Name',
+      dataIndex: 'alternative_name',
     },
     {
       title: 'Birthday',
-      dataIndex: 'birthday',
+      dataIndex: 'dob',
     },
     {
       title: 'Class',
-      dataIndex: 'class',
+      dataIndex: 'classroom',
     },
     {
       title: 'District',
@@ -41,23 +39,82 @@ export const Student = props => {
     },
     {
       title: 'Parent',
-      dataIndex: 'parent',
+      render: (_, record) =>
+        record.parent
+          ? `${record.parent.first_name} ${record.parent.last_name}`
+          : '',
     },
-    {
-      title: 'Registered Date',
-      dataIndex: 'registereddate',
-    },
-    {
-      title: 'Bus No',
-      dataIndex: 'busno',
-    },
+    // {
+    //   title: 'Registered Date',
+    //   dataIndex: 'registereddate',
+    // },
+    // {
+    //   title: 'Bus No',
+    //   dataIndex: 'busno',
+    // },
     {
       title: 'To School',
-      dataIndex: 'to school',
+      render: (_, record) => {
+        const { bus_routes } = record;
+        if (bus_routes && bus_routes.length > 0) {
+          const found = bus_routes.find(item => item.route_type === 'P');
+          if (found) {
+            return found.name;
+          }
+        }
+        return '';
+      },
     },
     {
       title: 'To Home',
-      dataIndex: 'tohome',
+      render: (_, record) => {
+        const { bus_routes } = record;
+        if (bus_routes && bus_routes.length > 0) {
+          const found = bus_routes.find(item => item.route_type === 'D');
+          if (found) {
+            return found.name;
+          }
+        }
+        return '';
+      },
+    },
+
+    {
+      title: 'Action',
+      align: 'center',
+      render: (_, record) => {
+        return (
+          <Row style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              style={{ marginRight: 16 }}
+              onClick={() => navigate(`/dashboard/student/${record.id}`)}
+            >
+              <Icon type="form" />
+            </Button>
+            <Popconfirm
+              placement="top"
+              title={'Delete row?'}
+              onConfirm={() =>
+                dispatch(
+                  actionCreator.deleteItem({
+                    url: `/core/api/student/${record.id}`,
+                    afterDelete: () =>
+                      dispatch(
+                        actionCreator.getList({ url: '/core/api/student' })
+                      ),
+                  })
+                )
+              }
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="danger">
+                <Icon type="delete" />
+              </Button>
+            </Popconfirm>
+          </Row>
+        );
+      },
     },
   ];
 
@@ -73,19 +130,9 @@ export const Student = props => {
         </Button>,
       ]}
     >
-      <DataTable columns={columns} />
+      <DataTable columns={columns} url="/core/api/student" />
     </Card>
   );
 };
 
-const mapDispatchToProps = {
-  getList: actionCreator.getList,
-  deleteItem: actionCreator.deleteItem,
-};
-
-const mapStateToProps = state => state.dataTable;
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Student);
+export default Student;

@@ -19,7 +19,11 @@ const IdSearchBar = memo(props => {
   const dispatch = useDispatch();
 
   const handleOnSearch = idNumber => {
-    dispatch(actionCreator.searchParent({ idNumber }));
+    dispatch(
+      actionCreator.searchParent({
+        idNumber,
+      })
+    );
   };
 
   return (
@@ -41,7 +45,12 @@ const ParentData = memo(({ parent, siblings, student }) => {
   const dispatch = useDispatch();
   const handleOnNext = () => {
     const data = { id: student.id, parent_id: parent.info };
-    dispatch(actionCreator.updateStudent({ data }));
+    dispatch(
+      actionCreator.updateStudent({
+        data,
+        afterSuccess: () => dispatch(actionCreator.changeStage(2)),
+      })
+    );
   };
   return (
     <Row>
@@ -76,7 +85,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
         >
           Back
         </Button>
-        <Button onClick={handleOnNext} type="primary">
+        <Button onClick={handleOnNext} style={{ marginLeft: 12 }}>
           Next
         </Button>
       </Row>

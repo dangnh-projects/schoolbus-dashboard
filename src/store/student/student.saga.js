@@ -128,7 +128,10 @@ function* updateStudent({ payload }) {
     });
 
     notification.success({ message: 'Student updated successfully' });
-    yield put(actionCreator.changeStage(2));
+    if (payload.afterSuccess) {
+      yield call(payload.afterSuccess);
+    }
+    // yield put(actionCreator.changeStage(2));
   } catch (error) {
     if (error.response && error.response.status === 403) {
       notification.error({

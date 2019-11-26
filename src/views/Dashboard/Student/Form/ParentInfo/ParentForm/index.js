@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Card,
   notification,
   Form,
   Col,
@@ -15,7 +14,6 @@ import {
 } from 'antd';
 import moment from 'moment';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { actionCreator as studentActionCreator } from 'store/student/student.meta';
 //import { API } from 'api/metaData';
@@ -24,7 +22,7 @@ const Item = Form.Item;
 
 const ParentForm = ({ formSave, updateItem, id, data }) => {
   const dispatch = useDispatch();
-  const { student, parent } = useSelector(store => store.student);
+  const { student } = useSelector(store => store.student);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');

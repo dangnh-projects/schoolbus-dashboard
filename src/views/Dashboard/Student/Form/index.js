@@ -40,23 +40,32 @@ const steps = [
   },
 ];
 
-const StudentForm = ({ formSave, updateItem, id, data }) => {
+const StudentForm = ({ formSave, updateItem, id }) => {
   const [item, setItem] = useState(null);
   const { stage = 0 } = useSelector(state => state.student);
+  const { data = [] } = useSelector(state => state.dataTable);
   const dispatch = useDispatch();
 
   id = parseInt(id);
   useEffect(() => {
     //getCourses();
     dispatch(actionCreator.changeStage(0));
-    dispatch(actionCreator.postParentSuccess(null));
+
     if (id) {
       const found = data.find(item => item.id === id);
-      setItem(found);
-      // dispatch(actionCreator.postParentSuccess(found));
+      if (found) {
+        setItem(found);
+        dispatch(actionCreator.postStudentSuccess(found));
+        dispatch(actionCreator.postParentSuccess(found.parent));
+      } else {
+        dispatch(actionCreator.postParentSuccess(null));
+        dispatch(actionCreator.postStudentSuccess(null));
+      }
     } else {
+      dispatch(actionCreator.postParentSuccess(null));
       dispatch(actionCreator.postStudentSuccess(null));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, data, id]);
 
   return (

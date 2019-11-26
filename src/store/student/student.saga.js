@@ -162,7 +162,8 @@ function* addToLocation({ payload }) {
     });
 
     notification.success({ message: 'Student added successfully' });
-    // yield put(actionCreator.changeStage(3));
+    yield put(actionCreator.changeStage(0));
+    yield put(navigate, '/dashboard/student');
   } catch (error) {
     console.log(error);
     if (error.response && error.response.status === 403) {

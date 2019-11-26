@@ -13,14 +13,14 @@ const BusRoute = props => {
   const { data } = useSelector(store => store.dataTable);
 
   useEffect(() => {
+    dispatch(actionCreator.toggleModal({ val: false, force: true }));
     if (!props.id) {
       dispatch(actionCreator.getRouteLocationSuccess([]));
       dispatch(actionCreator.postRouteSuccess(null));
       // dispatch(actionCreator.postRouteSuccess())
     } else {
-      console.log('found =======');
       const found = data.find(item => item.id.toString() === props.id);
-      console.log(found);
+
       if (found) {
         dispatch(actionCreator.postRouteSuccess(found));
         dispatch(actionCreator.getRouteLocations(found.id));

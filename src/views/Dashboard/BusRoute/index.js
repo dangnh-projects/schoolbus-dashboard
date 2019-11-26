@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import moment from 'moment';
 import { Card, Button, Popconfirm, Icon, Row, Table } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
@@ -38,37 +39,16 @@ export const Bus = props => {
       title: 'Route type',
       render: (_, i) => (i.type === 'P' ? 'Pickup' : 'Drop-off'),
     },
-    // {
-    //   title: 'Pickup',
-    //   children: [
-    //     {
-    //       title: 'Number of stop',
-    //       dataIndex: 'pickup_stop_no',
-    //       align: 'center',
-    //     },
-    //     {
-    //       title: 'Number of student',
-    //       dataIndex: 'pickup_student_no',
-    //       align: 'center',
-    //     },
-    //   ],
-    // },
 
-    // {
-    //   title: 'Drop off',
-    //   children: [
-    //     {
-    //       title: 'Number of stop',
-    //       dataIndex: 'dropoff_stop_no',
-    //       align: 'center',
-    //     },
-    //     {
-    //       title: 'Number of student',
-    //       dataIndex: 'dropoff_student_no',
-    //       align: 'center',
-    //     },
-    //   ],
-    // },
+    {
+      title: 'Start time',
+      render: (_, i) => moment(i.start_time, 'HH:mm:ss').format('HH:mm'),
+    },
+
+    {
+      title: 'End time',
+      render: (_, i) => moment(i.end_time, 'HH:mm:ss').format('HH:mm'),
+    },
     {
       title: 'Action',
       align: 'center',

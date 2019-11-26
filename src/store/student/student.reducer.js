@@ -4,6 +4,7 @@ import { types } from './student.meta';
 const initialState = {
   student: null,
   parent: null,
+  siblings: [],
   busRoutes: [],
   busStops: [],
   loading: false,
@@ -15,7 +16,7 @@ const postStudentSuccess = (state, action) => ({
   student: action.payload,
 });
 
-const getParentSuccess = (state, action) => ({
+const searchParentSuccess = (state, action) => ({
   ...state,
   parent: action.payload,
 });
@@ -35,13 +36,25 @@ const changeLoading = (state, action) => ({
   loading: !!action.payload,
 });
 
+const setSiblings = (state, action) => ({
+  ...state,
+  siblings: action.payload,
+});
+
+const updateStudentSuccess = (state, action) => ({
+  ...state,
+  student: action.payload,
+});
+
 export default handleActions(
   {
     [types.SET_LOADING]: changeLoading,
     [types.CHANGE_STAGE]: changeStage,
     [types.POST_STUDENT_SUCCESS]: postStudentSuccess,
-    [types.GET_PARENT_SUCCESS]: getParentSuccess,
+    [types.SEARCH_PARENT_SUCCESS]: searchParentSuccess,
+    [types.SET_SIBLING]: setSiblings,
     [types.POST_PARENT_SUCCESS]: postParentSuccess,
+    [types.UPDATE_STUDENT_SUCCESS]: updateStudentSuccess,
   },
   initialState
 );

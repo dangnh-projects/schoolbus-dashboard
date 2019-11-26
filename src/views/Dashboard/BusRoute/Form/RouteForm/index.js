@@ -9,7 +9,8 @@ import {
   Button,
   notification,
 } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import axios from 'axios';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
@@ -44,6 +45,7 @@ const getMetaData = async (url, token) => {
 const RouteForm = props => {
   const dispatch = useDispatch();
   const { token } = useSelector(store => store.user);
+  const { route } = useSelector(store => store.busRoute);
 
   const [buses, setBuses] = useState([]);
   const [supervisors, setSupervisors] = useState([]);
@@ -53,8 +55,9 @@ const RouteForm = props => {
   const [bus, setBus] = useState('');
   const [driver, setDriver] = useState('');
   const [busSupervisor, setBusSupervisor] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+
+  const [startTime, setStartTime] = useState(moment());
+  const [endTime, setEndTime] = useState(moment());
 
   const [type, setType] = useState('P');
 
@@ -75,22 +78,63 @@ const RouteForm = props => {
   };
   useEffect(() => {
     getMeta();
-    dispatch(actionCreator.getRouteLocations());
+    // dispatch(actionCreator.getRouteLocations());
+    if (route) {
+      setName(route.name);
+      setBusSupervisor(route.bus_supervisor.id);
+      setDriver(route.driver.id);
+      setBus(route.bus.id);
+      setStartTime(
+        route.start_time ? moment(route.start_time, 'HH:mm') : moment()
+      );
+
+      setEndTime(route.end_time ? moment(route.end_time, 'HH:mm') : moment());
+      setType(route.type);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [route]);
 
   const saveBusInfo = () => {
-    const data = {
-      route_type: type,
-      name,
-      bus,
-      bus_supervisor: busSupervisor,
-      driver,
-      start_time: startTime.format && startTime.format('HH:mm'),
-      end_time: endTime.format && endTime.format('HH:mm'),
-    };
+    console.log(startTime);
+    console.log(
+      startTime ? startTime.format('HH:mm') : moment().format('HH:mm')
+    );
 
-    dispatch(actionCreator.postRoute(data));
+    if (!route) {
+      const data = {
+        route_type: type,
+        name,
+        bus,
+        bus_supervisor: busSupervisor,
+        driver,
+        start_time: startTime.format
+          ? startTime.format('HH:mm')
+          : moment().format('HH:mm'),
+        end_time: endTime.format
+          ? endTime.format('HH:mm')
+          : moment().format('HH:mm'),
+      };
+
+      dispatch(actionCreator.postRoute(data));
+    } else {
+      const data = {
+        route_type: type,
+        name,
+        bus_id: bus,
+        bus_supervisor_id: busSupervisor,
+        driver_id: driver,
+        start_time: startTime.format
+          ? startTime.format('HH:mm')
+          : moment().format('HH:mm'),
+        end_time: endTime.format
+          ? endTime.format('HH:mm')
+          : moment().format('HH:mm'),
+      };
+
+      data.id = route.id;
+
+      dispatch(actionCreator.updateRoute(data));
+    }
   };
 
   return (
@@ -165,7 +209,7 @@ const RouteForm = props => {
             {drivers &&
               drivers.map(driver => (
                 <Option key={driver.id} value={driver.id}>
-                  {driver.first_name + ' ' + driver.last_name}
+                  {driver.name}
                 </Option>
               ))}
           </Select>

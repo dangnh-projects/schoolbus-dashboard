@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 const StudentInfomation = lazy(() => import('./StudentInformation'));
 const ParentInformation = lazy(() => import('./ParentInfo'));
+const BusInformation = lazy(() => import('./BusInfo'));
 
 const { Step } = Steps;
 
@@ -76,7 +77,7 @@ const StudentForm = ({ formSave, updateItem, id, data }) => {
           )}
           {stage === 2 && (
             <Suspense fallback={<Spin />}>
-              <StudentInfomation />
+              <BusInformation />
             </Suspense>
           )}
           {stage === 3 && (

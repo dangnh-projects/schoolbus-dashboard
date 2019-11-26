@@ -7,14 +7,16 @@ export const types = {
   CHANGE_STAGE: 'CHANGE_STAGE',
   SET_LOADING: 'SET_LOADING',
 
-  GET_PARENT: 'GET_PARENT',
-  GET_PARENT_SUCCESS: 'GET_PARENT_SUCCESS',
+  SEARCH_PARENT: 'SEARCH_PARENT',
+  SEARCH_PARENT_SUCCESS: 'SEARCH_PARENT_SUCCESS',
 
   POST_PARENT: 'POST_PARENT',
   POST_PARENT_SUCCESS: 'POST_PARENT_SUCCESS',
 
   UPDATE_STUDENT: 'UPDATE_STUDENT',
   UPDATE_STUDENT_SUCCESS: 'UPDATE_STUDENT_SUCCESS',
+
+  SET_SIBLING: 'SET_SIBLING',
 
   GET_BUS_ROUTES: 'GET_BUS_ROUTES',
   GET_BUS_ROUTES_SUCCESS: 'GET_BUS_ROUTES_SUCCESS',
@@ -33,8 +35,9 @@ export const actionCreator = {
   changeStage: createAction(types.CHANGE_STAGE),
   setLoading: createAction(types.SET_LOADING),
 
-  getParent: createAction(types.GET_PARENT),
-  getParentSuccess: createAction(types.GET_PARENT_SUCCESS),
+  searchParent: createAction(types.SEARCH_PARENT),
+  searchParentSuccess: createAction(types.SEARCH_PARENT_SUCCESS),
+  setSibling: createAction(types.SET_SIBLING),
 
   postParent: createAction(types.POST_PARENT),
   postParentSuccess: createAction(types.POST_PARENT_SUCCESS),

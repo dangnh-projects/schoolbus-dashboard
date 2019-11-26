@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Button, Popconfirm, Icon, Row, Tag } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
@@ -6,7 +6,6 @@ import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 export const Parent = props => {
-  const [viewType, setViewType] = useState('LIST');
   const columns = [
     {
       title: 'Avatar',
@@ -91,11 +90,6 @@ export const Parent = props => {
     <Card
       title="Manage parent"
       style={{ width: '100%', background: 'none' }}
-      headStyle={{ backgroundColor: 'white' }}
-      bodyStyle={{
-        padding: viewType === 'CARD' && 0,
-        backgroundColor: viewType === 'LIST' && 'white',
-      }}
       extra={[
         <Button key="add-new" onClick={() => navigate('/dashboard/parent/new')}>
           Add

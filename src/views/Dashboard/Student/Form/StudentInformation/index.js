@@ -82,7 +82,7 @@ const Information = props => {
     } else {
       setName('');
       setAltName('');
-      setDob(moment().format('YYYY-MM-DD'));
+      setDob(moment());
       setClassRoom('');
       setHomeNumber('');
       setStreet('');

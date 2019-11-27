@@ -20,10 +20,6 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
   const dispatch = useDispatch();
   const busRoute = useSelector(state => state.busRoute);
   const { route, locations = [], currentLocation, modalVisible } = busRoute;
-  // if (!route) {
-  //   setShowAddRoutePosition(false);
-  //   hand
-  // }
   const [address, setAddress] = useState('');
   const [search, setSearch] = useState('');
   const [addressObj, setAddressObj] = useState(null);

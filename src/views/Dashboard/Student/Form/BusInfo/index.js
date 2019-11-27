@@ -176,7 +176,13 @@ const BusRouteSection = memo(props => {
                     value={location.bus_location.id}
                     key={location.bus_location.id}
                   >
-                    {location.bus_location && location.bus_location.address}
+                    {location.bus_location &&
+                      `${location.bus_location.address} ${
+                        location.bus_location.street
+                      } ${location.bus_location.ward !== '' &&
+                        'phường ' + location.bus_location.ward} ${
+                        location.bus_location.district
+                      }`}
                   </Select.Option>
                 ))}
               </Select>

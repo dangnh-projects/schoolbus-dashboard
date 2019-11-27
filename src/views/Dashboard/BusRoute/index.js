@@ -37,7 +37,7 @@ export const Bus = props => {
     },
     {
       title: 'Route type',
-      render: (_, i) => (i.type === 'P' ? 'Pickup' : 'Drop-off'),
+      render: (_, i) => (i.route_type === 'P' ? 'Pickup' : 'Drop-off'),
     },
 
     {

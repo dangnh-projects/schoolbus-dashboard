@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Icon, Modal, Input, Form, Spin, Button, Row, Col } from 'antd';
+import { Modal, Input, Form, Spin, Button, Row, Col } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 const Item = Form.Item;
+
+const { Search } = Input;
 
 const ADDRESS_TYPES = {
   STREET_NUMBER: 'street_number',
@@ -23,19 +25,19 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
   //   hand
   // }
   const [address, setAddress] = useState('');
+  const [search, setSearch] = useState('');
   const [addressObj, setAddressObj] = useState(null);
   const [timeNextLoc, setTimeNextLoc] = useState(0);
-  const [number, setNumber] = useState('');
   const [street, setStreet] = useState('');
   const [ward, setWard] = useState('');
   const [district, setDistrict] = useState('');
   const [point, setPoint] = useState(null);
 
-  const getSearchPlace = async () => {
+  const getSearchPlace = async searchTerm => {
     setLoading(true);
     const geocoder = new map.maps.Geocoder();
     const places = await new Promise((res, rej) => {
-      geocoder.geocode({ address }, function(results, status) {
+      geocoder.geocode({ address: searchTerm }, function(results, status) {
         if (status === 'OK') {
           res(results);
         } else {
@@ -54,7 +56,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
         if (component && component.types && component.types.length > 0) {
           if (component.types.indexOf(ADDRESS_TYPES.STREET_NUMBER) > -1) {
             addObj['number'] = component.long_name;
-            setNumber(component.long_name);
+            setAddress(component.long_name);
             return;
           }
 
@@ -77,7 +79,8 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
           }
         }
       });
-      setAddress(formatted_address);
+
+      setSearch(formatted_address);
       setAddressObj(addObj);
       setPoint({
         lng: geometry.location.lng(),
@@ -92,7 +95,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
     if (currentLocation && currentLocation.bus_location) {
       const { bus_location } = currentLocation;
       setAddress(bus_location.address);
-      setNumber(bus_location.number);
+      // setNumber(bus_location.number);
       setStreet(bus_location.street);
       setWard(bus_location.ward);
       setDistrict(bus_location.district);
@@ -108,7 +111,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
     const data = {
       address,
       street,
-      number,
+      // number,
       ward,
       district,
       lng: point.lng,
@@ -143,19 +146,20 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
       <Spin spinning={loading}>
         <Form>
           <Item label="Address">
-            <Input
-              value={address}
-              onChange={e => setAddress(e.target.value)}
-              suffix={<Icon type="search" onClick={getSearchPlace} />}
+            <Search
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              // suffix={<Icon type="search" onClick={getSearchPlace} />}
+              onSearch={getSearchPlace}
             />
             <sub>Please click search button to get address information</sub>
           </Item>
           <Row gutter={16}>
             <Col span={12}>
-              <Item label="Number">
+              <Item label="Address">
                 <Input
-                  value={number}
-                  onChange={e => setNumber(e.target.value)}
+                  value={address}
+                  onChange={e => setAddress(e.target.value)}
                 />
               </Item>
             </Col>

@@ -63,7 +63,7 @@ export const Parent = props => {
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button
               style={{ marginRight: 16 }}
-              onClick={() => navigate(`/dashboard/parent/${record.id}`)}
+              onClick={() => navigate(`/dashboard/parent/${record.info}`)}
             >
               <Icon type="form" />
             </Button>

@@ -1,8 +1,12 @@
 import axios from 'axios';
-
+import { navigate } from '@reach/router';
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const baseHeader = {
   'Content-Type': 'application/json',
+};
+
+const HTTP_STATUS = {
+  UNAUTHORIZE: 401,
 };
 
 export function buildRequest(url, requestConfig = {}) {
@@ -26,6 +30,10 @@ export function buildRequest(url, requestConfig = {}) {
 
       const res = await instance(payload);
       const { data: body, status: httpStatus } = res;
+      if (httpStatus === HTTP_STATUS.UNAUTHORIZE) {
+        navigate('/login');
+        return;
+      }
       return { body, httpStatus };
     },
   };

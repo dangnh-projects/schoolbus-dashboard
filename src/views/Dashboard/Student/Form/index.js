@@ -62,6 +62,7 @@ const StudentForm = ({ formSave, updateItem, id }) => {
         dispatch(actionCreator.postStudentSuccess(null));
       }
     } else {
+      console.log('not have id');
       dispatch(actionCreator.postParentSuccess(null));
       dispatch(actionCreator.postStudentSuccess(null));
     }

@@ -96,7 +96,9 @@ function* updateItem({ payload }) {
   }
 
   try {
-    const formData = convertObjectToFormData(payload.data);
+    const data = { ...payload.data };
+    delete data.id;
+    const formData = convertObjectToFormData(data);
     yield call(apiRequest.request, {
       url: payload.alternativeURL || `${payload.url}${payload.data.id}`,
       data: formData,

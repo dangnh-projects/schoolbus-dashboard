@@ -35,11 +35,6 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const [homeNumber, setHomeNumber] = useState();
-  const [homeWard, setHomeWard] = useState();
-  const [homeDistrict, setHomeDistrict] = useState();
-  const [homeProvince, setHomeProvince] = useState();
-
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState();
 
@@ -51,10 +46,10 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
       phone_number: phoneNumber,
       id_number: idPassport,
       //chilren,
-      //homeNumber,
-      //homeWard,
-      //homeDistrict,
-      //homeProvince,
+      // homeNumber,
+      // homeWard,
+      // homeDistrict,
+      // homeProvince,
       username,
       password,
     };
@@ -194,12 +189,12 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
                 </Row>
               </div>
             )}
-            <Divider orientation="left" style={{ marginBottom: 0 }}>
+            {/* <Divider orientation="left" style={{ marginBottom: 0 }}>
               Address
             </Divider>
             <Row gutter={16}>
               <Col md={12}>
-                <Item label="Home number">
+                <Item label="Address">
                   <Input
                     value={homeNumber}
                     onChange={e => setHomeNumber(e.target.value)}
@@ -232,7 +227,7 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
                   />
                 </Item>
               </Col>
-            </Row>
+            </Row> */}
             <Divider orientation="left">Children</Divider>
             <Table
               columns={[

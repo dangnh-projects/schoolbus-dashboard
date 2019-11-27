@@ -79,6 +79,16 @@ const Information = props => {
       setDistrict(student.district);
       setWard(student.ward);
       setProvince(student.province);
+    } else {
+      setName('');
+      setAltName('');
+      setDob(moment().format('YYYY-MM-DD'));
+      setClassRoom('');
+      setHomeNumber('');
+      setStreet('');
+      setDistrict('');
+      setWard('');
+      setProvince('');
     }
   }, [student]);
 
@@ -127,14 +137,14 @@ const Information = props => {
         <Row gutter={16}>
           <Col md={8}>
             <Item label="Birthday">
-              <DatePicker onChange={val => setDob(val)} />
+              <DatePicker value={dob} onChange={val => setDob(val)} />
             </Item>
           </Col>
-          <Col md={8}>
+          {/* <Col md={8}>
             <Item label="School">
               <Input />
             </Item>
-          </Col>
+          </Col> */}
           <Col md={8}>
             <Item label="Class">
               <Input

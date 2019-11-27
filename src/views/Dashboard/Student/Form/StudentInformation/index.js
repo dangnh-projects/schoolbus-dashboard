@@ -79,6 +79,16 @@ const Information = props => {
       setDistrict(student.district);
       setWard(student.ward);
       setProvince(student.province);
+    } else {
+      setName('');
+      setAltName('');
+      setDob(moment().format('YYYY-MM-DD'));
+      setClassRoom('');
+      setHomeNumber('');
+      setStreet('');
+      setDistrict('');
+      setWard('');
+      setProvince('');
     }
   }, [student]);
 

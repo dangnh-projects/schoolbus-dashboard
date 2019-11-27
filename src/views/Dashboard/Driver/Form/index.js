@@ -131,13 +131,13 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
             </Divider>
             <Row gutter={16}>
               <Col md={24}>
-                <Item label="First name" style={{ marginBottom: 12 }}>
-                  {getFieldDecorator('first_name', {
+                <Item label="Name" style={{ marginBottom: 12 }}>
+                  {getFieldDecorator('name', {
                     initialValue: name,
                     rules: [
                       {
                         required: true,
-                        message: 'First name is required',
+                        message: 'Name is required',
                       },
                     ],
                   })(<Input onChange={e => setName(e.target.value)} />)}

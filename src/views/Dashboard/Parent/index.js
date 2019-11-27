@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Popconfirm, Icon, Row, Tag } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Tag, Col } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
@@ -38,9 +38,12 @@ export const Parent = props => {
     },
     {
       title: 'Children',
-      render: (_, record) =>
-        record.children &&
-        record.children.map(child => <Tag>{child.name}</Tag>),
+      render: (_, record) => (
+        <Col>
+          {record.children &&
+            record.children.map(child => <Tag>{child.name}</Tag>)}
+        </Col>
+      ),
     },
     {
       title: 'Status',
@@ -89,7 +92,6 @@ export const Parent = props => {
   return (
     <Card
       title="Manage parent"
-      style={{ width: '100%', background: 'none' }}
       extra={[
         <Button key="add-new" onClick={() => navigate('/dashboard/parent/new')}>
           Add

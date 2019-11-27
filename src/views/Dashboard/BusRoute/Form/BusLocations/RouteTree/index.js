@@ -45,7 +45,11 @@ const PositionItem = memo(
     <Timeline.Item dot={buildDot(dotType)}>
       <Row type="flex" align="top" justify="space-between">
         <Col style={{ flex: 1 }}>
-          {loc.bus_location && loc.bus_location.address}
+          {loc.bus_location &&
+            `${loc.bus_location.address} ${loc.bus_location.street} ${loc
+              .bus_location.ward !== '' && 'phường ' + loc.bus_location.ward} ${
+              loc.bus_location.district
+            }`}
           {dotType !== 'end' && [
             <br key="break" />,
             <Row
@@ -145,7 +149,12 @@ const RouteTree = props => {
           >
             <Row type="flex" align="top" justify="space-between">
               <Col style={{ flex: 1 }}>
-                {end.bus_location && end.bus_location.address}
+                {end.bus_location &&
+                  `${end.bus_location.address} ${end.bus_location.street} ${end
+                    .bus_location.ward !== '' &&
+                    'phường ' + end.bus_location.ward} ${
+                    end.bus_location.district
+                  }`}
               </Col>
               <Col>
                 <Icon

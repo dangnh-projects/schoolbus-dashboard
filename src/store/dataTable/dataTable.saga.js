@@ -1,7 +1,7 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { notification } from 'antd';
 import { types, actionCreator } from './dataTable.meta';
-import { navigate } from '@reach/router';
+import { authenticate } from 'store/utils';
 
 import { buildRequest } from 'api';
 
@@ -13,51 +13,58 @@ const convertObjectToFormData = obj => {
   return formData;
 };
 
+const apiCallWrapper = handler =>
+  function*(action) {
+    yield put(actionCreator.setLoading(true));
+    try {
+      yield call(handler, action);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        notification.error({
+          message:
+            "You don't have permission to perform this action, please try login again or contact administrator for more information",
+        });
+        return;
+      }
+
+      if (error.response && error.response.status === 500) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+        return;
+      }
+
+      notification.error({ message: 'Request error' });
+    }
+
+    yield put(actionCreator.setLoading(false));
+  };
+
 function* getList(action) {
-  yield put(actionCreator.setLoading(true));
   yield put(actionCreator.getListSuccess({ count: 0, results: [] }));
-  try {
-    const page = yield select(store => store.dataTable.page) || 1;
-    const user = yield select(store => store.user);
-    if (!user || !user.token || !user.token.access) {
-      yield call(navigate, '/login');
-      return;
-    }
+  const page = yield select(store => store.dataTable.page) || 1;
+  const user = yield call(authenticate);
 
-    const { limit = 10 } = action.payload;
-    const params = {
-      limit,
-      offset: (page - 1) * limit,
-    };
-
-    const { body } = yield call(apiRequest.request, {
-      url: action.payload.url,
-      params,
-      headers: {
-        Authorization: `Bearer ${user.token.access}`,
-      },
-    });
-    yield put(actionCreator.getListSuccess(body));
-  } catch (error) {
-    if (error.response && error.response.status === 403) {
-      notification.error({
-        message:
-          "You don't have permission to perform this action, please try login again or contact administrator for more information",
-      });
-      return;
-    }
-    notification.error({ message: 'Request error' });
-  }
-  yield put(actionCreator.setLoading(false));
+  const { limit = 10 } = action.payload;
+  const params = {
+    limit,
+    offset: (page - 1) * limit,
+  };
+  const { body } = yield call(apiRequest.request, {
+    url: action.payload.url,
+    params,
+    headers: {
+      Authorization: `Bearer ${user.token.access}`,
+    },
+  });
+  yield put(actionCreator.getListSuccess(body));
 }
 
 function* formSave({ payload }) {
   yield put(actionCreator.setLoading(true));
-  const user = yield select(store => store.user);
-  if (!user || !user.token || !user.token.access) {
-    yield call(navigate, '/login');
-    return;
-  }
+  const user = yield call(authenticate);
   try {
     const formData = convertObjectToFormData(payload.data);
     yield call(apiRequest.request, {
@@ -81,6 +88,16 @@ function* formSave({ payload }) {
       });
       return;
     }
+
+    if (error.response && error.response.status === 500) {
+      notification.error({
+        message: error.response.data
+          ? error.response.data.message
+          : 'Request Error',
+      });
+      return;
+    }
+
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
@@ -89,11 +106,7 @@ function* formSave({ payload }) {
 function* updateItem({ payload }) {
   yield put(actionCreator.setLoading(true));
 
-  const user = yield select(store => store.user);
-  if (!user || !user.token || !user.token.access) {
-    yield call(navigate, '/login');
-    return;
-  }
+  const user = yield call(authenticate);
 
   try {
     const data = { ...payload.data };
@@ -119,6 +132,16 @@ function* updateItem({ payload }) {
       });
       return;
     }
+
+    if (error.response && error.response.status === 500) {
+      notification.error({
+        message: error.response.data
+          ? error.response.data.message
+          : 'Request Error',
+      });
+      return;
+    }
+
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
@@ -127,11 +150,7 @@ function* updateItem({ payload }) {
 function* deleteItem({ payload }) {
   yield put(actionCreator.setLoading(true));
 
-  const user = yield select(store => store.user);
-  if (!user || !user.token || !user.token.access) {
-    yield call(navigate, '/login');
-    return;
-  }
+  const user = yield call(authenticate);
 
   try {
     yield call(apiRequest.request, {
@@ -164,7 +183,7 @@ function* deleteItem({ payload }) {
 }
 
 export default function* dataTableSaga() {
-  yield takeLatest(types.GET_LIST, getList);
+  yield takeLatest(types.GET_LIST, apiCallWrapper(getList));
   yield takeLatest(types.FORM_SAVE, formSave);
   yield takeLatest(types.UPDATE_ITEM, updateItem);
   yield takeLatest(types.DELETE_ITEM, deleteItem);

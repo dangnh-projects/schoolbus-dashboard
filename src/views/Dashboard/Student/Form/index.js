@@ -62,7 +62,6 @@ const StudentForm = ({ formSave, updateItem, id }) => {
         dispatch(actionCreator.postStudentSuccess(null));
       }
     } else {
-      console.log('not have id');
       dispatch(actionCreator.postParentSuccess(null));
       dispatch(actionCreator.postStudentSuccess(null));
     }
@@ -75,9 +74,11 @@ const StudentForm = ({ formSave, updateItem, id }) => {
         <Steps>
           {steps.map((step, idx) => (
             <Step
+              onClick={() => item && dispatch(actionCreator.changeStage(idx))}
               icon={<Icon type={idx < stage ? 'check-circle' : step.icon} />}
               title={step.title}
               status={getStatus(idx, stage)}
+              style={{ cursor: 'pointer' }}
             />
           ))}
         </Steps>
@@ -95,11 +96,6 @@ const StudentForm = ({ formSave, updateItem, id }) => {
           {stage === 2 && (
             <Suspense fallback={<Spin />}>
               <BusInformation />
-            </Suspense>
-          )}
-          {stage === 3 && (
-            <Suspense fallback={<Spin />}>
-              <StudentInfomation />
             </Suspense>
           )}
         </Row>

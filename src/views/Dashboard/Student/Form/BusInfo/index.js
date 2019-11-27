@@ -57,6 +57,7 @@ const RouteInfo = memo(({ currentRoute }) => (
 const BusRouteSection = memo(props => {
   const { token } = useSelector(store => store.user);
   const [currentRoute, setCurrentRoute] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   const { access } = token;
   if (!token) {
@@ -74,6 +75,24 @@ const BusRouteSection = memo(props => {
 
     if (locationRes && locationRes.data) {
       setLocations(locationRes.data);
+      if (props.location) {
+        const found = locationRes.data.find(
+          loc => loc.bus_location && loc.bus_location.id === props.location
+        );
+
+        if (found) {
+          setCurrentLocation(found.id);
+          props.setLocation(found.id);
+        } else {
+          if (locationRes.data.length > 0) {
+            setCurrentLocation(locationRes.data[0].bus_location.id);
+            props.setLocation(locationRes.data[0].bus_location.id);
+          } else {
+            setCurrentLocation(null);
+            props.setLocation(null);
+          }
+        }
+      }
     }
   };
 
@@ -85,6 +104,20 @@ const BusRouteSection = memo(props => {
 
     if (routesResponse && routesResponse.data) {
       setRoutes(routesResponse.data.routes);
+      if (props.route) {
+        const found = routesResponse.data.routes.find(
+          item => item.id === props.route
+        );
+        if (found) {
+          setCurrentRoute(found);
+        } else {
+          setCurrentRoute(
+            routesResponse.data.routes.length > 0
+              ? routesResponse.data.routes[0]
+              : ''
+          );
+        }
+      }
     }
   };
 
@@ -112,11 +145,12 @@ const BusRouteSection = memo(props => {
           <Col span={24}>
             <Item label="Bus route">
               <Select
-                defaultValue={props.route}
+                value={currentRoute.id}
                 onChange={val => {
                   props.setRoute && props.setRoute(val);
                   getLocations(val);
                   setCurrentRoute(routes.find(item => item.id === val));
+                  props.setLocation(null);
                 }}
               >
                 {routes.map(route => (
@@ -130,12 +164,18 @@ const BusRouteSection = memo(props => {
           <Col span={24}>
             <Item label="Locations">
               <Select
-                defaultValue={props.location}
+                value={currentLocation}
                 disabled={locations && locations.length === 0}
-                onChange={val => props.setLocation && props.setLocation(val)}
+                onChange={val => {
+                  props.setLocation && props.setLocation(val);
+                  setCurrentLocation(val);
+                }}
               >
                 {locations.map(location => (
-                  <Select.Option value={location.id} key={location.id}>
+                  <Select.Option
+                    value={location.bus_location.id}
+                    key={location.bus_location.id}
+                  >
                     {location.bus_location && location.bus_location.address}
                   </Select.Option>
                 ))}
@@ -162,7 +202,7 @@ const BusInfo = props => {
   const [dropOffLocation, setDropOffLocation] = useState();
 
   const handleOnSave = () => {
-    if (pickUpLocation && pickUpLocation) {
+    if (pickUpRoute && pickUpLocation) {
       dispatch(
         actionCreator.addToLocation({
           student: student.id,
@@ -171,7 +211,6 @@ const BusInfo = props => {
         })
       );
     }
-
     if (dropOffRoute && dropOffLocation) {
       dispatch(
         actionCreator.addToLocation({

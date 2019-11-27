@@ -67,7 +67,7 @@ const StudentForm = ({ formSave, updateItem, id }) => {
       dispatch(actionCreator.postStudentSuccess(null));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stage, item, data, id]);
+  }, [item, data, id]);
 
   return (
     <div>

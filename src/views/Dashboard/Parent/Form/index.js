@@ -22,14 +22,15 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 const Item = Form.Item;
 
-const ParentForm = ({ formSave, updateItem, id, data }) => {
+const ParentForm = ({ formSave, updateItem, id, data, form }) => {
+  const { getFieldDecorator } = form;
   const [item, setItem] = useState(null);
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
   const [birthday, setBirthday] = useState();
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [idPassport, setIdPassport] = useState('');
+  const [phone_number, setPhoneNumber] = useState('');
+  const [id_number, setIdPassport] = useState('');
   //const [chilren, setChildren] = useState('');
 
   const [username, setUsername] = useState();
@@ -38,13 +39,24 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState();
 
+  const handleSubmitCheck = e => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      if (err) {
+        return;
+      } else {
+        handleSubmit && handleSubmit(fieldsValue);
+      }
+    });
+  };
+
   const handleSubmit = () => {
     const fields = {
-      first_name: firstName,
-      last_name: lastName,
+      first_name,
+      last_name,
       birthday,
-      phone_number: phoneNumber,
-      id_number: idPassport,
+      phone_number,
+      id_number,
       //chilren,
       // homeNumber,
       // homeWard,
@@ -124,36 +136,56 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="First name" style={{ marginBottom: 12 }}>
-                  <Input
-                    onChange={e => setFirstName(e.target.value)}
-                    value={firstName}
-                  />
+                  {getFieldDecorator('firstname', {
+                    initialValue: first_name,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'First name is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setFirstName(e.target.value)} />)}
                 </Item>
               </Col>
               <Col md={12}>
                 <Item label="Last name">
-                  <Input
-                    onChange={e => setLastName(e.target.value)}
-                    value={lastName}
-                  />
+                  {getFieldDecorator('lastname', {
+                    initialValue: last_name,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Last name is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setLastName(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="Birthday">
-                  <DatePicker
-                    value={birthday}
-                    onChange={val => setBirthday(val)}
-                  />
+                  {getFieldDecorator('email', {
+                    initialValue: birthday,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Birthday is required',
+                      },
+                    ],
+                  })(<DatePicker onChange={val => setBirthday(val)} />)}
                 </Item>
               </Col>
               <Col md={12}>
                 <Item label="Phone number">
-                  <Input
-                    value={phoneNumber}
-                    onChange={e => setPhoneNumber(e.target.value)}
-                  />
+                  {getFieldDecorator('phone_number', {
+                    initialValue: phone_number,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Phone number is required',
+                      },
+                    ],
+                  })(<Input onChange={e => setPhoneNumber(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>
@@ -161,7 +193,7 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
               <Col md={12}>
                 <Item label="ID/Passport number">
                   <Input
-                    value={idPassport}
+                    value={id_number}
                     onChange={e => setIdPassport(e.target.value)}
                   />
                 </Item>
@@ -265,7 +297,7 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
           <Button
             type="primary"
             htmlType="button"
-            onClick={handleSubmit}
+            onClick={handleSubmitCheck}
             style={{ marginRight: 24 }}
           >
             Save
@@ -284,7 +316,9 @@ const mapDispatchToProps = {
   updateItem: actionCreator.updateItem,
 };
 
+const WrappedNormalParentForm = Form.create({ name: 'parent' })(ParentForm);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ParentForm);
+)(WrappedNormalParentForm);

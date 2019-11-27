@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Card, Button, Popconfirm, Icon, Row, Table, Tabs, Tag } from 'antd';
-import { navigate } from '@reach/router';
+import React from 'react';
+import { Card, Icon, Table, Tabs, Tag } from 'antd';
 import { connect } from 'react-redux';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
@@ -10,17 +9,17 @@ export const Bus = props => {
   const columns = [
     {
       title: 'Bus number',
-      render: (_, i) => <a>{i.number}</a>,
+      render: (_, i) => i.number,
     },
 
     {
       title: 'Driver',
-      render: (_, i) => <a>{i.driver}</a>,
+      render: (_, i) => i.driver,
     },
 
     {
       title: 'Bus supervisor',
-      render: (_, i) => <a>{i.bus_supervisor}</a>,
+      render: (_, i) => i.bus_supervisor,
     },
     {
       title: 'Start time',
@@ -28,19 +27,19 @@ export const Bus = props => {
     },
     {
       title: 'Next stop',
-      render: (_, i) => <a>{i.next_stop}</a>,
+      render: (_, i) => i.next_stop,
     },
     {
       title: 'No. of onboarding',
-      render: (_, i) => <a>{i.no_onboarding}</a>,
+      render: (_, i) => i.no_onboarding,
     },
     {
       title: 'No. remaining',
-      render: (_, i) => <a>{i.no_remaining}</a>,
+      render: (_, i) => i.no_remaining,
     },
     {
       title: 'End time',
-      render: (_, i) => <a>{i.end_time}</a>,
+      render: (_, i) => i.end_time,
     },
   ];
 

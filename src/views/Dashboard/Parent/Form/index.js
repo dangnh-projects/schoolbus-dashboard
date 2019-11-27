@@ -164,7 +164,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="Birthday">
-                  {getFieldDecorator('email', {
+                  {getFieldDecorator('birthday', {
                     initialValue: birthday,
                     rules: [
                       {
@@ -207,15 +207,33 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                 <Row gutter={16}>
                   <Col md={12}>
                     <Item label="Username">
-                      <Input onChange={e => setUsername(e.target.value)} />
+                      {getFieldDecorator('username', {
+                        initialValue: username,
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Username is required',
+                          },
+                        ],
+                      })(<Input onChange={e => setUsername(e.target.value)} />)}
                     </Item>
                   </Col>
                   <Col md={12}>
                     <Item label="Password">
-                      <Input
-                        type="password"
-                        onChange={e => setPassword(e.target.value)}
-                      />
+                      {getFieldDecorator('password', {
+                        initialValue: password,
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Password is required',
+                          },
+                        ],
+                      })(
+                        <Input
+                          type="password"
+                          onChange={e => setPassword(e.target.value)}
+                        />
+                      )}
                     </Item>
                   </Col>
                 </Row>

@@ -117,7 +117,12 @@ const BusRouteSetting = props => {
                   lng={loc.bus_location.lng}
                   key={loc.id}
                 >
-                  <img src="/images/bus.png" alt="pin" width={32} />
+                  <img
+                    src="/images/map-pin.png"
+                    alt="pin"
+                    width={32}
+                    style={{ transform: 'translate(-50%, -100%)' }}
+                  />
                 </div>
               );
             }

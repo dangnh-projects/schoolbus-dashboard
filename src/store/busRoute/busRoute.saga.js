@@ -136,7 +136,6 @@ function* updateRoute({ payload }, user) {
 }
 
 function* updateLocation({ payload }, user) {
-  console.log(user);
   const formData = convertObjectToFormData(payload);
   const { body } = yield call(postRouteLocationRequest.request, {
     url: '/' + payload.id,

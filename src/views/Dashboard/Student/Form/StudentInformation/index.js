@@ -25,7 +25,7 @@ const Information = props => {
 
   const [name, setName] = useState('');
   const [altName, setAltName] = useState('');
-  const [dob, setDob] = useState(moment());
+  const [dob, setDob] = useState();
   const [school] = useState('');
   const [classroom, setClassRoom] = useState('');
   const [imgVal, setImgVal] = useState('');
@@ -83,7 +83,7 @@ const Information = props => {
     } else {
       setName('');
       setAltName('');
-      setDob(moment());
+      setDob('');
       setClassRoom('');
       setHomeNumber('');
       setStreet('');

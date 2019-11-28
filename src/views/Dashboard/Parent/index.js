@@ -50,8 +50,8 @@ export const Parent = props => {
       title: 'Children',
       render: (_, record) => (
         <Col>
-          {record.children &&
-            record.children.map(child => <Tag>{child.name}</Tag>)}
+          {record.new_children &&
+            record.new_children.map(child => <Tag>{child.name}</Tag>)}
         </Col>
       ),
     },

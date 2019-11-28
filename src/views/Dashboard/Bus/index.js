@@ -30,7 +30,7 @@ export const Bus = props => {
       align: 'center',
     },
     {
-      title: 'Start Working Day',
+      title: 'Used from',
       dataIndex: 'start_working_date',
       align: 'center',
     },

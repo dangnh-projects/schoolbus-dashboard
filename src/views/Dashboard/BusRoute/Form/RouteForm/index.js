@@ -42,7 +42,8 @@ const getMetaData = async (url, token) => {
   }
 };
 
-const RouteForm = props => {
+const RouteForm = ({ form }) => {
+  const { getFieldDecorator } = form;
   const dispatch = useDispatch();
   const { token } = useSelector(store => store.user);
   const { route } = useSelector(store => store.busRoute);
@@ -56,8 +57,8 @@ const RouteForm = props => {
   const [driver, setDriver] = useState('');
   const [busSupervisor, setBusSupervisor] = useState('');
 
-  const [startTime, setStartTime] = useState(moment());
-  const [endTime, setEndTime] = useState(moment());
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
 
   const [type, setType] = useState('P');
 
@@ -97,8 +98,8 @@ const RouteForm = props => {
       setBusSupervisor('');
       setDriver('');
       setBus('');
-      setStartTime(moment());
-      setEndTime(moment());
+      setStartTime('');
+      setEndTime('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
@@ -141,11 +142,30 @@ const RouteForm = props => {
     }
   };
 
+  const handleSubmitCheck = e => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      if (err) {
+        return;
+      } else {
+        saveBusInfo && saveBusInfo(fieldsValue);
+      }
+    });
+  };
+
   return (
     <Col>
-      <Form {...formItemLayout}>
+      <Form {...formItemLayout} onSubmit={handleSubmitCheck}>
         <FormItem label="Name">
-          <Input value={name} onChange={e => setName(e.target.value)} />
+          {getFieldDecorator('name', {
+            initialValue: name,
+            rules: [
+              {
+                required: true,
+                message: 'Name is required',
+              },
+            ],
+          })(<Input onChange={e => setName(e.target.value)} />)}
         </FormItem>
         <FormItem label="Type">
           <Select
@@ -159,73 +179,119 @@ const RouteForm = props => {
         </FormItem>
 
         <FormItem label="Start time">
-          <TimePicker
-            value={startTime}
-            format="HH:mm"
-            minuteStep={5}
-            onChange={val => setStartTime(val)}
-          />
+          {getFieldDecorator('start_name', {
+            initialValue: startTime,
+            rules: [
+              {
+                required: true,
+                message: 'Start time is required',
+              },
+            ],
+          })(
+            <TimePicker
+              value={startTime}
+              format="HH:mm"
+              minuteStep={5}
+              onChange={val => setStartTime(val)}
+            />
+          )}
         </FormItem>
         <FormItem label="End time">
-          <TimePicker
-            value={endTime}
-            format="HH:mm"
-            minuteStep={5}
-            onChange={val => setEndTime(val)}
-          />
+          {getFieldDecorator('end_name', {
+            initialValue: endTime,
+            rules: [
+              {
+                required: true,
+                message: 'End time is required',
+              },
+            ],
+          })(
+            <TimePicker
+              value={endTime}
+              format="HH:mm"
+              minuteStep={5}
+              onChange={val => setEndTime(val)}
+            />
+          )}
         </FormItem>
         <FormItem label="Bus">
-          <Select
-            value={bus}
-            style={{ minWidth: 200 }}
-            onChange={val => setBus(val)}
-          >
-            {buses &&
-              buses.map(bus => (
-                <Option key={bus.id} value={bus.id}>
-                  {bus.number}
-                </Option>
-              ))}
-          </Select>
+          {getFieldDecorator('bus', {
+            initialValue: bus,
+            rules: [
+              {
+                required: true,
+                message: 'Bus is required',
+              },
+            ],
+          })(
+            <Select style={{ minWidth: 200 }} onChange={val => setBus(val)}>
+              {buses &&
+                buses.map(bus => (
+                  <Option key={bus.id} value={bus.id}>
+                    {bus.number}
+                  </Option>
+                ))}
+            </Select>
+          )}
         </FormItem>
         <FormItem label="Supervisor">
-          <Select
-            value={busSupervisor}
-            defaultValue={
-              supervisors && supervisors.length > 0 && supervisors[0].id
-            }
-            style={{ minWidth: 200 }}
-            onChange={val => setBusSupervisor(val)}
-          >
-            {supervisors &&
-              supervisors.map(supervisor => (
-                <Option key={supervisor.id} value={supervisor.id}>
-                  {supervisor.first_name + ' ' + supervisor.last_name}
-                </Option>
-              ))}
-          </Select>
+          {getFieldDecorator('busSupervisor', {
+            initialValue: busSupervisor,
+            rules: [
+              {
+                required: true,
+                message: 'Bus supervisor is required',
+              },
+            ],
+          })(
+            <Select
+              defaultValue={
+                supervisors && supervisors.length > 0 && supervisors[0].id
+              }
+              style={{ minWidth: 200 }}
+              onChange={val => setBusSupervisor(val)}
+            >
+              {supervisors &&
+                supervisors.map(supervisor => (
+                  <Option key={supervisor.id} value={supervisor.id}>
+                    {supervisor.first_name + ' ' + supervisor.last_name}
+                  </Option>
+                ))}
+            </Select>
+          )}
         </FormItem>
         <FormItem label="Driver">
-          <Select
-            value={driver}
-            defaultValue={drivers && drivers.length > 0 && drivers[0].id}
-            style={{ minWidth: 200 }}
-            onChange={val => setDriver(val)}
-          >
-            {drivers &&
-              drivers.map(driver => (
-                <Option key={driver.id} value={driver.id}>
-                  {driver.name}
-                </Option>
-              ))}
-          </Select>
+          {getFieldDecorator('driver', {
+            initialValue: driver,
+            rules: [
+              {
+                required: true,
+                message: 'Driver is required',
+              },
+            ],
+          })(
+            <Select
+              defaultValue={drivers && drivers.length > 0 && drivers[0].id}
+              style={{ minWidth: 200 }}
+              onChange={val => setDriver(val)}
+            >
+              {drivers &&
+                drivers.map(driver => (
+                  <Option key={driver.id} value={driver.id}>
+                    {driver.name}
+                  </Option>
+                ))}
+            </Select>
+          )}
         </FormItem>
         <Row type="flex" justify="center">
-          <Button onClick={saveBusInfo}>Save</Button>
+          <Button htmlType="submit">Save</Button>
         </Row>
       </Form>
     </Col>
   );
 };
 
-export default RouteForm;
+const WrappedRouteForm = Form.create({ name: 'RouteForm' })(RouteForm);
+
+export default WrappedRouteForm;

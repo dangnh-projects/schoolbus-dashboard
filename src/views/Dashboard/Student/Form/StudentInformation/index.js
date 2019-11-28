@@ -20,7 +20,8 @@ import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
 const Item = Form.Item;
 
-const Information = props => {
+const Information = ({ form }) => {
+  const { getFieldDecorator } = form;
   const dispatch = useDispatch();
   const { student } = useSelector(store => store.student);
 
@@ -39,13 +40,13 @@ const Information = props => {
   // const [busRegistratedDate, setBusRegistratedDAta] = useState('moment');
 
   const handleSubmit = e => {
-    e.preventDefault();
+    e && e.preventDefault && e.preventDefault();
     const data = {
       // first_name: firstName,
       // last_name: lastName,
       name,
       alternative_name: altName,
-      dob: dob.format('YYYY-MM-DD'),
+      dob: dob && dob.format && dob.format('YYYY-MM-DD'),
       school_id: school,
       classroom,
       image: avatar,
@@ -118,130 +119,169 @@ const Information = props => {
     setAvatar(info.file);
   };
 
+  const handleSubmitCheck = e => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      if (err) {
+        return;
+      } else {
+        handleSubmit && handleSubmit(fieldsValue);
+      }
+    });
+  };
+
   return (
     <Row style={{ display: 'flex', justifyContent: 'center' }}>
       <Col md={18}>
-        <Row
-          gutter={16}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+        <Form
+          style={{ padding: 16 }}
+          layout="horizontal"
+          onSubmit={handleSubmitCheck}
         >
-          <Col md={16}>
-            <Item
-              required={true}
-              label="Full name"
-              style={{ marginBottom: 12 }}
-            >
-              <Input value={name} onChange={e => setName(e.target.value)} />
-            </Item>
-            <Item label="Alternative name">
-              <Input
-                value={altName}
-                onChange={e => setAltName(e.target.value)}
-              />
-            </Item>
-          </Col>
-          <Col md={8}>
-            <Row type="flex" justify="center">
-              <Upload
-                name="avatar"
-                listType="picture-card"
-                className="avatar-uploader"
-                showUploadList={false}
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-                style={{ width: 'auto' }}
-              >
-                {imgVal ? (
-                  <img src={imgVal} alt="avatar" style={{ width: '100%' }} />
-                ) : (
-                  <div>
-                    <Icon type={'plus'} />
-                    <div className="ant-upload-text">Avatar</div>
-                  </div>
-                )}
-              </Upload>
-            </Row>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col md={8}>
-            <Item label="Birthday">
-              <DatePicker value={dob} onChange={val => setDob(val)} />
-            </Item>
-          </Col>
-          {/* <Col md={8}>
+          <Row
+            gutter={16}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Col md={16}>
+              <Item label="Full name" style={{ marginBottom: 12 }}>
+                {getFieldDecorator('name', {
+                  initialValue: name,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Name is required',
+                    },
+                  ],
+                })(<Input onChange={e => setName(e.target.value)} />)}
+              </Item>
+              <Item label="Alternative name">
+                <Input
+                  value={altName}
+                  onChange={e => setAltName(e.target.value)}
+                />
+              </Item>
+            </Col>
+            <Col md={8}>
+              <Row type="flex" justify="center">
+                <Upload
+                  name="avatar"
+                  listType="picture-card"
+                  className="avatar-uploader"
+                  showUploadList={false}
+                  beforeUpload={beforeUpload}
+                  onChange={handleChange}
+                  style={{ width: 'auto' }}
+                >
+                  {imgVal ? (
+                    <img src={imgVal} alt="avatar" style={{ width: '100%' }} />
+                  ) : (
+                    <div>
+                      <Icon type={'plus'} />
+                      <div className="ant-upload-text">Avatar</div>
+                    </div>
+                  )}
+                </Upload>
+              </Row>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col md={8}>
+              <Item label="Birthday">
+                {getFieldDecorator('dob', {
+                  initialValue: dob,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Birthday is required',
+                    },
+                  ],
+                })(<DatePicker onChange={val => setDob(val)} />)}
+              </Item>
+            </Col>
+            {/* <Col md={8}>
             <Item label="School">
               <Input />
             </Item>
           </Col> */}
-          <Col md={8}>
-            <Item label="Class">
-              <Input
-                value={classroom}
-                onChange={e => setClassRoom(e.target.value)}
-              />
-            </Item>
-          </Col>
-        </Row>
-        <Divider orientation="left">Address</Divider>
-        <Row gutter={16}>
-          <Col md={8}>
-            <Item label="Home number">
-              <Input
-                value={homeNumber}
-                onChange={e => setHomeNumber(e.target.value)}
-              />
-            </Item>
-          </Col>
-          <Col md={16}>
-            <Item label="Street">
-              <Input value={street} onChange={e => setStreet(e.target.value)} />
-            </Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col md={8}>
-            <Item label="Ward">
-              <Input value={ward} onChange={e => setWard(e.target.value)} />
-            </Item>
-          </Col>
-          <Col md={8}>
-            <Item label="District">
-              <Input
-                value={district}
-                onChange={e => setDistrict(e.target.value)}
-              />
-            </Item>
-          </Col>
-          <Col md={8}>
-            <Item label="Province">
-              <Input
-                value={province}
-                onChange={e => setProvince(e.target.value)}
-              />
-            </Item>
-          </Col>
-        </Row>
-        <Row type="flex" justify="center">
-          <Button type="primary" onClick={handleSubmit}>
-            Save
-          </Button>
-          {student && (
-            <Button
-              onClick={() => dispatch(actionCreator.changeStage(1))}
-              style={{ marginLeft: 12 }}
-            >
-              Next
+            <Col md={8}>
+              <Item label="Class">
+                {getFieldDecorator('class', {
+                  initialValue: classroom,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Class is required',
+                    },
+                  ],
+                })(<Input onChange={e => setClassRoom(e.target.value)} />)}
+              </Item>
+            </Col>
+          </Row>
+          <Divider orientation="left">Address</Divider>
+          <Row gutter={16}>
+            <Col md={8}>
+              <Item label="Home number">
+                <Input
+                  value={homeNumber}
+                  onChange={e => setHomeNumber(e.target.value)}
+                />
+              </Item>
+            </Col>
+            <Col md={16}>
+              <Item label="Street">
+                <Input
+                  value={street}
+                  onChange={e => setStreet(e.target.value)}
+                />
+              </Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col md={8}>
+              <Item label="Ward">
+                <Input value={ward} onChange={e => setWard(e.target.value)} />
+              </Item>
+            </Col>
+            <Col md={8}>
+              <Item label="District">
+                <Input
+                  value={district}
+                  onChange={e => setDistrict(e.target.value)}
+                />
+              </Item>
+            </Col>
+            <Col md={8}>
+              <Item label="Province">
+                <Input
+                  value={province}
+                  onChange={e => setProvince(e.target.value)}
+                />
+              </Item>
+            </Col>
+          </Row>
+          <Row type="flex" justify="center">
+            <Button type="primary" htmlType="submit">
+              Save
             </Button>
-          )}
-        </Row>
+            {student && (
+              <Button
+                onClick={() => dispatch(actionCreator.changeStage(1))}
+                style={{ marginLeft: 12 }}
+              >
+                Next
+              </Button>
+            )}
+          </Row>
+        </Form>
       </Col>
     </Row>
   );
 };
 
-export default memo(Information);
+const WrappedInfomation = Form.create({ name: 'parent' })(Information);
+
+export default memo(WrappedInfomation);

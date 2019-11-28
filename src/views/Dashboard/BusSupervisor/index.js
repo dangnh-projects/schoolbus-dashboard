@@ -8,6 +8,19 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 export const Bus = props => {
   const columns = [
     {
+      title: 'Avatar',
+      render: (_, record) =>
+        record.image ? (
+          <img
+            alt="avatar"
+            style={{ width: '60px', height: 'auto', textAlign: 'center' }}
+            src={process.env.REACT_APP_BACKEND_URL + record.image}
+          />
+        ) : (
+          ''
+        ),
+    },
+    {
       title: 'First name',
       dataIndex: 'first_name',
     },

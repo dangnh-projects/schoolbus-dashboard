@@ -14,6 +14,19 @@ export const Driver = props => {
       dataIndex: 'id',
     },
     {
+      title: 'Avatar',
+      render: (_, record) =>
+        record.image ? (
+          <img
+            alt="avatar"
+            style={{ width: '60px', height: 'auto', textAlign: 'center' }}
+            src={process.env.REACT_APP_BACKEND_URL + record.image}
+          />
+        ) : (
+          ''
+        ),
+    },
+    {
       title: 'Name',
       dataIndex: 'name',
     },

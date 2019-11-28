@@ -17,7 +17,8 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
-import { API } from 'api/metaData';
+
+import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
 const Item = Form.Item;
 
@@ -40,7 +41,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
   const [district, setDistrict] = useState();
   const [province, setProvince] = useState();
   const [avatar, setAvatar] = useState();
-  const [imgVal, setImgVal] = useState();
+  const [imgVal, setImgVal] = useState('/images/default-user.png');
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -114,6 +115,10 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       setDistrict(found.district);
       setProvince(found.province);
       setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
+    } else {
+      InitDefaultFile(e => {
+        setAvatar(dataURLtoBlob(e.target.result));
+      });
     }
   }, [item, data, id]);
 

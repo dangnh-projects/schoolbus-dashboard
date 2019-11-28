@@ -208,6 +208,9 @@ function* postParent({ payload }) {
             id: student.id,
             parent_id: body.data.info,
           },
+          afterSuccess: () => {
+            put(actionCreator.changeStage(2));
+          },
         })
       );
     }

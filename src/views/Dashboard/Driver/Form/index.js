@@ -17,6 +17,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
 const Item = Form.Item;
 
@@ -31,7 +32,7 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
   const [start_working_date, setStartDate] = useState();
   const [address, setAdress] = useState();
   const [avatar, setAvatar] = useState();
-  const [imgVal, setImgVal] = useState();
+  const [imgVal, setImgVal] = useState('/images/default-user.png');
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -95,6 +96,10 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
       if (found.image) {
         setImgVal(process.env.REACT_APP_BACKEND_URL + found.image);
       }
+    } else {
+      InitDefaultFile(e => {
+        setAvatar(dataURLtoBlob(e.target.result));
+      });
     }
   }, [item, data, id]);
 
@@ -106,9 +111,8 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
 
     return false;
   };
-  const handleChange = info => {
-    // Get this url from response in real world.
 
+  const handleChange = info => {
     const reader = new FileReader();
     reader.addEventListener('load', e => {
       if (e && e.target) setImgVal(e.target.result);
@@ -214,6 +218,12 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
           </Col>
           <Col md={6} style={{ paddingLeft: 24, marginTop: 24 }}>
             <Upload
+              // defaultFileList={[
+              //   {
+              //     uid: 'uid-' + new Date().getTime(),
+              //     originFileObj: new File([''], '/images/default-user.png'),
+              //   },
+              // ]}
               name="avatar"
               listType="picture-card"
               className="avatar-uploader"

@@ -25,13 +25,13 @@ const Item = Form.Item;
 const ParentForm = ({ formSave, updateItem, id, data, form }) => {
   const { getFieldDecorator } = form;
   const [item, setItem] = useState(null);
+  const [studentTest, setStudentTest] = useState([]);
 
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
   const [birthday, setBirthday] = useState();
   const [phone_number, setPhoneNumber] = useState('');
   const [id_number, setIdPassport] = useState('');
-  //const [chilren, setChildren] = useState('');
 
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -104,6 +104,8 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       setIdPassport(found.id_number);
       setPhoneNumber(found.phone_number);
       setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
+
+      setStudentTest(found.children);
     } else {
       InitDefaultFile(e => {
         setAvatar(dataURLtoBlob(e.target.result));
@@ -319,10 +321,11 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
             <Divider orientation="left">Children</Divider>
             <Table
               columns={[
-                { title: 'Name', key: 'name' },
-                { title: 'Class', key: 'class' },
-                { title: 'Bus registered date', key: 'busregistereddate' },
+                { title: 'Name', dataIndex: 'alternative_name' },
+                { title: 'Class', dataIndex: 'classroom' },
+                { title: 'Street', dataIndex: 'street' },
               ]}
+              dataSource={studentTest}
             />
           </Col>
           <Col md={6} style={{ paddingLeft: 24 }}>

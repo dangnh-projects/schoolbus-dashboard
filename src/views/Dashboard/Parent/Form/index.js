@@ -196,10 +196,20 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="ID/Passport number">
-                  <Input
-                    value={id_number}
-                    onChange={e => setIdPassport(e.target.value)}
-                  />
+                  {getFieldDecorator('id_number', {
+                    initialValue: phone_number,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'ID number is required',
+                      },
+                    ],
+                  })(
+                    <Input
+                      value={id_number}
+                      onChange={e => setIdPassport(e.target.value)}
+                    />
+                  )}
                 </Item>
               </Col>
             </Row>

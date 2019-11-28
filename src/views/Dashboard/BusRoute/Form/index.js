@@ -5,6 +5,7 @@ import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 const BusLocations = lazy(() => import('./BusLocations'));
 const RouteForm = lazy(() => import('./RouteForm'));
+const RouteStudent = lazy(() => import('./BusStudent'));
 
 const { TabPane } = Tabs;
 
@@ -17,6 +18,7 @@ const BusRoute = props => {
     if (!props.id) {
       dispatch(actionCreator.getRouteLocationSuccess([]));
       dispatch(actionCreator.postRouteSuccess(null));
+      dispatch(actionCreator.setStudent([]));
       // dispatch(actionCreator.postRouteSuccess())
     } else {
       const found = data.find(item => item.id.toString() === props.id);
@@ -24,6 +26,7 @@ const BusRoute = props => {
       if (found) {
         dispatch(actionCreator.postRouteSuccess(found));
         dispatch(actionCreator.getRouteLocations(found.id));
+        dispatch(actionCreator.setStudent(found.students || []));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,23 +63,9 @@ const BusRoute = props => {
           key="2"
           style={{ padding: 18 }}
         >
-          <Table
-            columns={[
-              {
-                title: 'Name',
-                dataIndex: 'name',
-              },
-              {
-                title: 'Class',
-                dataIndex: 'class',
-              },
-              {
-                title: 'Status',
-                dataIndex: 'end_time',
-                align: 'center',
-              },
-            ]}
-          />
+          <Suspense fallback={<Spin />}>
+            <RouteStudent />
+          </Suspense>
         </TabPane>
       </Tabs>
       {/* <Tabs defaultActiveKey="pickup">

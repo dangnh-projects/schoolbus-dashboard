@@ -11,6 +11,7 @@ const ADDRESS_TYPES = {
   STREET_NUMBER: 'street_number',
   ROUTE: 'route',
   WARD: 'locality',
+  WARD2: 'sublocality',
   DISTRICT: 'administrative_area_level_2',
   PROVINCE: 'administrative_area_level_1',
 };
@@ -67,7 +68,10 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
             return;
           }
 
-          if (component.types.indexOf(ADDRESS_TYPES.WARD) > -1) {
+          if (
+            component.types.indexOf(ADDRESS_TYPES.WARD) > -1 ||
+            component.types.indexOf(ADDRESS_TYPES.WARD2) > -1
+          ) {
             addObj['ward'] = component.long_name;
             setWard(component.long_name);
             return;

@@ -153,6 +153,7 @@ const Information = props => {
                 showUploadList={false}
                 beforeUpload={beforeUpload}
                 onChange={handleChange}
+                style={{ width: 'auto' }}
               >
                 {imgVal ? (
                   <img src={imgVal} alt="avatar" style={{ width: '100%' }} />

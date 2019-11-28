@@ -58,7 +58,11 @@ const ParentData = memo(({ parent, siblings, student }) => {
       <Descriptions>
         <Descriptions.Item label="Image">
           <img
-            src={process.env.REACT_APP_BACKEND_URL + parent.avatar}
+            src={
+              parent.avatar
+                ? process.env.REACT_APP_BACKEND_URL + parent.avatar
+                : '/images/default-user.png'
+            }
             alt="Parent"
             style={{ width: 150, height: 'auto' }}
           />

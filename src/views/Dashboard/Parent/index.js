@@ -6,6 +6,16 @@ import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 export const Parent = props => {
+  const dataTranform = records => {
+    return records.map(record => {
+      if (record.children) {
+        const new_children = [...record.children];
+        delete record.children;
+        record.new_children = new_children;
+      }
+      return record;
+    });
+  };
   const columns = [
     {
       title: 'Avatar',
@@ -13,7 +23,7 @@ export const Parent = props => {
         record.avatar ? (
           <img
             alt="avatar"
-            style={{ width: '80px', height: '80px', textAlign: 'center' }}
+            style={{ width: '80px', height: 'auto', textAlign: 'center' }}
             src={process.env.REACT_APP_BACKEND_URL + record.avatar}
           />
         ) : (
@@ -98,7 +108,11 @@ export const Parent = props => {
         </Button>,
       ]}
     >
-      <DataTable columns={columns} url="/core/api/parent" />
+      <DataTable
+        columns={columns}
+        url="/core/api/parent"
+        dataTranform={dataTranform}
+      />
     </Card>
   );
 };

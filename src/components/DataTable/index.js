@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Table } from 'antd';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 

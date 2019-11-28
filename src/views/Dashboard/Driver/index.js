@@ -1,11 +1,13 @@
 import React from 'react';
-import { Card, Button, Popconfirm, Icon, Row } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Col, Input } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 //const ButtonGroup = Button.Group;
+
+const { Search } = Input;
 
 export const Driver = props => {
   const columns = [
@@ -77,13 +79,30 @@ export const Driver = props => {
     },
   ];
 
+  const handleOnSearch = term => {
+    props.getList({
+      url: '/core/api/driver',
+      search: term,
+    });
+  };
+
   return (
     <Card
       title="Manage Driver"
       extra={[
-        <Button key="add-new" onClick={() => navigate('/dashboard/driver/new')}>
-          Add
-        </Button>,
+        <Row type="flex" gutter={16}>
+          <Col>
+            <Search onSearch={handleOnSearch} />
+          </Col>
+          <Col>
+            <Button
+              key="add-new"
+              onClick={() => navigate('/dashboard/driver/new')}
+            >
+              Add
+            </Button>
+          </Col>
+        </Row>,
       ]}
     >
       <DataTable columns={columns} url="/core/api/driver" />

@@ -1,9 +1,11 @@
 import React from 'react';
-import { Card, Button, Popconfirm, Icon, Row, Tag } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Tag, Input, Col } from 'antd';
 import { navigate } from '@reach/router';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+
+const { Search } = Input;
 
 export const Bus = props => {
   const dispatch = useDispatch();
@@ -77,14 +79,33 @@ export const Bus = props => {
     },
   ];
 
+  const handleOnSearch = term => {
+    dispatch(
+      actionCreator.getList({
+        url: '/core/api/bus',
+        search: term,
+      })
+    );
+  };
+
   return (
     <Card
       title="Manage bus"
       headStyle={{ backgroundColor: 'white' }}
       extra={[
-        <Button key="add-new" onClick={() => navigate('/dashboard/bus/new')}>
-          Add
-        </Button>,
+        <Row type="flex" gutter={16}>
+          <Col>
+            <Search onSearch={handleOnSearch} />
+          </Col>
+          <Col>
+            <Button
+              key="add-new"
+              onClick={() => navigate('/dashboard/bus/new')}
+            >
+              Add
+            </Button>
+          </Col>
+        </Row>,
       ]}
     >
       <DataTable columns={columns} url="/core/api/bus" />

@@ -46,7 +46,6 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
       const [place] = places;
       const { address_components, geometry, formatted_address } = place;
       const addObj = {};
-      console.log(place);
 
       address_components.forEach(component => {
         if (component && component.types && component.types.length > 0) {
@@ -117,6 +116,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
 
     if (currentLocation) {
       data.id = currentLocation.bus_location.id;
+      data.route = currentLocation.bus_route.id;
       dispatch(actionCreator.updateLocation(data));
     } else {
       data.route = route.id;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Input, Form, Spin, Button, Row, Col } from 'antd';
+import { Modal, Input, Form, Spin, Button, Row, Col, notification } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
 
@@ -38,6 +38,11 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
           res(results);
         } else {
           // alert('Geocode was not successful for the following reason: ' + status);
+          notification.warning({
+            message: 'Location not found!',
+          });
+
+          setLoading(false);
         }
       });
     });
@@ -81,6 +86,8 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
         lng: geometry.location.lng(),
         lat: geometry.location.lat(),
       });
+    } else {
+      notification.warning({ message: 'Location not found' });
     }
 
     setLoading(false);

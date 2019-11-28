@@ -79,6 +79,7 @@ const Information = props => {
       setDistrict(student.district);
       setWard(student.ward);
       setProvince(student.province);
+      setImgVal(process.env.REACT_APP_BACKEND_URL + student.image);
     } else {
       setName('');
       setAltName('');

@@ -11,7 +11,16 @@ export const Student = props => {
   const columns = [
     {
       title: 'Picture',
-      dataIndex: 'picture',
+      render: (_, record) =>
+        record.image ? (
+          <img
+            alt="student"
+            style={{ width: '60px', height: 'auto', textAlign: 'center' }}
+            src={process.env.REACT_APP_BACKEND_URL + record.image}
+          />
+        ) : (
+          ''
+        ),
     },
     {
       title: 'Name',
@@ -30,12 +39,12 @@ export const Student = props => {
       dataIndex: 'classroom',
     },
     {
-      title: 'District',
-      dataIndex: 'district',
+      title: 'Home number',
+      dataIndex: 'home_number',
     },
     {
-      title: 'Ward',
-      dataIndex: 'ward',
+      title: 'District',
+      dataIndex: 'district',
     },
     {
       title: 'Parent',
@@ -53,7 +62,7 @@ export const Student = props => {
     //   dataIndex: 'busno',
     // },
     {
-      title: 'To School',
+      title: 'Pick-up Route',
       render: (_, record) => {
         const { bus_routes } = record;
         if (bus_routes && bus_routes.length > 0) {
@@ -68,7 +77,7 @@ export const Student = props => {
       },
     },
     {
-      title: 'To Home',
+      title: 'Drop-off Route',
       render: (_, record) => {
         const { bus_routes } = record;
         if (bus_routes && bus_routes.length > 0) {

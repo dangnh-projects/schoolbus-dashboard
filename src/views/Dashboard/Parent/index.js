@@ -8,12 +8,13 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 export const Parent = props => {
   const dataTranform = records => {
     return records.map(record => {
-      if (record.children) {
-        const new_children = [...record.children];
-        delete record.children;
-        record.new_children = new_children;
+      const new_record = { ...record };
+      if (new_record.children) {
+        const new_children = [...new_record.children];
+        delete new_record.children;
+        new_record.new_children = new_children;
       }
-      return record;
+      return new_record;
     });
   };
   const columns = [

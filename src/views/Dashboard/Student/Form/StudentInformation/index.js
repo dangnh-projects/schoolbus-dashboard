@@ -27,7 +27,7 @@ const Information = props => {
   const [name, setName] = useState('');
   const [altName, setAltName] = useState('');
   const [dob, setDob] = useState();
-  const [school] = useState('');
+  const [school] = useState(1);
   const [classroom, setClassRoom] = useState('');
   const [imgVal, setImgVal] = useState('/images/default-user.png');
   const [avatar, setAvatar] = useState('');
@@ -46,7 +46,7 @@ const Information = props => {
       name,
       alternative_name: altName,
       dob: dob.format('YYYY-MM-DD'),
-      school,
+      school_id: school,
       classroom,
       image: avatar,
       home_number: homeNumber,

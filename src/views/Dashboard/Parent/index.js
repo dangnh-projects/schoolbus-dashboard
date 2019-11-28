@@ -1,9 +1,11 @@
 import React from 'react';
-import { Card, Button, Popconfirm, Icon, Row, Tag, Col } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Tag, Col, Input } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+
+const { Search } = Input;
 
 export const Parent = props => {
   const dataTranform = records => {
@@ -100,13 +102,30 @@ export const Parent = props => {
     },
   ];
 
+  const handleOnSearch = term => {
+    props.getList({
+      url: '/core/api/parent',
+      search: term,
+    });
+  };
+
   return (
     <Card
       title="Manage parent"
       extra={[
-        <Button key="add-new" onClick={() => navigate('/dashboard/parent/new')}>
-          Add
-        </Button>,
+        <Row type="flex" gutter={16}>
+          <Col>
+            <Search onSearch={handleOnSearch} />
+          </Col>
+          <Col>
+            <Button
+              key="add-new"
+              onClick={() => navigate('/dashboard/parent/new')}
+            >
+              Add
+            </Button>
+          </Col>
+        </Row>,
       ]}
     >
       <DataTable

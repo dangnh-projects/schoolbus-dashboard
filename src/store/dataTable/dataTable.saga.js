@@ -48,10 +48,11 @@ function* getList(action, user) {
   yield put(actionCreator.getListSuccess({ count: 0, results: [] }));
   const page = yield select(store => store.dataTable.page) || 1;
 
-  const { limit = 10 } = action.payload;
+  const { limit = 10, search = '' } = action.payload;
   const params = {
     limit,
     offset: (page - 1) * limit,
+    search,
   };
   const { body } = yield call(apiRequest.request, {
     url: action.payload.url,

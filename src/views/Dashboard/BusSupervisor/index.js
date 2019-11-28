@@ -1,9 +1,11 @@
 import React from 'react';
-import { Card, Button, Popconfirm, Icon, Row, Tag } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Tag, Col, Input } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+
+const { Search } = Input;
 
 export const Bus = props => {
   const columns = [
@@ -91,16 +93,30 @@ export const Bus = props => {
     },
   ];
 
+  const handleOnSearch = term => {
+    props.getList({
+      url: '/core/api/supervisor',
+      search: term,
+    });
+  };
+
   return (
     <Card
       title="Manage bus supervisor"
       extra={[
-        <Button
-          key="add-new"
-          onClick={() => navigate('/dashboard/bus-supervisor/new')}
-        >
-          Add
-        </Button>,
+        <Row type="flex" gutter={16}>
+          <Col>
+            <Search onSearch={handleOnSearch} />
+          </Col>
+          <Col>
+            <Button
+              key="add-new"
+              onClick={() => navigate('/dashboard/bus-supervisor/new')}
+            >
+              Add
+            </Button>
+          </Col>
+        </Row>,
       ]}
     >
       <DataTable columns={columns} url="/core/api/supervisor" />

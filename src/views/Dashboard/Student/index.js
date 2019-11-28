@@ -1,9 +1,11 @@
 import React from 'react';
-import { Card, Button, Popconfirm, Icon, Row } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Input, Col } from 'antd';
 import { navigate } from '@reach/router';
 import { useDispatch } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+
+const { Search } = Input;
 
 export const Student = props => {
   const dispatch = useDispatch();
@@ -125,16 +127,32 @@ export const Student = props => {
     },
   ];
 
+  const handleOnSearch = term => {
+    dispatch(
+      actionCreator.getList({
+        url: '/core/api/student',
+        search: term,
+      })
+    );
+  };
+
   return (
     <Card
       title="Manage Students"
       extra={[
-        <Button
-          key="add-new"
-          onClick={() => navigate('/dashboard/student/new')}
-        >
-          Add
-        </Button>,
+        <Row type="flex" gutter={16}>
+          <Col>
+            <Search onSearch={handleOnSearch} />
+          </Col>
+          <Col>
+            <Button
+              key="add-new"
+              onClick={() => navigate('/dashboard/student/new')}
+            >
+              Add
+            </Button>
+          </Col>
+        </Row>,
       ]}
     >
       <DataTable columns={columns} url="/core/api/student" />

@@ -10,7 +10,7 @@ const { Search } = Input;
 const ADDRESS_TYPES = {
   STREET_NUMBER: 'street_number',
   ROUTE: 'route',
-  WARD: 'sublocality_level_1',
+  WARD: 'locality',
   DISTRICT: 'administrative_area_level_2',
   PROVINCE: 'administrative_area_level_1',
 };
@@ -27,6 +27,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
   const [street, setStreet] = useState('');
   const [ward, setWard] = useState('');
   const [district, setDistrict] = useState('');
+  const [province, setProvince] = useState('');
   const [point, setPoint] = useState(null);
 
   const getSearchPlace = async searchTerm => {
@@ -77,6 +78,12 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
             setDistrict(component.long_name);
             return;
           }
+
+          if (component.types.indexOf(ADDRESS_TYPES.PROVINCE) > -1) {
+            addObj['province'] = component.long_name;
+            setProvince(component.long_name);
+            return;
+          }
         }
       });
 
@@ -101,6 +108,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
       setStreet(bus_location.street);
       setWard(bus_location.ward);
       setDistrict(bus_location.district);
+      setProvince(bus_location.province);
       setTimeNextLoc(bus_location.time_to_next_location);
       setPoint({
         lng: bus_location.lng,
@@ -116,6 +124,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
       // number,
       ward,
       district,
+      province,
       lng: point.lng,
       lat: point.lat,
       time_to_next_location: parseInt(timeNextLoc) || 0,
@@ -189,6 +198,15 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
                 />
               </Item>
             </Col>
+
+            <Col span={12}>
+              <Item label="Province">
+                <Input
+                  value={province}
+                  onChange={e => setProvince(e.target.value)}
+                />
+              </Item>
+            </Col>
           </Row>
 
           <Item label="Time to next destination (0 if this is final position)">
@@ -201,7 +219,10 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
             <Button
               onClick={handleOnSubmit}
               htmlType="button"
-              disabled={!currentLocation && !addressObj}
+              disabled={
+                !currentLocation && !addressObj
+                // !(address || street || ward || district || province)
+              }
             >
               Submit
             </Button>

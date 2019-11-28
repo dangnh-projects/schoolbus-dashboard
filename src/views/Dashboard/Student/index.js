@@ -31,20 +31,14 @@ export const Student = props => {
       dataIndex: 'alternative_name',
     },
     {
-      title: 'Birthday',
-      dataIndex: 'dob',
-    },
-    {
       title: 'Class',
       dataIndex: 'classroom',
     },
     {
-      title: 'Home number',
-      dataIndex: 'home_number',
-    },
-    {
-      title: 'District',
-      dataIndex: 'district',
+      title: 'Address',
+      render: (_, record) =>
+        `${record.home_number || ''} ${record.street || ''} ${record.ward ||
+          ''} ${record.district || ''}`,
     },
     {
       title: 'Parent',

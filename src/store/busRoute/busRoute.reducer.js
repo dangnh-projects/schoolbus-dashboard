@@ -6,6 +6,7 @@ const initialState = {
   locations: [],
   currentLocation: null,
   modalVisible: false,
+  students: [],
 };
 
 const postRouteSuccess = (state, action) => ({
@@ -37,6 +38,11 @@ const toggleModal = (state, action) => ({
       : !state.modalVisible,
 });
 
+const setStudent = (state, action) => ({
+  ...state,
+  students: action.payload,
+});
+
 export default handleActions(
   {
     [TYPES.POST_ROUTE_SUCCESS]: postRouteSuccess,
@@ -44,6 +50,7 @@ export default handleActions(
     [TYPES.GET_ROUTE_LOCATION_SUCCESS]: getRouteLocationSuccess,
     [TYPES.SET_CURRENT_LOCATION]: setCurrentLocation,
     [TYPES.TOGGLE_MODAL]: toggleModal,
+    [TYPES.SET_STUDENT]: setStudent,
   },
   initialState
 );

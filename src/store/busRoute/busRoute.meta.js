@@ -20,6 +20,8 @@ export const TYPES = {
   TOGGLE_MODAL: 'TOGGLE_MODAL',
 
   SET_LOADING: 'SET_LOADING',
+
+  SET_STUDENT: 'SET_STUDENT',
 };
 
 export const actionCreator = {
@@ -41,4 +43,6 @@ export const actionCreator = {
   setLoading: createAction(TYPES.SET_LOADING),
 
   toggleModal: createAction(TYPES.TOGGLE_MODAL),
+
+  setStudent: createAction(TYPES.SET_STUDENT),
 };

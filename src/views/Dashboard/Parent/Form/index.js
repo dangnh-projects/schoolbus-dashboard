@@ -199,7 +199,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                 </Item>
               </Col>
             </Row>
-            {!item && (
+            {!item ? (
               <div>
                 <Divider orientation="left" style={{ marginBottom: 0 }}>
                   Account information
@@ -235,6 +235,30 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                         />
                       )}
                     </Item>
+                  </Col>
+                </Row>
+              </div>
+            ) : (
+              <div>
+                <Divider orientation="left" style={{ marginBottom: 0 }}>
+                  Account information
+                </Divider>
+                <Row gutter={16} display="flex" justify="center">
+                  <Col md={12}>
+                    <Item label="Username">
+                      {getFieldDecorator('username', {
+                        initialValue: item.username,
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Username is required',
+                          },
+                        ],
+                      })(<Input readOnly={true} />)}
+                    </Item>
+                  </Col>
+                  <Col md={12}>
+                    <Button>Update Password</Button>
                   </Col>
                 </Row>
               </div>

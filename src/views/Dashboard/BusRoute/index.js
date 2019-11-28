@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import moment from 'moment';
-import { Card, Button, Popconfirm, Icon, Row, Table } from 'antd';
+import { Card, Button, Popconfirm, Icon, Row, Table, Col, Input } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+
+const { Search } = Input;
 
 export const Bus = props => {
   const { data = [] } = props;
@@ -90,16 +92,30 @@ export const Bus = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleOnSearch = term => {
+    props.getList({
+      url: '/core/api/bus-route',
+      search: term,
+    });
+  };
+
   return (
     <Card
       title="Manage bus route"
       extra={[
-        <Button
-          key="add-new"
-          onClick={() => navigate('/dashboard/bus-route/new')}
-        >
-          Add
-        </Button>,
+        <Row type="flex" gutter={16}>
+          <Col>
+            <Search onSearch={handleOnSearch} />
+          </Col>
+          <Col>
+            <Button
+              key="add-new"
+              onClick={() => navigate('/dashboard/bus-route/new')}
+            >
+              Add
+            </Button>
+          </Col>
+        </Row>,
       ]}
     >
       <Table columns={columns} bordered size="middle" dataSource={data} />

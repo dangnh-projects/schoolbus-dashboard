@@ -10,11 +10,11 @@ export const Bus = props => {
     {
       title: 'Avatar',
       render: (_, record) =>
-        record.image ? (
+        record.avatar ? (
           <img
             alt="avatar"
             style={{ width: '60px', height: 'auto', textAlign: 'center' }}
-            src={process.env.REACT_APP_BACKEND_URL + record.image}
+            src={process.env.REACT_APP_BACKEND_URL + record.avatar}
           />
         ) : (
           ''

@@ -92,16 +92,18 @@ const RouteForm = props => {
         route.end_time ? moment(route.end_time, 'HH:mm:ss') : moment()
       );
       setType(route.route_type);
+    } else {
+      setName('');
+      setBusSupervisor('');
+      setDriver('');
+      setBus('');
+      setStartTime(moment());
+      setEndTime(moment());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
   const saveBusInfo = () => {
-    console.log(startTime);
-    console.log(
-      startTime ? startTime.format('HH:mm') : moment().format('HH:mm')
-    );
-
     if (!route) {
       const data = {
         route_type: type,

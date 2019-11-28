@@ -45,16 +45,16 @@ export const Parent = props => {
         </Col>
       ),
     },
-    {
-      title: 'Status',
-      render: (_, record) =>
-        record.status === 'A' ? (
-          <Tag color="#3e8247">Active</Tag>
-        ) : (
-          <Tag>Inactive</Tag>
-        ),
-      align: 'center',
-    },
+    // {
+    //   title: 'Status',
+    //   render: (_, record) =>
+    //     record.status === 'A' ? (
+    //       <Tag color="#3e8247">Active</Tag>
+    //     ) : (
+    //       <Tag>Inactive</Tag>
+    //     ),
+    //   align: 'center',
+    // },
     {
       title: 'Action',
       align: 'center',

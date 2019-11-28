@@ -18,7 +18,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
-//import { API } from 'api/metaData';
+import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
 const Item = Form.Item;
 
@@ -37,7 +37,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
   const [password, setPassword] = useState();
 
   const [avatar, setAvatar] = useState();
-  const [imgVal, setImgVal] = useState();
+  const [imgVal, setImgVal] = useState('/images/default-user.png');
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -104,6 +104,10 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       setIdPassport(found.id_number);
       setPhoneNumber(found.phone_number);
       setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
+    } else {
+      InitDefaultFile(e => {
+        setAvatar(dataURLtoBlob(e.target.result));
+      });
     }
   }, [item, data, id]);
 

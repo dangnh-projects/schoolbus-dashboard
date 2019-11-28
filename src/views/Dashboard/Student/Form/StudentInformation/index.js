@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
 
 import moment from 'moment';
+import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 //import { navigate } from '@reach/router'
 
 const Item = Form.Item;
@@ -28,7 +29,7 @@ const Information = props => {
   const [dob, setDob] = useState();
   const [school] = useState('');
   const [classroom, setClassRoom] = useState('');
-  const [imgVal, setImgVal] = useState('');
+  const [imgVal, setImgVal] = useState('/images/default-user.png');
   const [avatar, setAvatar] = useState('');
   const [homeNumber, setHomeNumber] = useState('');
   const [street, setStreet] = useState('');
@@ -90,6 +91,9 @@ const Information = props => {
       setDistrict('');
       setWard('');
       setProvince('');
+      InitDefaultFile(e => {
+        setAvatar(dataURLtoBlob(e.target.result));
+      });
     }
   }, [student]);
 

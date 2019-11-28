@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   notification,
   Form,
@@ -16,6 +16,7 @@ import moment from 'moment';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { actionCreator as studentActionCreator } from 'store/student/student.meta';
+import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 //import { API } from 'api/metaData';
 
 const Item = Form.Item;
@@ -34,13 +35,8 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const [homeNumber, setHomeNumber] = useState();
-  const [homeWard, setHomeWard] = useState();
-  const [homeDistrict, setHomeDistrict] = useState();
-  const [homeProvince, setHomeProvince] = useState();
-
   const [avatar, setAvatar] = useState();
-  const [imgVal, setImgVal] = useState();
+  const [imgVal, setImgVal] = useState('/images/default-user.png');
 
   const handleSubmit = () => {
     const fields = {
@@ -82,6 +78,12 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
     // });
   };
   id = parseInt(id);
+
+  useEffect(() => {
+    InitDefaultFile(e => {
+      setAvatar(dataURLtoBlob(e.target.result));
+    });
+  }, []);
 
   const beforeUpload = file => {
     const isLt2M = file.size / 1024 / 1024 < 2;
@@ -175,46 +177,6 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
               </Col>
             </Row>
           </div>
-
-          <Divider orientation="left" style={{ marginBottom: 0 }}>
-            Address
-          </Divider>
-          <Row gutter={16}>
-            <Col md={12}>
-              <Item label="Home number">
-                <Input
-                  value={homeNumber}
-                  onChange={e => setHomeNumber(e.target.value)}
-                />
-              </Item>
-            </Col>
-            <Col md={12}>
-              <Item label="Ward">
-                <Input
-                  value={homeWard}
-                  onChange={e => setHomeWard(e.target.value)}
-                />
-              </Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col md={12}>
-              <Item label="District">
-                <Input
-                  value={homeDistrict}
-                  onChange={e => setHomeDistrict(e.target.value)}
-                />
-              </Item>
-            </Col>
-            <Col md={12}>
-              <Item label="Province">
-                <Input
-                  value={homeProvince}
-                  onChange={e => setHomeProvince(e.target.value)}
-                />
-              </Item>
-            </Col>
-          </Row>
         </Col>
         <Col md={6} style={{ paddingLeft: 24 }}>
           <Upload
@@ -222,7 +184,6 @@ const ParentForm = ({ formSave, updateItem, id, data }) => {
             listType="picture-card"
             className="avatar-uploader"
             showUploadList={false}
-            //action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
             beforeUpload={beforeUpload}
             onChange={handleChange}
           >

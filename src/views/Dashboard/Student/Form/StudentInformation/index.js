@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
 
 import moment from 'moment';
+import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 //import { navigate } from '@reach/router'
 
 const Item = Form.Item;
@@ -28,7 +29,7 @@ const Information = props => {
   const [dob, setDob] = useState();
   const [school] = useState('');
   const [classroom, setClassRoom] = useState('');
-  const [imgVal, setImgVal] = useState('');
+  const [imgVal, setImgVal] = useState('/images/default-user.png');
   const [avatar, setAvatar] = useState('');
   const [homeNumber, setHomeNumber] = useState('');
   const [street, setStreet] = useState('');
@@ -90,6 +91,10 @@ const Information = props => {
       setDistrict('');
       setWard('');
       setProvince('');
+      InitDefaultFile(e => {
+        setAvatar(dataURLtoBlob(e.target.result));
+      });
+      setImgVal('/images/default-user.png');
     }
   }, [student]);
 
@@ -114,10 +119,17 @@ const Information = props => {
   };
 
   return (
-    <Row>
+    <Row style={{ display: 'flex', justifyContent: 'center' }}>
       <Col md={18}>
-        <Row gutter={16}>
-          <Col md={12}>
+        <Row
+          gutter={16}
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Col md={16}>
             <Item
               required={true}
               label="Full name"
@@ -125,14 +137,33 @@ const Information = props => {
             >
               <Input value={name} onChange={e => setName(e.target.value)} />
             </Item>
-          </Col>
-          <Col md={12}>
             <Item label="Alternative name">
               <Input
                 value={altName}
                 onChange={e => setAltName(e.target.value)}
               />
             </Item>
+          </Col>
+          <Col md={8}>
+            <Row type="flex" justify="center">
+              <Upload
+                name="avatar"
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                beforeUpload={beforeUpload}
+                onChange={handleChange}
+              >
+                {imgVal ? (
+                  <img src={imgVal} alt="avatar" style={{ width: '100%' }} />
+                ) : (
+                  <div>
+                    <Icon type={'plus'} />
+                    <div className="ant-upload-text">Avatar</div>
+                  </div>
+                )}
+              </Upload>
+            </Row>
           </Col>
         </Row>
         <Row gutter={16}>
@@ -206,27 +237,6 @@ const Information = props => {
               Next
             </Button>
           )}
-        </Row>
-      </Col>
-      <Col md={6}>
-        <Row type="flex" justify="center">
-          <Upload
-            name="avatar"
-            listType="picture-card"
-            className="avatar-uploader"
-            showUploadList={false}
-            beforeUpload={beforeUpload}
-            onChange={handleChange}
-          >
-            {imgVal ? (
-              <img src={imgVal} alt="avatar" style={{ width: '100%' }} />
-            ) : (
-              <div>
-                <Icon type={'plus'} />
-                <div className="ant-upload-text">Avatar</div>
-              </div>
-            )}
-          </Upload>
         </Row>
       </Col>
     </Row>

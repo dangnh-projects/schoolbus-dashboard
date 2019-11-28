@@ -18,7 +18,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
-//import { API } from 'api/metaData';
+import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
 const Item = Form.Item;
 
@@ -37,7 +37,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
   const [password, setPassword] = useState();
 
   const [avatar, setAvatar] = useState();
-  const [imgVal, setImgVal] = useState();
+  const [imgVal, setImgVal] = useState('/images/default-user.png');
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -106,6 +106,10 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
 
       setStudentTest(found.children);
+    } else {
+      InitDefaultFile(e => {
+        setAvatar(dataURLtoBlob(e.target.result));
+      });
     }
   }, [item, data, id]);
 
@@ -194,10 +198,20 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="ID/Passport number">
-                  <Input
-                    value={id_number}
-                    onChange={e => setIdPassport(e.target.value)}
-                  />
+                  {getFieldDecorator('id_number', {
+                    initialValue: phone_number,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'ID number is required',
+                      },
+                    ],
+                  })(
+                    <Input
+                      value={id_number}
+                      onChange={e => setIdPassport(e.target.value)}
+                    />
+                  )}
                 </Item>
               </Col>
             </Row>

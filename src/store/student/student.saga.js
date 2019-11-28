@@ -87,7 +87,7 @@ function* searchParent({ payload }) {
     }
     // yield put(actionCreator.changeStage(1));
     notification.success({
-      message: 'Save bus route information successfully',
+      message: 'Search parent successfully',
     });
   } catch (error) {
     if (error.response && error.response.status === 403) {
@@ -207,6 +207,9 @@ function* postParent({ payload }) {
           data: {
             id: student.id,
             parent_id: body.data.info,
+          },
+          afterSuccess: function*() {
+            yield put(actionCreator.changeStage(2));
           },
         })
       );

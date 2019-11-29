@@ -1,12 +1,23 @@
-import React from 'react';
-import { Card, Icon, Table, Tabs, Tag } from 'antd';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import { actionCreator } from 'store/dataTable/dataTable.meta';
+import React, { useEffect, lazy, Suspense } from 'react';
+import { Card, Icon, Table, Tabs, Tag, Spin } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionCreator } from 'store/busRoute/busRoute.meta';
+
+const LiveTrackTable = lazy(() => import('./LiveTrackTable'));
+const BusRouteTable = lazy(() => import('./BusRoutesTable'));
 
 const { TabPane } = Tabs;
 
 export const Bus = props => {
+  const {
+    routes = [],
+    pickupRunningRoute = [],
+    dropoffRunningRoute = [],
+  } = useSelector(state => state.busRoute);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(actionCreator.getRoutes());
+  }, []);
   const columns = [
     {
       title: 'Bus number',
@@ -65,13 +76,13 @@ export const Bus = props => {
                   <Icon type="arrow-up" />
                   Pickup
                   <Tag color="#87d068" style={{ marginLeft: 12 }}>
-                    10
+                    {pickupRunningRoute.length}
                   </Tag>
                 </span>
               }
               key="Pickup"
             >
-              <Table
+              {/* <Table
                 columns={columns}
                 bordered
                 size="middle"
@@ -88,7 +99,10 @@ export const Bus = props => {
                     end_time: '08:30',
                   },
                 ]}
-              />
+              /> */}
+              <Suspense fallback={<Spin />}>
+                <LiveTrackTable dataSource={pickupRunningRoute} />
+              </Suspense>
             </TabPane>
             <TabPane
               tab={
@@ -96,30 +110,15 @@ export const Bus = props => {
                   <Icon type="arrow-down" />
                   Drop off
                   <Tag color="#87d068" style={{ marginLeft: 12 }}>
-                    3
+                    {dropoffRunningRoute.length}
                   </Tag>
                 </span>
               }
               key="drop-off"
             >
-              <Table
-                columns={columns}
-                bordered
-                size="middle"
-                dataSource={[
-                  {
-                    name: 'District 7 - Hong Bang',
-                    number: 'Bus 02',
-                    driver: 'Hung Vo',
-                    bus_supervisor: 'Thao Hoang',
-                    start_time: '08:00',
-                    next_stop: 'Điện Biên Phủ',
-                    no_onboarding: 20,
-                    no_remaining: 22,
-                    end_time: '08:30',
-                  },
-                ]}
-              />
+              <Suspense fallback={<Spin />}>
+                <LiveTrackTable dataSource={dropoffRunningRoute} />
+              </Suspense>
             </TabPane>
           </Tabs>
         </TabPane>
@@ -128,44 +127,19 @@ export const Bus = props => {
             <span>
               All Buses{' '}
               <Tag color="gray" style={{ marginLeft: 12 }}>
-                20
+                {routes.length}
               </Tag>
             </span>
           }
           key="all"
         >
-          <Table
-            columns={columns}
-            bordered
-            size="middle"
-            dataSource={[
-              {
-                name: 'District 7 - Hong Bang',
-                number: 'Bus 02',
-                driver: 'Hung Vo',
-                bus_supervisor: 'Thao Hoang',
-                start_time: '08:00',
-                next_stop: 'Điện Biên Phủ',
-                no_onboarding: 20,
-                no_remaining: 22,
-                end_time: '08:30',
-              },
-            ]}
-          />
+          <Suspense fallback={<Spin />}>
+            <BusRouteTable dataSource={routes} />
+          </Suspense>
         </TabPane>
       </Tabs>
     </Card>
   );
 };
 
-const mapDispatchToProps = {
-  getList: actionCreator.getList,
-  deleteItem: actionCreator.deleteItem,
-};
-
-const mapStateToProps = state => state.dataTable;
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Bus);
+export default Bus;

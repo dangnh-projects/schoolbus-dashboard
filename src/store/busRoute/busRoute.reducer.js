@@ -1,6 +1,11 @@
 import { handleActions } from 'redux-actions';
 import { TYPES } from './busRoute.meta';
 
+const ROUTE_TYPES = {
+  DROP_OFF: 'D',
+  PICK_UP: 'P',
+};
+
 const initialState = {
   route: null,
   locations: [],
@@ -8,6 +13,8 @@ const initialState = {
   modalVisible: false,
   students: [],
   routes: [],
+  pickupRunningRoute: [],
+  dropoffRunningRoute: [],
 };
 
 const postRouteSuccess = (state, action) => ({
@@ -47,6 +54,16 @@ const setStudent = (state, action) => ({
 const getRoutesSuccess = (state, action) => ({
   ...state,
   routes: action.payload,
+  pickupRunningRoute:
+    action.payload &&
+    action.payload.filter(
+      route => route.route_type === ROUTE_TYPES.PICK_UP && route.is_running
+    ),
+  dropoffRunningRoute:
+    action.payload &&
+    action.payload.filter(
+      route => route.route_type === ROUTE_TYPES.DROP_OFF && route.is_running
+    ),
 });
 
 export default handleActions(

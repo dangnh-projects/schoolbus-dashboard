@@ -85,7 +85,7 @@ export const Parent = props => {
               title={'Delete row?'}
               onConfirm={() =>
                 props.deleteItem({
-                  url: `/core/api/parent/${record.id}`,
+                  url: `/core/api/parent/${record.info}`,
                   afterDelete: () => props.getList({ url: '/core/api/parent' }),
                 })
               }

@@ -5,7 +5,7 @@ import { notification } from 'antd';
 import { authenticate } from 'store/utils';
 
 import { buildRequest } from 'api';
-export const postRouteRequest = buildRequest('/core/api/bus-route');
+export const routeRequest = buildRequest('/core/api/bus-route');
 export const getRouteLocationRequest = buildRequest('/core/api/bus-route');
 export const postRouteLocationRequest = buildRequest('/core/api/bus-location');
 export const removeRouteLocationRequest = buildRequest(
@@ -48,7 +48,7 @@ const apiCallWrapper = handler =>
 
 function* postRoute({ payload }, user) {
   const formData = convertObjectToFormData(payload);
-  const { body } = yield call(postRouteRequest.request, {
+  const { body } = yield call(routeRequest.request, {
     data: formData,
     method: 'POST',
     headers: {
@@ -117,7 +117,7 @@ function* removeRouteLocation({ payload = {} }, user) {
 
 function* updateRoute({ payload }, user) {
   const formData = convertObjectToFormData(payload);
-  const { body } = yield call(postRouteRequest.request, {
+  const { body } = yield call(routeRequest.request, {
     url: '/' + payload.id,
     data: formData,
     method: 'PUT',
@@ -157,6 +157,18 @@ function* updateLocation({ payload }, user) {
   yield put(actionCreator.getRouteLocations(payload.route));
 }
 
+function* getRoutes(_, user) {
+  const { body } = yield call(routeRequest.request, {
+    headers: {
+      Authorization: `Bearer ${user.token.access}`,
+      // 'Content-Type': 'multipart/form-data',
+    },
+  });
+  if (body && body.data) {
+    yield put(actionCreator.getRoutesSuccess(body.data));
+  }
+}
+
 export default function* busRouteSaga() {
   yield takeLatest(TYPES.POST_ROUTE, apiCallWrapper(postRoute));
   yield takeLatest(
@@ -171,4 +183,5 @@ export default function* busRouteSaga() {
   yield takeLatest(TYPES.UPDATE_ROUTE, apiCallWrapper(updateRoute));
 
   yield takeEvery(TYPES.UPDATE_LOCATION, apiCallWrapper(updateLocation));
+  yield takeLatest(TYPES.GET_ROUTES, apiCallWrapper(getRoutes));
 }

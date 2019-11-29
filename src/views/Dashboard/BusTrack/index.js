@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Icon, Table, Tabs, Tag } from 'antd';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 const { TabPane } = Tabs;

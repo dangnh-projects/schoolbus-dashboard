@@ -22,6 +22,9 @@ export const TYPES = {
   SET_LOADING: 'SET_LOADING',
 
   SET_STUDENT: 'SET_STUDENT',
+
+  GET_ROUTES: 'GET_ROUTES',
+  GET_ROUTES_SUCCESS: 'GET_ROUTES_SUCCESS',
 };
 
 export const actionCreator = {
@@ -45,4 +48,7 @@ export const actionCreator = {
   toggleModal: createAction(TYPES.TOGGLE_MODAL),
 
   setStudent: createAction(TYPES.SET_STUDENT),
+
+  getRoutes: createAction(TYPES.GET_ROUTES),
+  getRoutesSuccess: createAction(TYPES.GET_ROUTES_SUCCESS),
 };

@@ -74,14 +74,23 @@ const ParentData = memo(({ parent, siblings, student }) => {
           {parent.id_number}
         </Descriptions.Item>
       </Descriptions>
-      <Divider orientation="left">Sibling</Divider>
-      <Table
-        columns={[
-          { title: 'Student', key: 'student' },
-          { title: 'Class', key: 'class' },
-        ]}
-        dataSource={siblings || []}
-      />
+      {siblings && siblings.length > 0 && (
+        <div>
+          <Divider orientation="left">Sibling</Divider>
+          <Table
+            columns={[
+              { title: 'Student', dataIndex: 'name' },
+              { title: 'Class', dataIndex: 'classroom' },
+              {
+                title: 'School',
+                render: (_, record) => record.school && record.school.name,
+              },
+            ]}
+            dataSource={siblings || []}
+          />
+        </div>
+      )}
+
       <Row type="flex" align="center" style={{ marginTop: 24 }}>
         <Button
           onClick={() => dispatch(actionCreator.changeStage(0))}
@@ -90,7 +99,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
           Back
         </Button>
         <Button onClick={handleOnNext} style={{ marginLeft: 12 }}>
-          Next
+          Save
         </Button>
       </Row>
     </Row>

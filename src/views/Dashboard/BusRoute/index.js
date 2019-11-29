@@ -8,7 +8,7 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 const { Search } = Input;
 
 export const Bus = props => {
-  const { data = [] } = props;
+  const { data = [], loading } = props;
   const columns = [
     {
       title: 'Route name',
@@ -118,7 +118,13 @@ export const Bus = props => {
         </Row>,
       ]}
     >
-      <Table columns={columns} bordered size="middle" dataSource={data} />
+      <Table
+        columns={columns}
+        loading={loading}
+        bordered
+        size="middle"
+        dataSource={data}
+      />
     </Card>
   );
 };

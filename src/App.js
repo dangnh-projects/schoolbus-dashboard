@@ -31,6 +31,8 @@ const BusSupervisorForm = lazy(() =>
 const Student = lazy(() => import('./views/Dashboard/Student'));
 const StudentForm = lazy(() => import('./views/Dashboard/Student/Form'));
 
+const Message = lazy(() => import('./views/Dashboard/Message'));
+
 const WaitingComponent = ({ Component, ...props }) => (
   <Suspense maxDuration={1500} fallback={<Loading />}>
     <Component {...props} />
@@ -76,6 +78,8 @@ function App() {
           <WaitingComponent Component={Student} path="student" />
           <WaitingComponent Component={StudentForm} path="student/new" />
           <WaitingComponent Component={StudentForm} path="student/:id" />
+
+          <WaitingComponent Component={Message} path="message" />
         </WaitingComponent>
         <WaitingComponent Component={Dashboard} path="permission">
           {/* <WaitingComponent Component={User} path="user" />

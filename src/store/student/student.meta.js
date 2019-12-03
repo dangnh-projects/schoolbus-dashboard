@@ -26,6 +26,8 @@ export const types = {
 
   ADD_STUDENT_TO_BUS_LOCATION: 'ADD_STUDENT_TO_BUS_LOCATION',
   ADD_STUDENT_TO_BUS_LOCATION_SUCCESS: 'ADD_STUDENT_TO_BUS_LOCATION_SUCCESS',
+
+  SET_SHOW_PARENT_FORM: 'SET_SHOW_PARENT_FORM',
 };
 
 export const actionCreator = {
@@ -47,4 +49,6 @@ export const actionCreator = {
 
   addToLocation: createAction(types.ADD_STUDENT_TO_BUS_LOCATION),
   addToLocationSuccess: createAction(types.ADD_STUDENT_TO_BUS_LOCATION_SUCCESS),
+
+  setShowParentForm: createAction(types.SET_SHOW_PARENT_FORM),
 };

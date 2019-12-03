@@ -83,6 +83,7 @@ function* searchParent({ payload }) {
       yield all([
         put(actionCreator.searchParentSuccess(parent)),
         put(actionCreator.setSibling(children)),
+        put(actionCreator.setShowParentForm(false)),
       ]);
     }
     // yield put(actionCreator.changeStage(1));

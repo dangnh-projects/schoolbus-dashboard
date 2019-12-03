@@ -9,6 +9,7 @@ const initialState = {
   busStops: [],
   loading: false,
   stage: 0,
+  showParentForm: false,
 };
 
 const postStudentSuccess = (state, action) => ({
@@ -46,6 +47,11 @@ const updateStudentSuccess = (state, action) => ({
   student: action.payload,
 });
 
+const setShowParentForm = (state, action) => ({
+  ...state,
+  showParentForm: !!action.payload,
+});
+
 export default handleActions(
   {
     [types.SET_LOADING]: changeLoading,
@@ -55,6 +61,7 @@ export default handleActions(
     [types.SET_SIBLING]: setSiblings,
     [types.POST_PARENT_SUCCESS]: postParentSuccess,
     [types.UPDATE_STUDENT_SUCCESS]: updateStudentSuccess,
+    [types.SET_SHOW_PARENT_FORM]: setShowParentForm,
   },
   initialState
 );

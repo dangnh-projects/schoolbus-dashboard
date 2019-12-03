@@ -107,8 +107,10 @@ const ParentData = memo(({ parent, siblings, student }) => {
 });
 
 const ParentInfo = props => {
-  const [showForm, setShowForm] = useState(false);
-  const { parent, siblings, student } = useSelector(state => state.student);
+  const { parent, siblings, student, showParentForm } = useSelector(
+    state => state.student
+  );
+  const dispatch = useDispatch();
   return (
     <div>
       <Form style={{ padding: 16 }} layout="horizontal">
@@ -121,10 +123,14 @@ const ParentInfo = props => {
               <Divider>or</Divider>
             </Col>
             <Col md={10}>
-              <Button onClick={() => setShowForm(true)}>Add new</Button>
+              <Button
+                onClick={() => dispatch(actionCreator.setShowParentForm(true))}
+              >
+                Add new
+              </Button>
             </Col>
           </Row>
-          {parent && !showForm && (
+          {parent && !showParentForm && (
             <Col>
               <ParentData
                 parent={parent}
@@ -133,7 +139,7 @@ const ParentInfo = props => {
               />
             </Col>
           )}
-          {showForm && <ParentForm />}
+          {showParentForm && <ParentForm />}
         </Row>
       </Form>
     </div>

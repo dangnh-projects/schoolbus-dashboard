@@ -25,7 +25,7 @@ const Item = Form.Item;
 const ParentForm = ({ formSave, updateItem, id, data, form }) => {
   const { getFieldDecorator } = form;
   const [item, setItem] = useState(null);
-  const [studentTest, setStudentTest] = useState([]);
+  const [student, setStudent] = useState([]);
 
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
@@ -105,7 +105,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       setPhoneNumber(found.phone_number);
       setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
 
-      setStudentTest(found.children);
+      setStudent(found.children);
     } else {
       InitDefaultFile(e => {
         setAvatar(dataURLtoBlob(e.target.result));
@@ -325,7 +325,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                 { title: 'Class', dataIndex: 'classroom' },
                 { title: 'Street', dataIndex: 'street' },
               ]}
-              dataSource={studentTest}
+              dataSource={student}
             />
           </Col>
           <Col md={6} style={{ paddingLeft: 24 }}>

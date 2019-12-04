@@ -33,6 +33,9 @@ const StudentForm = lazy(() => import('./views/Dashboard/Student/Form'));
 
 const Message = lazy(() => import('./views/Dashboard/Message'));
 
+const Report = lazy(() => import('./views/Dashboard/Report'));
+const ReportForm = lazy(() => import('./views/Dashboard/Report/Form'));
+
 const WaitingComponent = ({ Component, ...props }) => (
   <Suspense maxDuration={1500} fallback={<Loading />}>
     <Component {...props} />
@@ -80,6 +83,9 @@ function App() {
           <WaitingComponent Component={StudentForm} path="student/:id" />
 
           <WaitingComponent Component={Message} path="message" />
+
+          <WaitingComponent Component={Report} path="report" />
+          <WaitingComponent Component={ReportForm} path="report/:id" />
         </WaitingComponent>
         <WaitingComponent Component={Dashboard} path="permission">
           {/* <WaitingComponent Component={User} path="user" />

@@ -6,6 +6,15 @@ const ROUTE_TYPES = {
   PICK_UP: 'P',
 };
 
+export const STUDENT_STATUS = {
+  NOT_ON_BUS: 0,
+  MISSING: 1,
+  ABSENCE_WITH_REPORT: 2,
+  ON_THE_WAY_TO_SCHOOL: 3,
+  ON_THE_WAY_TO_HOME: 4,
+  OFF_BUS: 5,
+};
+
 const initialState = {
   route: null,
   locations: [],

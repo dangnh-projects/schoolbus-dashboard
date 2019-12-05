@@ -43,13 +43,15 @@ export const Bus = props => {
     },
 
     {
-      title: 'Start time',
-      render: (_, i) => moment(i.start_time, 'HH:mm:ss').format('HH:mm'),
+      title: 'Planned start time',
+      render: (_, i) =>
+        moment(i.estimated_start_time, 'HH:mm:ss').format('HH:mm'),
     },
 
     {
-      title: 'End time',
-      render: (_, i) => moment(i.end_time, 'HH:mm:ss').format('HH:mm'),
+      title: 'Planned end time',
+      render: (_, i) =>
+        moment(i.estimated_end_time, 'HH:mm:ss').format('HH:mm'),
     },
     {
       title: 'Action',

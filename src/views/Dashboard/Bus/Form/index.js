@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, notification } from 'antd';
+import { Card } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import BaseForm from 'components/Form';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
-import { API } from 'api/metaData';
 
 const BusForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);
@@ -34,8 +33,6 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
       setItem(found);
     }
   }, [item, data, id]);
-
-  console.log(item);
 
   return (
     <Card title={id ? 'Update Bus' : 'Create New Bus'}>

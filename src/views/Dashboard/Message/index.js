@@ -12,7 +12,7 @@ import {
   Table,
   Select,
 } from 'antd';
-import { navigate } from '@reach/router';
+//import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
@@ -39,17 +39,17 @@ function showConfirm() {
 export const Message = props => {
   const [state, setState] = useState(false);
 
-  const dataTranform = records => {
-    return records.map(record => {
-      const new_record = { ...record };
-      if (new_record.children) {
-        const new_children = [...new_record.children];
-        delete new_record.children;
-        new_record.new_children = new_children;
-      }
-      return new_record;
-    });
-  };
+  // const dataTranform = records => {
+  //   return records.map(record => {
+  //     const new_record = { ...record };
+  //     if (new_record.children) {
+  //       const new_children = [...new_record.children];
+  //       delete new_record.children;
+  //       new_record.new_children = new_children;
+  //     }
+  //     return new_record;
+  //   });
+  // };
 
   const columns = [
     {

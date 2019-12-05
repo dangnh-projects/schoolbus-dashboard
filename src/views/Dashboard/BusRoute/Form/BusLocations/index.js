@@ -31,7 +31,7 @@ const BusRouteSetting = props => {
   const [map, setMap] = useState(null);
   // const [points, setPoints] = useState([]);
 
-  const [showAddRoutePosition, setShowAddRoutePosition] = useState(false);
+  //const [showAddRoutePosition, setShowAddRoutePosition] = useState(false);
   const handleOnClick = async ev => {
     // const { lat, lng } = ev;
     // if (points.length > 0) {
@@ -50,35 +50,35 @@ const BusRouteSetting = props => {
     // setPoints([...points]);
   };
 
-  const handleAddPoint = async pt => {
-    // const { lat, lng } = pt;
-    // if (points.length > 0) {
-    //   const curPt = { ...points[points.length - 1] };
-    //   const directions = await getRoutes(
-    //     map,
-    //     { lat: curPt.lat, lng: curPt.lng },
-    //     { lat, lng }
-    //   );
-    //   const { routes } = directions;
-    //   if (routes.length > 0) {
-    //     const { overview_polyline } = routes[0];
-    //     const pts = map.maps.geometry.encoding
-    //       .decodePath(overview_polyline)
-    //       .map(point => ({ lat: point.lat(), lng: point.lng() }));
-    //     console.log(pts);
-    //     var flightPath = new map.maps.Polyline({
-    //       path: [curPt, ...pts],
-    //       geodesic: true,
-    //       strokeColor: '#88191d',
-    //       strokeOpacity: 1,
-    //       strokeWeight: 5,
-    //     });
-    //     flightPath.setMap(map.map);
-    //   }
-    // }
-    // points.push(pt);
-    // setPoints([...points]);
-  };
+  //const handleAddPoint = async pt => {
+  // const { lat, lng } = pt;
+  // if (points.length > 0) {
+  //   const curPt = { ...points[points.length - 1] };
+  //   const directions = await getRoutes(
+  //     map,
+  //     { lat: curPt.lat, lng: curPt.lng },
+  //     { lat, lng }
+  //   );
+  //   const { routes } = directions;
+  //   if (routes.length > 0) {
+  //     const { overview_polyline } = routes[0];
+  //     const pts = map.maps.geometry.encoding
+  //       .decodePath(overview_polyline)
+  //       .map(point => ({ lat: point.lat(), lng: point.lng() }));
+  //     console.log(pts);
+  //     var flightPath = new map.maps.Polyline({
+  //       path: [curPt, ...pts],
+  //       geodesic: true,
+  //       strokeColor: '#88191d',
+  //       strokeOpacity: 1,
+  //       strokeWeight: 5,
+  //     });
+  //     flightPath.setMap(map.map);
+  //   }
+  // }
+  // points.push(pt);
+  // setPoints([...points]);
+  //};
 
   const handleGoogleMapApi = map => setMap(map);
   const end =
@@ -90,7 +90,8 @@ const BusRouteSetting = props => {
       {modalVisible && <AddLocationModal map={map} />}
       <Col span={8}>
         <Suspense fallback={<Spin />}>
-          <RouteTree setShowAddRoutePosition={setShowAddRoutePosition} />
+          <RouteTree //setShowAddRoutePosition={setShowAddRoutePosition}
+          />
         </Suspense>
       </Col>
       <Col span={16} style={{ minHeight: 480 }}>

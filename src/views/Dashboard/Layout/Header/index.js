@@ -1,8 +1,6 @@
 import React, { Fragment } from 'react';
 import moment from 'moment';
 import { Layout, Menu, Avatar, Popover, List, Icon, Badge } from 'antd';
-import Bus from '../../../../assets/bus';
-import { navigate } from '@reach/router';
 import { useSelector } from 'react-redux';
 const { Header } = Layout;
 const { SubMenu } = Menu;

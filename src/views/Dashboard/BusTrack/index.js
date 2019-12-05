@@ -1,7 +1,7 @@
-import React, { useEffect, lazy, Suspense } from 'react';
-import { Card, Icon, Table, Tabs, Tag, Spin } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import { actionCreator } from 'store/busRoute/busRoute.meta';
+import React, { lazy, Suspense } from 'react';
+import { Card, Icon, Tabs, Tag, Spin } from 'antd';
+import { useSelector } from 'react-redux';
+//import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 const LiveTrackTable = lazy(() => import('./LiveTrackTable'));
 const BusRouteTable = lazy(() => import('./BusRoutesTable'));
@@ -14,46 +14,10 @@ export const Bus = props => {
     pickupRunningRoute = [],
     dropoffRunningRoute = [],
   } = useSelector(state => state.busRoute);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(actionCreator.getRoutes());
-  }, []);
-  const columns = [
-    {
-      title: 'Bus number',
-      render: (_, i) => i.number,
-    },
-
-    {
-      title: 'Driver',
-      render: (_, i) => i.driver,
-    },
-
-    {
-      title: 'Bus supervisor',
-      render: (_, i) => i.bus_supervisor,
-    },
-    {
-      title: 'Start time',
-      key: 'start_time',
-    },
-    {
-      title: 'Next stop',
-      render: (_, i) => i.next_stop,
-    },
-    {
-      title: 'No. of onboarding',
-      render: (_, i) => i.no_onboarding,
-    },
-    {
-      title: 'No. remaining',
-      render: (_, i) => i.no_remaining,
-    },
-    {
-      title: 'End time',
-      render: (_, i) => i.end_time,
-    },
-  ];
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(actionCreator.getRoutes());
+  // }, []);
 
   return (
     <Card>

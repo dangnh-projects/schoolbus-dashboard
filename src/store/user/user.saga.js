@@ -29,7 +29,7 @@ function* login(action) {
     var bodyFormData = new FormData();
     bodyFormData.set('username', action.payload.username);
     bodyFormData.set('password', action.payload.password);
-    bodyFormData.set('type', 'web');
+    bodyFormData.set('device_type', 'web');
     const { body } = yield call(
       loginRequest.request,
       {

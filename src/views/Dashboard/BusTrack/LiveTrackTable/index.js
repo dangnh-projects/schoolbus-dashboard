@@ -41,24 +41,6 @@ const processAttendanceTableData = items => {
 };
 
 const AttendanceTable = ({ visible, attendances = [], setVisible }) => {
-  const columns = [
-    {
-      title: 'Location',
-      dataIndex: 'address',
-    },
-    {
-      title: 'Student',
-      render: (_, item, index) => {
-        console.log(item, index);
-        return item.student && item.student.name;
-      },
-    },
-    {
-      title: 'Status',
-      render: (_, item) => <Tag>{STATUS_TEXT[item.status]}</Tag>,
-    },
-  ];
-
   const processedData = processAttendanceTableData(attendances);
   // console.log(processedData);
   return (

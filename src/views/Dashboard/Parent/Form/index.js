@@ -199,7 +199,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
               <Col md={12}>
                 <Item label="ID/Passport number">
                   {getFieldDecorator('id_number', {
-                    initialValue: phone_number,
+                    initialValue: id_number,
                     rules: [
                       {
                         required: true,

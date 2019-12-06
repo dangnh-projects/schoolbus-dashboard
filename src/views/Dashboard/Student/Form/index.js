@@ -56,9 +56,10 @@ const StudentForm = ({ formSave, updateItem, id }) => {
       if (found) {
         setItem(found);
         dispatch(actionCreator.postStudentSuccess(found));
-        if (found) {
+        if (found && found.parent) {
           dispatch(actionCreator.postParentSuccess(found.parent));
-          dispatch(actionCreator.setSibling(found.parent.children));
+
+          dispatch(actionCreator.setSibling(found.parent.children || []));
         }
       } else {
         dispatch(actionCreator.postParentSuccess(null));

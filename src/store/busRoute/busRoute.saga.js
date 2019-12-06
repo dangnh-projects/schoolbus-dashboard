@@ -8,6 +8,7 @@ import { buildRequest } from 'api';
 export const routeRequest = buildRequest('/core/api/bus-route');
 export const getRouteLocationRequest = buildRequest('/core/api/bus-route');
 export const postRouteLocationRequest = buildRequest('/core/api/bus-location');
+export const getMovingRouteRequest = buildRequest('/core/api/bus-route/moving');
 export const removeRouteLocationRequest = buildRequest(
   '/core/api/bus-location',
   {
@@ -159,7 +160,7 @@ function* updateLocation({ payload }, user) {
 }
 
 function* getRoutes(_, user) {
-  const { body } = yield call(routeRequest.request, {
+  const { body } = yield call(getMovingRouteRequest.request, {
     headers: {
       Authorization: `Bearer ${user.token.access}`,
       // 'Content-Type': 'multipart/form-data',
@@ -175,7 +176,7 @@ function* getRoutes(_, user) {
     //     return route;
     //   })
     // );
-    yield put(actionCreator.getRoutesSuccess(body.data));
+    yield put(actionCreator.getRoutesSuccess(body.data.routes));
   }
 }
 

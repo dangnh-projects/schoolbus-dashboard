@@ -66,12 +66,12 @@ const getRoutesSuccess = (state, action) => ({
   pickupRunningRoute:
     action.payload &&
     action.payload.filter(
-      route => route.route_type === ROUTE_TYPES.PICK_UP && route.is_running
+      route => route.bus_route.route_type === ROUTE_TYPES.PICK_UP
     ),
   dropoffRunningRoute:
     action.payload &&
     action.payload.filter(
-      route => route.route_type === ROUTE_TYPES.DROP_OFF && route.is_running
+      route => route.bus_route.route_type === ROUTE_TYPES.DROP_OFF
     ),
 });
 

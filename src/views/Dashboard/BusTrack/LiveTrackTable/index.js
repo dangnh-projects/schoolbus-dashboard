@@ -1,59 +1,282 @@
-import React from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import moment from 'moment';
-import { Table } from 'antd';
+import { Table, Tag, Modal } from 'antd';
+
+export const STUDENT_STATUS = {
+  NOT_ON_BUS: 0,
+  MISSING: 1,
+  ABSENCE_WITH_REPORT: 2,
+  ON_THE_WAY_TO_SCHOOL: 3,
+  ON_THE_WAY_TO_HOME: 4,
+  OFF_BUS: 5,
+};
+
+const STATUS_TEXT = {
+  0: 'Not on the bus',
+  1: 'Miss the bus',
+  2: 'Student absent with report',
+  3: 'Student on the way to school',
+  4: 'Student on the way to home',
+  5: 'Student off the bus',
+};
+
+const processAttendanceTableData = items => {
+  const output = {};
+  items.forEach(item => {
+    const address = `${item.location.address} ${item.location.street} ${item
+      .location.ward !== '' && 'phường ' + item.location.ward} Quận ${
+      item.location.district
+    }`;
+    if (!output[address]) {
+      output[address] = [];
+    }
+
+    output[address].push(item);
+  });
+
+  return Object.keys(output).map(key => ({
+    address: key,
+    children: output[key],
+  }));
+};
+
+const AttendanceTable = ({ visible, attendances = [], setVisible }) => {
+  const columns = [
+    {
+      title: 'Location',
+      dataIndex: 'address',
+    },
+    {
+      title: 'Student',
+      render: (_, item, index) => {
+        console.log(item, index);
+        return item.student && item.student.name;
+      },
+    },
+    {
+      title: 'Status',
+      render: (_, item) => <Tag>{STATUS_TEXT[item.status]}</Tag>,
+    },
+  ];
+
+  const processedData = processAttendanceTableData(attendances);
+  // console.log(processedData);
+  return (
+    <Modal
+      visible={visible}
+      onCancel={() => setVisible(false)}
+      cancelButtonProps={{ display: 'none' }}
+      footer={false}
+      bodyStyle={{ padding: 24 }}
+      width={600}
+    >
+      {/* <Table
+        columns={columns}
+        dataSource={processedData}
+        pagination={false}
+        childrenColumnName={['children']}
+      /> */}
+      <div
+        className="ant-table ant-table-middle ant-table-bordered ant-table-scroll-position-left"
+        style={{ padding: 12 }}
+      >
+        <table style={{ border: '1px solid #e8e8e8' }}>
+          <thead className="ant-table-thead" style={{}}>
+            <th
+              style={{
+                borderRight: '1px solid #e8e8e8',
+                borderBottom: '1px solid #e8e8e8',
+                padding: 12,
+              }}
+            >
+              <span className="ant-table-header-column">Location</span>
+            </th>
+            <th
+              style={{
+                borderRight: '1px solid #e8e8e8',
+                borderBottom: '1px solid #e8e8e8',
+                padding: 12,
+              }}
+            >
+              Student name
+            </th>
+            <th style={{ padding: 12, borderBottom: '1px solid #e8e8e8' }}>
+              Status
+            </th>
+          </thead>
+          <tbody className="ant-table-tbody">
+            {processedData.map(loc => {
+              const { address, children } = loc;
+              const [first, ...last] = children;
+              return (
+                <Fragment>
+                  <tr key={address} className="">
+                    <td rowSpan={children.length}>{address}</td>
+                    <td>{first.student.name}</td>
+                    <td>
+                      <Tag>{STATUS_TEXT[first.status]}</Tag>
+                    </td>
+                  </tr>
+                  {last.map(attend => (
+                    <tr key={attend.student.id}>
+                      <td>{attend.student.name}</td>
+                      <td>
+                        <Tag>{STATUS_TEXT[attend.status]}</Tag>
+                      </td>
+                    </tr>
+                  ))}
+                </Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </Modal>
+  );
+};
+
+const processData = records => {
+  return records.map(route => {
+    const { locations } = route;
+    const onboarding = [];
+    const remaining = [];
+    let nextLoc = null;
+    for (let i = 0; i < locations.length; i++) {
+      const { attendances } = locations[i];
+      if (attendances.length === 0) {
+        continue;
+      }
+
+      const haveStudentNotOnBus = attendances.some(
+        item => item.status === STUDENT_STATUS.NOT_ON_BUS
+      );
+
+      if (haveStudentNotOnBus) {
+        nextLoc = locations[i];
+      }
+
+      attendances.forEach(atten => {
+        atten.location = locations[i].location;
+        if (
+          atten.status === STUDENT_STATUS.ON_THE_WAY_TO_SCHOOL ||
+          atten.status === STUDENT_STATUS.ON_THE_WAY_TO_HOME
+        ) {
+          onboarding.push(atten);
+        } else {
+          remaining.push(atten);
+        }
+      });
+    }
+
+    route.nextLoc = nextLoc;
+    route.onboarding = onboarding;
+    route.remaining = remaining;
+    return route;
+  });
+};
 
 const LiveTable = props => {
+  const [data, setData] = useState([]);
+  const [attendances, setAttendances] = useState([]);
+  const [isVisible, setVisible] = useState(false);
   const columns = [
     {
       title: 'Route name',
-      dataIndex: 'name',
+      render: (_, i) => i.bus_route && i.bus_route.name,
     },
     {
       title: 'Bus number',
-      render: (_, i) => i.bus && i.bus.number,
+      render: (_, i) =>
+        i.bus_route && i.bus_route.bus && i.bus_route.bus.number,
     },
 
     {
       title: 'Driver',
-      render: (_, i) => i.driver && i.driver.name,
+      render: (_, i) =>
+        i.bus_route && i.bus_route.driver && i.bus_route.driver.name,
     },
 
     {
       title: 'Bus supervisor',
       render: (_, i) =>
-        i.bus_supervisor &&
-        i.bus_supervisor.first_name + ' ' + i.bus_supervisor.last_name,
+        i.bus_route &&
+        i.bus_route.bus_supervisor &&
+        i.bus_route.bus_supervisor.first_name +
+          ' ' +
+          i.bus_route.bus_supervisor.last_name,
     },
     {
       title: 'Start time',
-      render: (_, i) => moment(i.start_time, 'HH:mm:ss').format('HH:mm'),
+      render: (_, i) =>
+        i.bus_route &&
+        i.bus_route.start_time &&
+        moment(i.bus_route && i.bus_route.start_time, 'HH:mm:ss').format(
+          'HH:mm'
+        ),
     },
     {
       title: 'Next stop',
-      render: (_, i) => i.next_stop,
+      render: (_, i) =>
+        i.nextLoc &&
+        `${i.nextLoc.location.address} ${i.nextLoc.location.street} ${i.nextLoc
+          .location.ward !== '' && 'phường ' + i.nextLoc.location.ward} Quận ${
+          i.nextLoc.location.district
+        }`,
     },
     {
       title: 'No. of onboarding',
-      render: (_, i) => i.no_onboarding,
+      align: 'center',
+      render: (_, i) => (
+        <Tag
+          color="#87d068"
+          style={{ paddingLeft: 12, paddingRight: 12, cursor: 'pointer' }}
+          onClick={() => {
+            setVisible(true);
+            setAttendances(i.onboarding);
+          }}
+        >
+          {i.onboarding ? i.onboarding.length : 0}
+        </Tag>
+      ),
     },
     {
       title: 'No. remaining',
-      render: (_, i) => i.no_remaining,
+      align: 'center',
+      render: (_, i) => (
+        <Tag
+          color="#108ee9"
+          style={{ paddingLeft: 12, paddingRight: 12, cursor: 'pointer' }}
+          onClick={() => {
+            setVisible(true);
+            setAttendances(i.remaining);
+          }}
+        >
+          {i.remaining ? i.remaining.length : 0}
+        </Tag>
+      ),
     },
 
     {
       title: 'End time',
+      align: 'center',
       render: (_, i) => moment(i.end_time, 'HH:mm:ss').format('HH:mm'),
     },
   ];
 
+  useEffect(() => {
+    const data = processData(props.dataSource);
+    setData(data);
+  }, [props.dataSource]);
+
   return (
-    <Table
-      columns={columns}
-      bordered
-      size="middle"
-      dataSource={props.dataSource || []}
-    />
+    <Fragment>
+      <AttendanceTable
+        setVisible={setVisible}
+        visible={isVisible}
+        attendances={attendances}
+      />
+      <Table columns={columns} bordered size="middle" dataSource={data || []} />
+    </Fragment>
   );
 };
 

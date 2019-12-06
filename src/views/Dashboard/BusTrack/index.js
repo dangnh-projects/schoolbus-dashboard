@@ -1,140 +1,67 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { Card, Icon, Table, Tabs, Tag, Spin } from 'antd';
+import { Card, Icon, Tabs, Tag, Spin, Row, Col } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 const LiveTrackTable = lazy(() => import('./LiveTrackTable'));
-const BusRouteTable = lazy(() => import('./BusRoutesTable'));
-
 const { TabPane } = Tabs;
 
 export const Bus = props => {
-  const {
-    routes = [],
-    pickupRunningRoute = [],
-    dropoffRunningRoute = [],
-  } = useSelector(state => state.busRoute);
+  const { pickupRunningRoute = [], dropoffRunningRoute = [] } = useSelector(
+    state => state.busRoute
+  );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actionCreator.getRoutes());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const columns = [
-    {
-      title: 'Bus number',
-      render: (_, i) => i.number,
-    },
-
-    {
-      title: 'Driver',
-      render: (_, i) => i.driver,
-    },
-
-    {
-      title: 'Bus supervisor',
-      render: (_, i) => i.bus_supervisor,
-    },
-    {
-      title: 'Start time',
-      key: 'start_time',
-    },
-    {
-      title: 'Next stop',
-      render: (_, i) => i.next_stop,
-    },
-    {
-      title: 'No. of onboarding',
-      render: (_, i) => i.no_onboarding,
-    },
-    {
-      title: 'No. remaining',
-      render: (_, i) => i.no_remaining,
-    },
-    {
-      title: 'End time',
-      render: (_, i) => i.end_time,
-    },
-  ];
 
   return (
-    <Card>
+    <Card
+      title={
+        <Row type="flex">
+          <Col>
+            <img
+              src="/images/ic_bus.png"
+              alt="moving bus"
+              style={{ width: 48, marginRight: 12 }}
+            />
+          </Col>
+          <Col>Moving Bus</Col>
+        </Row>
+      }
+    >
       <Tabs>
         <TabPane
           tab={
             <span>
-              Moving Buses
+              <Icon type="arrow-up" />
+              Pickup
               <Tag color="#87d068" style={{ marginLeft: 12 }}>
-                10
+                {pickupRunningRoute.length}
               </Tag>
             </span>
           }
-          key="on-going"
+          key="Pickup"
         >
-          <Tabs tabPosition="left">
-            <TabPane
-              tab={
-                <span>
-                  <Icon type="arrow-up" />
-                  Pickup
-                  <Tag color="#87d068" style={{ marginLeft: 12 }}>
-                    {pickupRunningRoute.length}
-                  </Tag>
-                </span>
-              }
-              key="Pickup"
-            >
-              {/* <Table
-                columns={columns}
-                bordered
-                size="middle"
-                dataSource={[
-                  {
-                    name: 'District 7 - Hong Bang',
-                    number: 'Bus 02',
-                    driver: 'Hung Vo',
-                    bus_supervisor: 'Thao Hoang',
-                    start_time: '08:00',
-                    next_stop: 'Điện Biên Phủ',
-                    no_onboarding: 20,
-                    no_remaining: 22,
-                    end_time: '08:30',
-                  },
-                ]}
-              /> */}
-              <Suspense fallback={<Spin />}>
-                <LiveTrackTable dataSource={pickupRunningRoute} />
-              </Suspense>
-            </TabPane>
-            <TabPane
-              tab={
-                <span>
-                  <Icon type="arrow-down" />
-                  Drop off
-                  <Tag color="#87d068" style={{ marginLeft: 12 }}>
-                    {dropoffRunningRoute.length}
-                  </Tag>
-                </span>
-              }
-              key="drop-off"
-            >
-              <Suspense fallback={<Spin />}>
-                <LiveTrackTable dataSource={dropoffRunningRoute} />
-              </Suspense>
-            </TabPane>
-          </Tabs>
+          <Suspense fallback={<Spin />}>
+            <LiveTrackTable dataSource={pickupRunningRoute} />
+          </Suspense>
         </TabPane>
         <TabPane
           tab={
             <span>
-              All Buses{' '}
-              <Tag color="gray" style={{ marginLeft: 12 }}>
-                {routes.length}
+              <Icon type="arrow-down" />
+              Drop off
+              <Tag color="#87d068" style={{ marginLeft: 12 }}>
+                {dropoffRunningRoute.length}
               </Tag>
             </span>
           }
-          key="all"
+          key="drop-off"
         >
           <Suspense fallback={<Spin />}>
-            <BusRouteTable dataSource={routes} />
+            <LiveTrackTable dataSource={dropoffRunningRoute} />
           </Suspense>
         </TabPane>
       </Tabs>

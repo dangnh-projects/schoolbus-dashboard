@@ -16,7 +16,9 @@ const ADDRESS_TYPES = {
   PROVINCE: 'administrative_area_level_1',
 };
 
-const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
+const MapRouteModal = ({ setShowAddRoutePosition, map, form }) => {
+  const { getFieldDecorator } = form;
+
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const busRoute = useSelector(state => state.busRoute);
@@ -121,6 +123,17 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
     }
   }, [currentLocation]);
 
+  const handleSubmitCheck = e => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      if (err) {
+        return;
+      } else {
+        handleOnSubmit && handleOnSubmit(fieldsValue);
+      }
+    });
+  };
+
   const handleOnSubmit = async () => {
     const data = {
       address,
@@ -173,55 +186,89 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
           <Row gutter={16}>
             <Col span={12}>
               <Item label="Address">
-                <Input
-                  value={address}
-                  onChange={e => setAddress(e.target.value)}
-                />
+                {getFieldDecorator('address', {
+                  initialValue: address,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Address is required',
+                    },
+                  ],
+                })(<Input onChange={e => setAddress(e.target.value)} />)}
               </Item>
             </Col>
             <Col span={12}>
               <Item label="Street">
-                <Input
-                  value={street}
-                  onChange={e => setStreet(e.target.value)}
-                />
+                {getFieldDecorator('street', {
+                  initialValue: street,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Street is required',
+                    },
+                  ],
+                })(<Input onChange={e => setStreet(e.target.value)} />)}
               </Item>
             </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Item label="Ward">
-                <Input value={ward} onChange={e => setWard(e.target.value)} />
+                {getFieldDecorator('ward', {
+                  initialValue: ward,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Ward is required',
+                    },
+                  ],
+                })(<Input onChange={e => setWard(e.target.value)} />)}
               </Item>
             </Col>
             <Col span={12}>
               <Item label="District">
-                <Input
-                  value={district}
-                  onChange={e => setDistrict(e.target.value)}
-                />
+                {getFieldDecorator('district', {
+                  initialValue: district,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'District is required',
+                    },
+                  ],
+                })(<Input onChange={e => setDistrict(e.target.value)} />)}
               </Item>
             </Col>
-
+          </Row>
+          <Row gutter={16}>
             <Col span={12}>
               <Item label="Province">
-                <Input
-                  value={province}
-                  onChange={e => setProvince(e.target.value)}
-                />
+                {getFieldDecorator('province', {
+                  initialValue: province,
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Province is required',
+                    },
+                  ],
+                })(<Input onChange={e => setDistrict(e.target.value)} />)}
               </Item>
             </Col>
           </Row>
 
           <Item label="Time to next destination (0 if this is final position)">
-            <Input
-              value={timeNextLoc}
-              onChange={e => setTimeNextLoc(e.target.value)}
-            />
+            {getFieldDecorator('timeNextLoc', {
+              initialValue: timeNextLoc,
+              rules: [
+                {
+                  required: true,
+                  message: 'Province is required',
+                },
+              ],
+            })(<Input onChange={e => setTimeNextLoc(e.target.value)} />)}
           </Item>
           <Row type="flex" justify="center">
             <Button
-              onClick={handleOnSubmit}
+              onClick={handleSubmitCheck}
               htmlType="button"
               disabled={
                 !currentLocation && !addressObj
@@ -237,4 +284,8 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
   );
 };
 
-export default MapRouteModal;
+const WrappedNormalMapRouteModal = Form.create({ name: 'maproutemodal' })(
+  MapRouteModal
+);
+
+export default WrappedNormalMapRouteModal;

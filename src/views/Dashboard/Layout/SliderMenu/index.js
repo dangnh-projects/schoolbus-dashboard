@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
-import { checkPermission } from 'utils/permission';
+//import { checkPermission } from 'utils/permission';
 import Bus from '../../../../assets/bus';
 import './style.scss';
 
@@ -17,22 +17,22 @@ const getActiveKey = path => {
   return { group, item, action };
 };
 
-const renderManageItem = (checker, title, slug) =>
-  checker &&
-  checker(slug)(
-    <Menu.Item key={slug} onClick={() => navigate('/dashboard/' + slug)}>
-      {title}
-    </Menu.Item>
-  );
+// const renderManageItem = (checker, title, slug) =>
+//   checker &&
+//   checker(slug)(
+//     <Menu.Item key={slug} onClick={() => navigate('/dashboard/' + slug)}>
+//       {title}
+//     </Menu.Item>
+//   );
 
-const SliderMenu = ({ location, permissions, groups }) => {
+const SliderMenu = ({ location }) => {
   const [collapsed, setColapsed] = useState(false);
   const { group, item } = getActiveKey(location.pathname);
-  const [checker, setChecker] = useState(null);
+  //const [checker, setChecker] = useState(null);
 
-  useEffect(() => {
-    setChecker(() => checkPermission(permissions, groups));
-  }, []);
+  // useEffect(() => {
+  //   setChecker(() => checkPermission(permissions, groups));
+  // }, []);
 
   return (
     <Sider

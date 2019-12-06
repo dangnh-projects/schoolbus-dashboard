@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from 'react';
-import { Spin, Card, Row, Tabs, Table, Icon } from 'antd';
+import { Spin, Card, Row, Tabs, Icon } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
 

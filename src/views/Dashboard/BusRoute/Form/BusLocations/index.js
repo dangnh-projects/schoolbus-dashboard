@@ -31,7 +31,7 @@ const BusRouteSetting = props => {
   const [map, setMap] = useState(null);
   // const [points, setPoints] = useState([]);
 
-  const [showAddRoutePosition, setShowAddRoutePosition] = useState(false);
+  //const [showAddRoutePosition, setShowAddRoutePosition] = useState(false);
   const handleOnClick = async ev => {
     // const { lat, lng } = ev;
     // if (points.length > 0) {
@@ -60,7 +60,8 @@ const BusRouteSetting = props => {
       {modalVisible && <AddLocationModal map={map} />}
       <Col span={8}>
         <Suspense fallback={<Spin />}>
-          <RouteTree setShowAddRoutePosition={setShowAddRoutePosition} />
+          <RouteTree //setShowAddRoutePosition={setShowAddRoutePosition}
+          />
         </Suspense>
       </Col>
       <Col span={16} style={{ minHeight: 480 }}>

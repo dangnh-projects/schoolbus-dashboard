@@ -104,7 +104,7 @@ export const Bus = props => {
     <Card
       title="Manage bus supervisor"
       extra={[
-        <Row type="flex" gutter={16}>
+        <Row key="extra-group" type="flex" gutter={16}>
           <Col>
             <Search onSearch={handleOnSearch} />
           </Col>

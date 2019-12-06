@@ -261,7 +261,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map, form }) => {
               rules: [
                 {
                   required: true,
-                  message: 'Province is required',
+                  message: 'Time to next destination is required',
                 },
               ],
             })(<Input onChange={e => setTimeNextLoc(e.target.value)} />)}

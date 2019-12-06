@@ -250,7 +250,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map, form }) => {
                       message: 'Province is required',
                     },
                   ],
-                })(<Input onChange={e => setDistrict(e.target.value)} />)}
+                })(<Input onChange={e => setProvince(e.target.value)} />)}
               </Item>
             </Col>
           </Row>

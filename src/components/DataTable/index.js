@@ -21,7 +21,6 @@ const DataTable = ({ columns = [], url, setPage, dataTranform }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const onSelectChange = selectedRowKeys => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
     setSelectedRowKeys(selectedRowKeys);
   };
 
@@ -48,7 +47,6 @@ const DataTable = ({ columns = [], url, setPage, dataTranform }) => {
       // onRow={(record, rowIndex) => {
       //   return {
       //     onClick: event => {
-      //       console.log(record, rowIndex);
       //     },
       //   };
       // }}

@@ -86,11 +86,15 @@ const RouteForm = ({ form }) => {
       setDriver(route.driver.id);
       setBus(route.bus.id);
       setStartTime(
-        route.start_time ? moment(route.start_time, 'HH:mm:ss') : moment()
+        route.estimated_start_time
+          ? moment(route.estimated_start_time, 'HH:mm:ss')
+          : moment()
       );
 
       setEndTime(
-        route.end_time ? moment(route.end_time, 'HH:mm:ss') : moment()
+        route.estimated_end_time
+          ? moment(route.estimated_end_time, 'HH:mm:ss')
+          : moment()
       );
       setType(route.route_type);
     } else {
@@ -112,10 +116,10 @@ const RouteForm = ({ form }) => {
         bus,
         bus_supervisor: busSupervisor,
         driver,
-        start_time: startTime.format
+        estimated_start_time: startTime.format
           ? startTime.format('HH:mm')
           : moment().format('HH:mm'),
-        end_time: endTime.format
+        estimated_end_time: endTime.format
           ? endTime.format('HH:mm')
           : moment().format('HH:mm'),
       };
@@ -128,10 +132,10 @@ const RouteForm = ({ form }) => {
         bus_id: bus,
         bus_supervisor_id: busSupervisor,
         driver_id: driver,
-        start_time: startTime.format
+        estimated_start_time: startTime.format
           ? startTime.format('HH:mm')
           : moment().format('HH:mm'),
-        end_time: endTime.format
+        estimated_end_time: endTime.format
           ? endTime.format('HH:mm')
           : moment().format('HH:mm'),
       };
@@ -178,7 +182,7 @@ const RouteForm = ({ form }) => {
           </Select>
         </FormItem>
 
-        <FormItem label="Start time">
+        <FormItem label="Planned start time">
           {getFieldDecorator('start_name', {
             initialValue: startTime,
             rules: [
@@ -196,7 +200,7 @@ const RouteForm = ({ form }) => {
             />
           )}
         </FormItem>
-        <FormItem label="End time">
+        <FormItem label="Planned end time">
           {getFieldDecorator('end_name', {
             initialValue: endTime,
             rules: [

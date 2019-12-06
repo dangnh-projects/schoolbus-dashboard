@@ -95,7 +95,6 @@ const PositionItem = memo(
 );
 
 const RouteTree = props => {
-  console.log('Route tree render');
   const dispatch = useDispatch();
   const setCurrentLocation = loc =>
     dispatch(actionCreator.setCurrentLocation(loc));

@@ -8,6 +8,7 @@ import { buildRequest } from 'api';
 export const routeRequest = buildRequest('/core/api/bus-route');
 export const getRouteLocationRequest = buildRequest('/core/api/bus-route');
 export const postRouteLocationRequest = buildRequest('/core/api/bus-location');
+export const getMovingRouteRequest = buildRequest('/core/api/bus-route/moving');
 export const removeRouteLocationRequest = buildRequest(
   '/core/api/bus-location',
   {
@@ -23,6 +24,7 @@ const apiCallWrapper = handler =>
     try {
       yield call(handler, action, user);
     } catch (error) {
+      console.log(error);
       if (error.response && error.response.status === 403) {
         notification.error({
           message:
@@ -158,14 +160,23 @@ function* updateLocation({ payload }, user) {
 }
 
 function* getRoutes(_, user) {
-  const { body } = yield call(routeRequest.request, {
+  const { body } = yield call(getMovingRouteRequest.request, {
     headers: {
       Authorization: `Bearer ${user.token.access}`,
       // 'Content-Type': 'multipart/form-data',
     },
   });
   if (body && body.data) {
-    yield put(actionCreator.getRoutesSuccess(body.data));
+    // console.log(body.data);
+    // // get attendance with Route
+    // const data = yield call(
+    //   Promise.all,
+    //   body.data.map(route => {
+    //     console.log(route);
+    //     return route;
+    //   })
+    // );
+    yield put(actionCreator.getRoutesSuccess(body.data.routes));
   }
 }
 

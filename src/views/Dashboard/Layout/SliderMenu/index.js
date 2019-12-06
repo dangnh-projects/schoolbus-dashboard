@@ -166,6 +166,14 @@ const SliderMenu = ({ location }) => {
           <Icon type="setting" />
           <span>Settings</span>
         </Menu.Item>
+        <Menu.Item key="message" onClick={() => navigate('/dashboard/message')}>
+          <Icon type="message" />
+          <span>Message</span>
+        </Menu.Item>
+        <Menu.Item key="report" onClick={() => navigate('/dashboard/report')}>
+          <Icon type="bar-chart" />
+          <span>Report</span>
+        </Menu.Item>
       </Menu>
     </Sider>
   );

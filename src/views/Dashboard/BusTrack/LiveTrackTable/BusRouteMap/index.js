@@ -1,13 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Col, Row } from 'antd';
 import GoogleMapReact from 'google-map-react';
+
+import Firebase from 'utils/firebase-service';
 
 const BusRouteMap = props => {
   const { route = {} } = props;
   const { locations = [] } = route || {};
   const [loc, setLoc] = useState();
+  useEffect(() => {
+    if (route) {
+      let ref = Firebase.database().ref('route_18');
+      ref.on('value', snapshot => {
+        const state = snapshot.val();
+        console.log(state);
+        // this.setState(state);
+      });
+      // console.log('DATA RETRIEVED');
+      // const app = Firebase.app();
+      // console.log(app);
+      const database = Firebase.database();
+      database
+        // .ref(`/topics/route_${route.bus_route.id}`)
+        .ref()
+        .once('value')
+        .then(console.log);
+      // // console.log(ref, '==================');
+      // // ref.on('value', params => {
+      // //   console.log(params);
+      // // });
+    }
+  }, [route]);
   return (
-    <Modal visible={props.visible}>
+    <Modal
+      visible={props.visible}
+      onOk={() => props.setVisible && props.setVisible(false)}
+      onCancel={() => props.setVisible && props.setVisible(false)}
+      width={800}
+    >
       <Row type="flex">
         <Col span={24} style={{ minHeight: 480 }}>
           <GoogleMapReact
@@ -19,7 +49,7 @@ const BusRouteMap = props => {
               lng: 106.7042577,
             }}
             center={loc ? { lat: loc.lat, lng: loc.lng } : null}
-            defaultZoom={16}
+            defaultZoom={14}
             layerTypes={['TrafficLayer']}
             // onGoogleApiLoaded={handleGoogleMapApi}
             yesIWantToUseGoogleMapApiInternals={true}

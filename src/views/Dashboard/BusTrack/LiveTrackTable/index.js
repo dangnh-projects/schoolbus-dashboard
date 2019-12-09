@@ -1,6 +1,8 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, lazy, Suspense } from 'react';
 import moment from 'moment';
-import { Table, Tag, Modal, Row, Button } from 'antd';
+import { Table, Tag, Modal, Row, Button, Spin } from 'antd';
+
+const BusRouteMap = lazy(() => import('./BusRouteMap'));
 
 export const STUDENT_STATUS = {
   NOT_ON_BUS: 0,
@@ -155,6 +157,9 @@ const LiveTable = props => {
   const [data, setData] = useState([]);
   const [attendances, setAttendances] = useState([]);
   const [isVisible, setVisible] = useState(false);
+  const [isShowMap, setShowMap] = useState(false);
+  const [currentRoute, setCurrentRoute] = useState(null);
+
   const columns = [
     {
       title: 'Route name',
@@ -267,6 +272,13 @@ const LiveTable = props => {
         visible={isVisible}
         attendances={attendances}
       />
+      <Suspense fallback={<Spin />}>
+        <BusRouteMap
+          route={currentRoute}
+          visible={isShowMap}
+          setVisible={setShowMap}
+        />
+      </Suspense>
       <Table columns={columns} bordered size="middle" dataSource={data || []} />
     </Fragment>
   );

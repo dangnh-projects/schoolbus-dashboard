@@ -12,7 +12,7 @@ const sagaMiddleware = createSaga();
 const persistConfig = {
   key: 'root',
   storage,
-  keyPrefix: 'v0.0.1:',
+  keyPrefix: 'v0.0.2:',
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);

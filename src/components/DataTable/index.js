@@ -13,7 +13,7 @@ const DataTable = ({ columns = [], url, setPage, dataTranform }) => {
   };
 
   useEffect(() => {
-    dispatch(actionCreator.setPage(1));
+    dispatch(actionCreator.setPage(0));
     getTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, true);

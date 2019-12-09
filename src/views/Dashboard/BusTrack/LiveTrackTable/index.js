@@ -248,7 +248,12 @@ const LiveTable = props => {
       title: '',
       render: (_, i) => (
         <Row>
-          <Button>
+          <Button
+            onClick={() => {
+              setCurrentRoute(i);
+              setShowMap(true);
+            }}
+          >
             <img
               src="/images/map.png"
               alt="map-icon"

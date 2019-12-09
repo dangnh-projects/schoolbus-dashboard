@@ -1,6 +1,8 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, lazy, Suspense } from 'react';
 import moment from 'moment';
-import { Table, Tag, Modal } from 'antd';
+import { Table, Tag, Modal, Row, Button, Spin } from 'antd';
+
+const BusRouteMap = lazy(() => import('./BusRouteMap'));
 
 export const STUDENT_STATUS = {
   NOT_ON_BUS: 0,
@@ -52,12 +54,6 @@ const AttendanceTable = ({ visible, attendances = [], setVisible }) => {
       bodyStyle={{ padding: 24 }}
       width={600}
     >
-      {/* <Table
-        columns={columns}
-        dataSource={processedData}
-        pagination={false}
-        childrenColumnName={['children']}
-      /> */}
       <div
         className="ant-table ant-table-middle ant-table-bordered ant-table-scroll-position-left"
         style={{ padding: 12 }}
@@ -161,6 +157,9 @@ const LiveTable = props => {
   const [data, setData] = useState([]);
   const [attendances, setAttendances] = useState([]);
   const [isVisible, setVisible] = useState(false);
+  const [isShowMap, setShowMap] = useState(false);
+  const [currentRoute, setCurrentRoute] = useState(null);
+
   const columns = [
     {
       title: 'Route name',
@@ -239,9 +238,25 @@ const LiveTable = props => {
     },
 
     {
-      title: 'End time',
+      title: 'Planned end time',
       align: 'center',
-      render: (_, i) => moment(i.end_time, 'HH:mm:ss').format('HH:mm'),
+      render: (_, i) =>
+        i.estimated_end_time &&
+        moment(i.estimated_end_time, 'HH:mm:ss').format('HH:mm'),
+    },
+    {
+      title: '',
+      render: (_, i) => (
+        <Row>
+          <Button>
+            <img
+              src="/images/map.png"
+              alt="map-icon"
+              style={{ width: 16, height: 'auto' }}
+            />
+          </Button>
+        </Row>
+      ),
     },
   ];
 
@@ -257,6 +272,13 @@ const LiveTable = props => {
         visible={isVisible}
         attendances={attendances}
       />
+      <Suspense fallback={<Spin />}>
+        <BusRouteMap
+          route={currentRoute}
+          visible={isShowMap}
+          setVisible={setShowMap}
+        />
+      </Suspense>
       <Table columns={columns} bordered size="middle" dataSource={data || []} />
     </Fragment>
   );

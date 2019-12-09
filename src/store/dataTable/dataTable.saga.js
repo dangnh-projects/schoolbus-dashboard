@@ -52,6 +52,7 @@ function* getList(action, user) {
   const params = {
     limit,
     offset: (page - 1) * limit,
+    records_per_page: 10,
     search,
   };
   const { body } = yield call(apiRequest.request, {
@@ -61,7 +62,14 @@ function* getList(action, user) {
       Authorization: `Bearer ${user.token.access}`,
     },
   });
-  yield put(actionCreator.getListSuccess(body));
+
+  const { count, results } = body.data;
+  yield put(
+    actionCreator.getListSuccess({
+      data: results,
+      count,
+    })
+  );
 }
 
 function* formSave({ payload }) {

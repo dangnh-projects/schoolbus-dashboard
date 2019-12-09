@@ -4,7 +4,7 @@ import { Table } from 'antd';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 const DataTable = ({ columns = [], url, setPage, dataTranform }) => {
-  const { data = [], count = 0, loading } = useSelector(
+  const { data = [], count = 0, loading, page } = useSelector(
     state => state.dataTable
   );
   const dispatch = useDispatch();
@@ -37,9 +37,10 @@ const DataTable = ({ columns = [], url, setPage, dataTranform }) => {
       bordered
       pagination={{
         total: count,
+        current: page + 1,
       }}
       onChange={pagination => {
-        dispatch(actionCreator.setPage(pagination.current));
+        dispatch(actionCreator.setPage(pagination.current - 1));
         getTableData();
       }}
       size="small"

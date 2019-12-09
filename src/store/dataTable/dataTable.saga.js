@@ -51,7 +51,7 @@ function* getList(action, user) {
   const { limit = 10, search = '' } = action.payload;
   const params = {
     limit,
-    offset: (page - 1) * limit,
+    page,
     records_per_page: 10,
     search,
   };

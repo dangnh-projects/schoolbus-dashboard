@@ -76,8 +76,6 @@ const RouteForm = ({ form }) => {
       getMetaData('/core/api/driver', access),
     ]);
 
-    console.log(busRes);
-
     setBuses(busRes && busRes.data ? busRes.data.results : []);
     setSupervisors(
       supervisorRes && supervisorRes.data ? supervisorRes.data.results : []

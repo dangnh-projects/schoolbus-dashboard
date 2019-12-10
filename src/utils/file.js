@@ -7,7 +7,9 @@ export function dataURLtoBlob(dataurl) {
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n);
   }
-  return new Blob([u8arr], { type: mime });
+  const blob = new Blob([u8arr], { type: mime });
+
+  return new File([blob], 'default-user.png');
 }
 
 export const InitDefaultFile = cb => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   Button,
@@ -13,9 +13,10 @@ import {
   Select,
 } from 'antd';
 //import { navigate } from '@reach/router';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+import StudentSelectionModal from './StudentSelectionModal';
 
 const { TextArea, Search } = Input;
 const { Option } = Select;
@@ -36,90 +37,90 @@ function showConfirm() {
   });
 }
 
+const processData = routes => {
+  const output = [];
+  routes.map(route => {
+    const { students } = route;
+  });
+
+  return output;
+};
 export const Message = props => {
   const [state, setState] = useState(false);
+  const { data = [] } = useSelector(store => store.dataTable);
 
-  // const dataTranform = records => {
-  //   return records.map(record => {
-  //     const new_record = { ...record };
-  //     if (new_record.children) {
-  //       const new_children = [...new_record.children];
-  //       delete new_record.children;
-  //       new_record.new_children = new_children;
-  //     }
-  //     return new_record;
-  //   });
-  // };
+  const [students, setStudents] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // get bus route
+    dispatch(actionCreator.getList({ url: '/core/api/bus-route' }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleClickStudent = students => {
+    setState(true);
+    setStudents(students);
+  };
 
   const columns = [
     {
-      title: 'Parent',
-      dataIndex: 'parent',
+      title: 'Route name',
+      dataIndex: 'name',
     },
     {
-      title: 'Student',
-      render: (_, record) => (
-        <Col>
-          {record.new_children &&
-            record.new_children.map(child => <Tag>{child.name}</Tag>)}
-        </Col>
+      title: 'Bus number',
+      render: (_, i) =>
+        // <a href={`/dashboard/bus/${i.bus.id}`}>{i.bus.number}</a>
+        i.bus && i.bus.number,
+    },
+
+    {
+      title: 'Driver',
+      render: (_, i) =>
+        // <a href={`/dashboard/driver/${i.driver.id}`}>{i.driver.name}</a>
+        i.driver && i.driver.name,
+    },
+
+    {
+      title: 'Bus supervisor',
+      render: (_, i) =>
+        // <a href={`/dashboard/bus-supervisor/${i.bus_supervisor.id}`}>
+        //   {i.bus_supervisor.first_name + ' ' + i.bus_supervisor.last_name}
+        // </a>
+        i.bus_supervisor &&
+        i.bus_supervisor.first_name + ' ' + i.bus_supervisor.last_name,
+    },
+
+    {
+      title: 'Select',
+      render: (_, i) => (
+        <span
+          style={{ color: '#1890ff', cursor: 'pointer' }}
+          onClick={() => handleClickStudent(i.students)}
+        >
+          {i.students && i.students.length + ' students'} <br /> 0 selected
+        </span>
       ),
     },
     {
-      title: 'Bus',
-      dataIndex: 'bus',
-    },
-    {
-      title: 'Supervisor',
-      dataIndex: 'supervisor',
-    },
-    {
-      title: 'Driver',
-      dataIndex: 'driver',
-    },
-    // {
-    //   title: 'Status',
-    //   render: (_, record) =>
-    //     record.status === 'A' ? (
-    //       <Tag color="#3e8247">Active</Tag>
-    //     ) : (
-    //       <Tag>Inactive</Tag>
-    //     ),
-    //   align: 'center',
-    // },
-    {
-      title: 'Action',
-      align: 'center',
-      render: (_, record) => {
-        return (
-          <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              style={{ marginRight: 16 }}
-              //onClick={() => navigate(`/dashboard/parent/${record.info}`)}
-            >
-              <Icon type="form" />
-            </Button>
-            <Popconfirm
-              placement="top"
-              title={'Delete row?'}
-              onConfirm={() =>
-                props.deleteItem({
-                  //url: `/core/api/parent/${record.info}`,
-                  //afterDelete: () => props.getList({ url: '/core/api/parent' }),
-                })
-              }
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="danger">
-                <Icon type="delete" />
-              </Button>
-            </Popconfirm>
-          </Row>
-        );
-      },
+      title: 'Route type',
+      render: (_, i) => (i.route_type === 'P' ? 'Pickup' : 'Drop-off'),
     },
   ];
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const onSelectChange = (selectedRowKeys, selectedRows) => {
+    console.log(selectedRowKeys);
+    console.log(selectedRows);
+    setSelectedRowKeys(selectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
   const showModal = () => {
     setState(!state);
@@ -143,13 +144,13 @@ export const Message = props => {
 
       <Row gutter={16} style={{ marginBottom: 24, marginTop: 24 }}>
         <Col md={12} style={{ textAlign: 'left' }}>
-          Parent
+          Bus routes
         </Col>
-        <Col md={12} style={{ textAlign: 'right' }}>
+        {/* <Col md={12} style={{ textAlign: 'right' }}>
           <Button style={{ width: 100 }} onClick={showModal}>
             Add
           </Button>
-        </Col>
+        </Col> */}
       </Row>
       <DataTable
         columns={columns}
@@ -163,68 +164,9 @@ export const Message = props => {
           </Button>
         </Col>
       </Row>
-      <Modal
-        title="Add Parent"
-        visible={state}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="Submit"
-      >
-        <Row gutter={16}>
-          <Col md={11}>
-            <Search
-              placeholder="Parent name"
-              onSearch={value => console.log(value)}
-              style={{ width: 200 }}
-            />
-          </Col>
-          <Col md={2} style={{ textAlign: 'center' }}>
-            by
-          </Col>
-          <Col md={11} style={{ textAlign: 'right' }}>
-            <Select
-              showSearch
-              style={{ width: 200, marginBottom: 24 }}
-              placeholder="Select"
-              optionFilterProp="children"
-              //onChange={onChange}
-              //onFocus={onFocus}
-              //onBlur={onBlur}
-              //onSearch={onSearch}
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              <Option value="jack">Parent name</Option>
-              {/* <Option value="lucy">Bus route name</Option>
-              <Option value="tom">Supervisor name</Option> */}
-            </Select>
-          </Col>
-        </Row>
-
-        <Table
-          columns={[
-            { title: 'Name', dataIndex: 'name' },
-            { title: 'Student', dataIndex: 'student' },
-            { title: 'Bus', dataIndex: 'bus' },
-            { title: 'Supervisor', dataIndex: 'supervisor' },
-          ]}
-        />
-      </Modal>
+      <StudentSelectionModal visible={state} students={students} />
     </Card>
   );
 };
 
-const mapDispatchToProps = {
-  getList: actionCreator.getList,
-  deleteItem: actionCreator.deleteItem,
-};
-
-const mapStateToProps = state => state.dataTable;
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Message);
+export default Message;

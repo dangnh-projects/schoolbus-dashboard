@@ -16,6 +16,7 @@ import {
 import { connect, useDispatch, useSelector } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+import { actionCreator as messageActionCreator } from 'store/message/message.meta';
 import StudentSelectionModal from './StudentSelectionModal';
 
 const { TextArea, Search } = Input;

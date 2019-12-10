@@ -10,25 +10,22 @@ const BusRouteMap = props => {
   const [loc, setLoc] = useState();
   useEffect(() => {
     if (route) {
-      let ref = Firebase.database().ref('locations');
+      let ref = Firebase.database().ref(
+        'locations/route_' + route.bus_route.id
+      );
       ref.on('value', snapshot => {
         const state = snapshot.val();
-        console.log(state);
-        // this.setState(state);
+        if (state) {
+          const { lat, lng } = state;
+          setLoc({ lat, lng });
+        } else {
+          if (locations.length > 0) {
+            const loc = locations[0];
+            const { lat, lng } = loc.location;
+            setLoc({ lat, lng });
+          }
+        }
       });
-      // console.log('DATA RETRIEVED');
-      // const app = Firebase.app();
-      // console.log(app);
-      const database = Firebase.database();
-      database
-        // .ref(`/topics/route_${route.bus_route.id}`)
-        .ref()
-        .once('value')
-        .then(console.log);
-      // // console.log(ref, '==================');
-      // // ref.on('value', params => {
-      // //   console.log(params);
-      // // });
     }
   }, [route]);
   return (
@@ -54,17 +51,13 @@ const BusRouteMap = props => {
             // onGoogleApiLoaded={handleGoogleMapApi}
             yesIWantToUseGoogleMapApiInternals={true}
           >
-            {loc && loc.bus_location && (
-              <div
-                lat={loc.bus_location.lat}
-                lng={loc.bus_location.lng}
-                key={loc.id}
-              >
+            {loc && (
+              <div lat={loc.lat} lng={loc.lng}>
                 <img
-                  src="/images/map-pin.png"
+                  src="/images/yellow-bus-icon.png"
                   alt="pin"
-                  width={32}
-                  style={{ transform: 'translate(-50%, -100%)' }}
+                  width={48}
+                  style={{ transform: 'translate(-50%, -50%)' }}
                 />
               </div>
             )}

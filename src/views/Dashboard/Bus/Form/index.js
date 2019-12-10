@@ -69,10 +69,10 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
             rules: [
               {
                 required: true,
-                message: 'Number is required',
+                message: 'Name is required',
               },
             ],
-            defaultValue: item ? item.number : '',
+            defaultValue: item ? item.name : '',
           },
           {
             type: 'TEXT',

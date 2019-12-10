@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { actionCreator } from 'store/message/message.meta';
 
 const StudentSelectionModal = props => {
   const dispatch = useDispatch();
@@ -8,8 +9,6 @@ const StudentSelectionModal = props => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const onSelectChange = (selectedRowKeys, selectedRows) => {
-    console.log(selectedRowKeys);
-    console.log(selectedRows);
     setSelectedRowKeys(selectedRowKeys);
   };
 
@@ -17,7 +16,11 @@ const StudentSelectionModal = props => {
     selectedRowKeys,
     onChange: onSelectChange,
     onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
+      if (selected) {
+        dispatch(actionCreator.addStudent(record));
+      } else {
+        dispatch(actionCreator.removeStudent(record));
+      }
     },
   };
 

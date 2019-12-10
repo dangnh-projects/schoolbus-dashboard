@@ -1,7 +1,9 @@
 import { createAction } from 'redux-actions';
 
 export const types = {
-  ADD_STUDENTS: 'ADD_STUDENTS',
+  SET_STUDENTS: 'SET_STUDENTS',
+  ADD_STUDENT: 'ADD_STUDENT',
+  REMOVE_STUDENT: 'REMOVE_STUDENT',
   SET_ROUTES: 'SET_ROUTES',
 
   SEND_MESSAGE: 'SEND_MESSAGE',
@@ -9,7 +11,11 @@ export const types = {
 };
 
 export const actionCreator = {
-  addStudent: createAction(types.ADD_STUDENTS),
+  setStudents: createAction(types.SET_STUDENTS),
+
+  addStudent: createAction(types.ADD_STUDENT),
+  removeStudent: createAction(types.REMOVE_STUDENT),
+
   setRoutes: createAction(types.SET_ROUTES),
 
   sendMessage: createAction(types.SEND_MESSAGE),

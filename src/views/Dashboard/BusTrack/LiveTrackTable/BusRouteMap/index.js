@@ -49,7 +49,6 @@ const BusRouteMap = props => {
             center={loc ? { lat: loc.lat, lng: loc.lng } : null}
             defaultZoom={14}
             layerTypes={['TrafficLayer']}
-            // onGoogleApiLoaded={handleGoogleMapApi}
             yesIWantToUseGoogleMapApiInternals={true}
           >
             {loc && (

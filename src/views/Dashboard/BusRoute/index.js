@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Card, Button, Popconfirm, Icon, Row, Table, Col, Input } from 'antd';
 import { navigate } from '@reach/router';
@@ -8,7 +8,8 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 const { Search } = Input;
 
 export const Bus = props => {
-  const { data = [], loading } = props;
+  const { data = [], loading, count, page } = props;
+  const [search, setSearch] = useState('');
   const columns = [
     {
       title: 'Route name',
@@ -95,6 +96,7 @@ export const Bus = props => {
   }, []);
 
   const handleOnSearch = term => {
+    setSearch(term);
     props.getList({
       url: '/core/api/bus-route',
       search: term,
@@ -126,6 +128,17 @@ export const Bus = props => {
         bordered
         size="middle"
         dataSource={data}
+        pagination={{
+          total: count,
+          current: page + 1,
+        }}
+        onChange={pagination => {
+          props.setPage(pagination.current - 1);
+          props.getList({
+            url: '/core/api/bus-route',
+            search: search || '',
+          });
+        }}
       />
     </Card>
   );
@@ -134,6 +147,7 @@ export const Bus = props => {
 const mapDispatchToProps = {
   getList: actionCreator.getList,
   deleteItem: actionCreator.deleteItem,
+  setPage: actionCreator.setPage,
 };
 
 const mapStateToProps = state => state.dataTable;

@@ -10,7 +10,7 @@ const BusRouteMap = props => {
   const [loc, setLoc] = useState();
   useEffect(() => {
     if (route) {
-      let ref = Firebase.database().ref('route_18');
+      let ref = Firebase.database().ref('locations');
       ref.on('value', snapshot => {
         const state = snapshot.val();
         console.log(state);

@@ -39,7 +39,7 @@ const getMetaData = async (url, token) => {
       }
     );
 
-    return response.data.results;
+    return response.data;
   } catch (error) {
     notification.error({ message: `Load fail with url: ${url}` });
   }
@@ -76,9 +76,13 @@ const RouteForm = ({ form }) => {
       getMetaData('/core/api/driver', access),
     ]);
 
-    setBuses(busRes ? busRes.data : []);
-    setSupervisors(supervisorRes ? supervisorRes.data : []);
-    setDrivers(driverRes ? driverRes.data : []);
+    console.log(busRes);
+
+    setBuses(busRes && busRes.data ? busRes.data.results : []);
+    setSupervisors(
+      supervisorRes && supervisorRes.data ? supervisorRes.data.results : []
+    );
+    setDrivers(driverRes && driverRes.data ? driverRes.data.results : []);
   };
   useEffect(() => {
     getMeta();

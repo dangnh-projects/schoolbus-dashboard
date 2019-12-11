@@ -19,9 +19,17 @@ const { TextArea } = Input;
 const confirm = Modal.confirm;
 
 const BodyTable = memo(props => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const onSelectChange = (selectedRowKeys, selectedRows) => {
+    setSelectedRowKeys(selectedRowKeys);
+  };
+
   const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
     onSelect: (record, selected, selectedRows) => {
-      const { students } = record;
+      const { students = [] } = record;
       if (selected) {
         students.forEach(student =>
           props.dispatch(messageActionCreator.addStudent(student))
@@ -36,21 +44,39 @@ const BodyTable = memo(props => {
     onSelectAll: (selected, selectedRows, changeRows) => {
       if (selected) {
         selectedRows.forEach(record => {
-          const { students } = record;
+          const { students = [] } = record;
           students.forEach(student =>
             props.dispatch(messageActionCreator.addStudent(student))
           );
         });
       } else {
         changeRows.forEach(record => {
-          const { students } = record;
+          const { students = [] } = record;
           students.forEach(student =>
             props.dispatch(messageActionCreator.removeStudent(student))
           );
         });
       }
     },
+
+    // getCheckboxProps: record => ({
+    //   disabled: record.students.length === 0,
+    // }),
   };
+
+  useEffect(() => {
+    const selected = [];
+    props.rows.forEach((row, i) => {
+      if (
+        row.students &&
+        row.students.length > 0 &&
+        row.students.length === row.selected
+      ) {
+        selected.push(i);
+      }
+    });
+    setSelectedRowKeys(selected);
+  }, [props.rows]);
 
   return (
     <Table
@@ -80,7 +106,7 @@ const BodyTable = memo(props => {
 const caculateSelected = (routes, selectedStudents) => {
   routes.forEach(route => {
     let count = 0;
-    const { students } = route;
+    const { students = [] } = route;
     students.forEach(std => {
       if (
         selectedStudents.find(student => student.student.id === std.student.id)

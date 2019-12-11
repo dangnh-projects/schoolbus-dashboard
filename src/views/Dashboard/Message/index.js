@@ -19,10 +19,44 @@ const { TextArea } = Input;
 const confirm = Modal.confirm;
 
 const BodyTable = memo(props => {
+  const rowSelection = {
+    onSelect: (record, selected, selectedRows) => {
+      const { students } = record;
+      if (selected) {
+        students.forEach(student =>
+          props.dispatch(messageActionCreator.addStudent(student))
+        );
+      } else {
+        students.forEach(student =>
+          props.dispatch(messageActionCreator.removeStudent(student))
+        );
+      }
+    },
+
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      if (selected) {
+        selectedRows.forEach(record => {
+          const { students } = record;
+          students.forEach(student =>
+            props.dispatch(messageActionCreator.addStudent(student))
+          );
+        });
+      } else {
+        changeRows.forEach(record => {
+          const { students } = record;
+          students.forEach(student =>
+            props.dispatch(messageActionCreator.removeStudent(student))
+          );
+        });
+      }
+    },
+  };
+
   return (
     <Table
       columns={props.columns}
       loading={props.loading}
+      rowSelection={rowSelection}
       bordered
       size="middle"
       dataSource={props.rows}
@@ -44,7 +78,6 @@ const BodyTable = memo(props => {
 });
 
 const caculateSelected = (routes, selectedStudents) => {
-  console.log('======= caculate selected');
   routes.forEach(route => {
     let count = 0;
     const { students } = route;
@@ -78,7 +111,7 @@ export const Message = props => {
   useEffect(() => {
     // get bus route
     dispatch(actionCreator.getList({ url: '/core/api/bus-route' }));
-    // dispatch(messageActionCreator.setStudents([]));
+    dispatch(messageActionCreator.setStudents([]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -156,6 +189,7 @@ export const Message = props => {
       notification.warn({
         message: 'Please select at least 1 student to send notification',
       });
+      return;
     }
     const parents = selectedStudents.map(student => student.student.parent);
     const dedupParent = Array.from(new Set(parents));

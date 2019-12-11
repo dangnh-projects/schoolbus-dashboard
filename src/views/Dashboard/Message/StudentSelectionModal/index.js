@@ -16,11 +16,24 @@ const StudentSelectionModal = props => {
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+
     onSelect: (record, selected, selectedRows) => {
       if (selected) {
         dispatch(actionCreator.addStudent(record));
       } else {
         dispatch(actionCreator.removeStudent(record));
+      }
+    },
+
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      if (selected) {
+        selectedRows.forEach(record =>
+          dispatch(actionCreator.addStudent(record))
+        );
+      } else {
+        changeRows.forEach(record =>
+          dispatch(actionCreator.removeStudent(record))
+        );
       }
     },
   };

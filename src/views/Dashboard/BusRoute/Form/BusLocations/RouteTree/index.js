@@ -13,9 +13,7 @@ import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 const buildDot = type => {
   if (type === 'start') {
-    return (
-      <Icon type="play-circle" style={{ fontSize: '16px', color: '#52c41a' }} />
-    );
+    return <Icon type="bank" style={{ fontSize: '16px', color: '#52c41a' }} />;
   }
 
   if (type === 'end') {
@@ -45,25 +43,19 @@ const PositionItem = memo(
     <Timeline.Item dot={buildDot(dotType)}>
       <Row type="flex" align="top" justify="space-between">
         <Col style={{ flex: 1 }}>
-          {loc.bus_location &&
-            `${loc.bus_location.address} ${loc.bus_location.street} ${loc
-              .bus_location.ward !== '' && 'phường ' + loc.bus_location.ward} ${
-              loc.bus_location.district
-            }`}
-          {dotType !== 'end' && [
-            <br key="break" />,
-            <Row
-              key="time"
-              style={{
-                marginTop: 16,
-                fontSize: 12,
-                fontStyle: 'italic',
-                color: 'rgba(0,0,0,0.45)',
-              }}
-            >
-              {time_to_next_location} min
-            </Row>,
-          ]}
+          {name}
+          <br key="break" />
+          <Row
+            key="time"
+            style={{
+              marginTop: 16,
+              fontSize: 12,
+              fontStyle: 'italic',
+              color: 'rgba(0,0,0,0.45)',
+            }}
+          >
+            {time_to_next_location} min
+          </Row>
         </Col>
         <Col>
           <Icon
@@ -120,17 +112,32 @@ const RouteTree = props => {
         Positions
       </Row>
       <Timeline>
+        <PositionItem
+          name="School"
+          dotType="start"
+          time_to_next_location={
+            st && st.length > 0 && st[0].estimated_travelling_time
+          }
+        />
         {st &&
           st.length > 0 &&
           st.map((loc, idx) => (
             <PositionItem
               loc={loc}
               key={idx}
-              name={loc.bus_location && loc.bus_location.address}
-              time_to_next_location={
-                loc.bus_location && loc.bus_location.time_to_next_location
+              name={
+                loc.bus_location &&
+                `${loc.bus_location.address} ${loc.bus_location.street} ${loc
+                  .bus_location.ward !== '' &&
+                  'phường ' + loc.bus_location.ward} ${
+                  loc.bus_location.district
+                }`
               }
-              dotType={idx === 0 && 'start'}
+              time_to_next_location={
+                idx < st.length - 1
+                  ? st[idx + 1].estimated_travelling_time
+                  : end.estimated_travelling_time
+              }
               dispatch={dispatch}
               id={loc.bus_location && loc.bus_location.id}
               route={loc.bus_route && loc.bus_route.id}

@@ -146,12 +146,7 @@ const RouteTree = props => {
           ))}
         {end && (
           <Timeline.Item
-            dot={
-              <Icon
-                type="close-circle"
-                style={{ fontSize: '16px', color: 'red' }}
-              />
-            }
+            dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />}
           >
             <Row type="flex" align="top" justify="space-between">
               <Col style={{ flex: 1 }}>
@@ -189,6 +184,16 @@ const RouteTree = props => {
             </Row>
           </Timeline.Item>
         )}
+        <Timeline.Item
+          dot={
+            <Icon
+              type="close-circle"
+              style={{ fontSize: '16px', color: 'red' }}
+            />
+          }
+        >
+          School
+        </Timeline.Item>
       </Timeline>
       <Row type="flex" justify="center">
         <Button

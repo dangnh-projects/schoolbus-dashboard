@@ -1,61 +1,84 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import {
   Card,
   Button,
-  Popconfirm,
-  Icon,
   Row,
-  Tag,
   Col,
   Input,
   Modal,
   Table,
-  Select,
+  notification,
 } from 'antd';
 //import { navigate } from '@reach/router';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import DataTable from 'components/DataTable';
+import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { actionCreator as messageActionCreator } from 'store/message/message.meta';
 import StudentSelectionModal from './StudentSelectionModal';
 
-const { TextArea, Search } = Input;
-const { Option } = Select;
+const { TextArea } = Input;
 const confirm = Modal.confirm;
 
-function showConfirm() {
-  confirm({
-    title: 'Are you sure?',
-    content: 'This action cannot be rollback',
-    okText: 'Yes',
-    cancelText: 'No',
-    onOk() {
-      return new Promise((resolve, reject) => {
-        setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-      }).catch(() => console.log('Oops errors!'));
-    },
-    onCancel() {},
-  });
-}
+const BodyTable = memo(props => {
+  return (
+    <Table
+      columns={props.columns}
+      loading={props.loading}
+      bordered
+      size="middle"
+      dataSource={props.rows}
+      pagination={{
+        total: props.count,
+        current: props.page + 1,
+      }}
+      onChange={pagination => {
+        props.dispatch(actionCreator.setPage(pagination.current - 1));
+        props.dispatch(
+          actionCreator.getList({
+            url: '/core/api/bus-route',
+            // search: search || '',
+          })
+        );
+      }}
+    />
+  );
+});
 
-const processData = routes => {
-  const output = [];
-  routes.map(route => {
+const caculateSelected = (routes, selectedStudents) => {
+  console.log('======= caculate selected');
+  routes.forEach(route => {
+    let count = 0;
     const { students } = route;
+    students.forEach(std => {
+      if (
+        selectedStudents.find(student => student.student.id === std.student.id)
+      ) {
+        count++;
+      }
+    });
+
+    route.selected = count;
   });
 
-  return output;
+  return routes;
 };
+
 export const Message = props => {
   const [state, setState] = useState(false);
-  const { data = [] } = useSelector(store => store.dataTable);
+  const { data = [], loading, count, page } = useSelector(
+    store => store.dataTable
+  );
+  const { selectedStudents = [] } = useSelector(store => store.message);
 
   const [students, setStudents] = useState([]);
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     // get bus route
     dispatch(actionCreator.getList({ url: '/core/api/bus-route' }));
+    // dispatch(messageActionCreator.setStudents([]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -100,7 +123,8 @@ export const Message = props => {
           style={{ color: '#1890ff', cursor: 'pointer' }}
           onClick={() => handleClickStudent(i.students)}
         >
-          {i.students && i.students.length + ' students'} <br /> 0 selected
+          {i.students && i.students.length + ' students'} <br /> {i.selected}{' '}
+          selected
         </span>
       ),
     },
@@ -123,23 +147,61 @@ export const Message = props => {
     onChange: onSelectChange,
   };
 
-  const showModal = () => {
-    setState(!state);
-  };
-  const handleOk = e => {
-    setState(!state);
+  const handleSubmit = props => {
+    if (!title || !body) {
+      notification.warn({ message: 'Please fill title and body' });
+      return;
+    }
+    if (selectedStudents.length === 0) {
+      notification.warn({
+        message: 'Please select at least 1 student to send notification',
+      });
+    }
+    const parents = selectedStudents.map(student => student.student.parent);
+    const dedupParent = Array.from(new Set(parents));
+    const data = {
+      title,
+      body,
+      parents: JSON.stringify(dedupParent),
+    };
+    // console.log(parents);
+
+    confirm({
+      title: 'Are you sure to perform this action?',
+      content: (
+        <Col>
+          <Row>
+            This message will send notification to {dedupParent.length} parents.{' '}
+          </Row>
+        </Col>
+      ),
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk() {
+        dispatch(messageActionCreator.sendMessage(data));
+        notification.info({ message: 'Processing ... ' });
+      },
+      onCancel() {},
+    });
   };
 
-  const handleCancel = e => {
-    setState(!state);
-  };
+  const rows = useMemo(() => caculateSelected(data, selectedStudents), [
+    data,
+    selectedStudents,
+  ]);
 
   return (
     <Card title="Manage message">
-      <Row gutter={16}>
+      <Row type="flex" gutter={[16, 16]} style={{ marginBottom: 12 }}>
+        <Col md={2}>Title</Col>
+        <Col md={22}>
+          <Input onChange={e => setTitle(e.target.value)} />
+        </Col>
+      </Row>
+      <Row>
         <Col md={2}>Message</Col>
         <Col md={22}>
-          <TextArea row={6} />
+          <TextArea onChange={e => setBody(e.target.value)} row={6} />
         </Col>
       </Row>
 
@@ -153,19 +215,26 @@ export const Message = props => {
           </Button>
         </Col> */}
       </Row>
-      <DataTable
+      <BodyTable
         columns={columns}
-        //url="/core/api/message"
-        //dataTranform={dataTranform}
+        loading={loading}
+        rows={rows}
+        count={count}
+        page={page}
+        dispatch={dispatch}
       />
       <Row gutter={16} style={{ textAlign: 'right' }}>
         <Col md={24}>
-          <Button type="primary" style={{ width: 100 }} onClick={showConfirm}>
+          <Button type="primary" style={{ width: 100 }} onClick={handleSubmit}>
             Submit
           </Button>
         </Col>
       </Row>
-      <StudentSelectionModal visible={state} students={students} />
+      <StudentSelectionModal
+        visible={state}
+        students={students}
+        setVisible={setState}
+      />
     </Card>
   );
 };

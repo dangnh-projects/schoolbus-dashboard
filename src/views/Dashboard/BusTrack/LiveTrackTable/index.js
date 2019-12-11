@@ -162,6 +162,10 @@ const LiveTable = props => {
 
   const columns = [
     {
+      title: 'ID',
+      render: (_, i) => i.bus_route && i.bus_route.id,
+    },
+    {
       title: 'Route name',
       render: (_, i) => i.bus_route && i.bus_route.name,
     },

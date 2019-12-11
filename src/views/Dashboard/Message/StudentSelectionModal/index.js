@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'store/message/message.meta';
 
 const StudentSelectionModal = props => {
+  const { students = [] } = props;
   const dispatch = useDispatch();
-  const { selectedStudents } = useSelector(store => store.message);
+  const { selectedStudents = [] } = useSelector(store => store.message);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const onSelectChange = (selectedRowKeys, selectedRows) => {
@@ -23,6 +24,20 @@ const StudentSelectionModal = props => {
       }
     },
   };
+
+  useEffect(() => {
+    // process selected
+    const selected = [];
+    for (let i = 0; i < students.length; i++) {
+      const fnd = selectedStudents.find(
+        student => student.student.id === students[i].student.id
+      );
+      if (fnd) {
+        selected.push(i);
+      }
+    }
+    setSelectedRowKeys(selected);
+  }, [students]);
 
   const handleOK = () => {};
 
@@ -45,7 +60,7 @@ const StudentSelectionModal = props => {
             render: (_, i) => i.student.classroom,
           },
         ]}
-        dataSource={props.students}
+        dataSource={students}
       />
     </Modal>
   );

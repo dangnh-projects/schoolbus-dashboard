@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import {
   Card,
   Button,
@@ -18,29 +18,50 @@ import StudentSelectionModal from './StudentSelectionModal';
 const { TextArea } = Input;
 const confirm = Modal.confirm;
 
-function showConfirm() {
-  confirm({
-    title: 'Are you sure?',
-    content: 'This action cannot be rollback',
-    okText: 'Yes',
-    cancelText: 'No',
-    onOk() {
-      return new Promise((resolve, reject) => {
-        setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-      }).catch(() => console.log('Oops errors!'));
-    },
-    onCancel() {},
+const BodyTable = memo(props => {
+  return (
+    <Table
+      columns={props.columns}
+      loading={props.loading}
+      bordered
+      size="middle"
+      dataSource={props.rows}
+      pagination={{
+        total: props.count,
+        current: props.page + 1,
+      }}
+      onChange={pagination => {
+        props.dispatch(actionCreator.setPage(pagination.current - 1));
+        props.dispatch(
+          actionCreator.getList({
+            url: '/core/api/bus-route',
+            // search: search || '',
+          })
+        );
+      }}
+    />
+  );
+});
+
+const caculateSelected = (routes, selectedStudents) => {
+  console.log('======= caculate selected');
+  routes.forEach(route => {
+    let count = 0;
+    const { students } = route;
+    students.forEach(std => {
+      if (
+        selectedStudents.find(student => student.student.id === std.student.id)
+      ) {
+        count++;
+      }
+    });
+
+    route.selected = count;
   });
-}
 
-// const processData = routes => {
-//   const output = [];
-//   routes.map(route => {
-//     const { students } = route;
-//   });
+  return routes;
+};
 
-//   return output;
-// };
 export const Message = props => {
   const [state, setState] = useState(false);
   const { data = [], loading, count, page } = useSelector(
@@ -102,7 +123,8 @@ export const Message = props => {
           style={{ color: '#1890ff', cursor: 'pointer' }}
           onClick={() => handleClickStudent(i.students)}
         >
-          {i.students && i.students.length + ' students'} <br /> 0 selected
+          {i.students && i.students.length + ' students'} <br /> {i.selected}{' '}
+          selected
         </span>
       ),
     },
@@ -126,21 +148,47 @@ export const Message = props => {
   };
 
   const handleSubmit = props => {
+    if (!title || !body) {
+      notification.warn({ message: 'Please fill title and body' });
+      return;
+    }
     if (selectedStudents.length === 0) {
       notification.warn({
         message: 'Please select at least 1 student to send notification',
       });
     }
+    const parents = selectedStudents.map(student => student.student.parent);
+    const dedupParent = Array.from(new Set(parents));
     const data = {
       title,
       body,
-      parents: JSON.stringify(
-        selectedStudents.map(student => student.student.parent)
-      ),
+      parents: JSON.stringify(dedupParent),
     };
+    // console.log(parents);
 
-    dispatch(messageActionCreator.sendMessage(data));
+    confirm({
+      title: 'Are you sure to perform this action?',
+      content: (
+        <Col>
+          <Row>
+            This message will send notification to {dedupParent.length} parents.{' '}
+          </Row>
+        </Col>
+      ),
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk() {
+        dispatch(messageActionCreator.sendMessage(data));
+        notification.info({ message: 'Processing ... ' });
+      },
+      onCancel() {},
+    });
   };
+
+  const rows = useMemo(() => caculateSelected(data, selectedStudents), [
+    data,
+    selectedStudents,
+  ]);
 
   return (
     <Card title="Manage message">
@@ -167,25 +215,13 @@ export const Message = props => {
           </Button>
         </Col> */}
       </Row>
-      <Table
+      <BodyTable
         columns={columns}
         loading={loading}
-        bordered
-        size="middle"
-        dataSource={data}
-        pagination={{
-          total: count,
-          current: page + 1,
-        }}
-        onChange={pagination => {
-          dispatch(actionCreator.setPage(pagination.current - 1));
-          dispatch(
-            actionCreator.getList({
-              url: '/core/api/bus-route',
-              // search: search || '',
-            })
-          );
-        }}
+        rows={rows}
+        count={count}
+        page={page}
+        dispatch={dispatch}
       />
       <Row gutter={16} style={{ textAlign: 'right' }}>
         <Col md={24}>

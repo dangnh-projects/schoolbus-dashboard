@@ -1,4 +1,4 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import { notification } from 'antd';
 import { types, actionCreator } from './message.meta';
 import { authenticate } from 'store/utils';
@@ -58,6 +58,9 @@ function* sendMessage({ payload }, user) {
   }
 
   yield put(actionCreator.sendMessageSuccess());
+  yield put(actionCreator.setStudents([]));
+
+  notification.success({ message: 'Sent successfully!!!' });
 }
 
 export default function* dataTableSaga() {

@@ -34,7 +34,7 @@ const BusRouteMap = props => {
       visible={props.visible}
       onOk={() => props.setVisible && props.setVisible(false)}
       onCancel={() => props.setVisible && props.setVisible(false)}
-      width={800}
+      width={1200}
     >
       <Row type="flex">
         <Col span={24} style={{ minHeight: 480 }}>

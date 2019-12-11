@@ -52,12 +52,10 @@ const StudentSelectionModal = props => {
     setSelectedRowKeys(selected);
   }, [students]);
 
-  const handleOK = () => {};
-
   return (
     <Modal
       visible={props.visible}
-      onOk={() => handleOK}
+      onOk={() => props.setVisible && props.setVisible(false)}
       onCancel={() => props.setVisible && props.setVisible(false)}
       okText="Submit"
     >

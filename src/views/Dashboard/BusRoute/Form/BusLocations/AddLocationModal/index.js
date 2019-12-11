@@ -24,7 +24,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
   const [address, setAddress] = useState('');
   const [search, setSearch] = useState('');
   const [addressObj, setAddressObj] = useState(null);
-  const [timeNextLoc, setTimeNextLoc] = useState(0);
+  const [estimatedTravelTime, setEstimatedTravelTime] = useState(0);
   const [street, setStreet] = useState('');
   const [ward, setWard] = useState('');
   const [district, setDistrict] = useState('');
@@ -113,7 +113,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
       setWard(bus_location.ward);
       setDistrict(bus_location.district);
       setProvince(bus_location.province);
-      setTimeNextLoc(bus_location.time_to_next_location);
+      setEstimatedTravelTime(currentLocation.estimated_travelling_time);
       setPoint({
         lng: bus_location.lng,
         lat: bus_location.lat,
@@ -131,7 +131,7 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
       province,
       lng: point.lng,
       lat: point.lat,
-      time_to_next_location: parseInt(timeNextLoc) || 0,
+      estimated_travelling_time: parseInt(estimatedTravelTime) || 0,
     };
 
     if (currentLocation) {
@@ -215,8 +215,8 @@ const MapRouteModal = ({ setShowAddRoutePosition, map }) => {
 
           <Item label="Time to next destination (0 if this is final position)">
             <Input
-              value={timeNextLoc}
-              onChange={e => setTimeNextLoc(e.target.value)}
+              value={estimatedTravelTime}
+              onChange={e => setEstimatedTravelTime(e.target.value)}
             />
           </Item>
           <Row type="flex" justify="center">

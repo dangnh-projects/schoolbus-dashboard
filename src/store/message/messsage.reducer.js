@@ -10,16 +10,26 @@ const setStudents = (state, action) => {
   return { ...state, selectedStudents: [] };
 };
 
-const addStudent = (state, action) => ({
-  ...state,
-  selectedStudents: [...state.selectedStudents, action.payload],
-});
+const addStudent = (state, action) => {
+  const found = state.selectedStudents.find(
+    student => student.student.id === action.payload.student.id
+  );
+
+  if (found) {
+    return state;
+  }
+
+  return {
+    ...state,
+    selectedStudents: [...state.selectedStudents, action.payload],
+  };
+};
 
 const removeStudent = (state, action) => ({
   ...state,
   selectedStudents: [
     ...state.selectedStudents.filter(
-      student => student.id !== action.payload.id
+      student => student.student.id !== action.payload.student.id
     ),
   ],
 });

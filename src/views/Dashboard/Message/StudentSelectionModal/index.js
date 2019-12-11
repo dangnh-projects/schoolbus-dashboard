@@ -16,11 +16,24 @@ const StudentSelectionModal = props => {
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+
     onSelect: (record, selected, selectedRows) => {
       if (selected) {
         dispatch(actionCreator.addStudent(record));
       } else {
         dispatch(actionCreator.removeStudent(record));
+      }
+    },
+
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      if (selected) {
+        selectedRows.forEach(record =>
+          dispatch(actionCreator.addStudent(record))
+        );
+      } else {
+        changeRows.forEach(record =>
+          dispatch(actionCreator.removeStudent(record))
+        );
       }
     },
   };
@@ -39,12 +52,10 @@ const StudentSelectionModal = props => {
     setSelectedRowKeys(selected);
   }, [students]);
 
-  const handleOK = () => {};
-
   return (
     <Modal
       visible={props.visible}
-      onOk={() => handleOK}
+      onOk={() => props.setVisible && props.setVisible(false)}
       onCancel={() => props.setVisible && props.setVisible(false)}
       okText="Submit"
     >

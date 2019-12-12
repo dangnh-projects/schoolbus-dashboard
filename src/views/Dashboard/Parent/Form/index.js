@@ -68,12 +68,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
     if (avatar) {
       fields.avatar = avatar;
     }
-    if (birthday > moment()) {
-      notification.error({
-        message: 'Birthday must not be after current date',
-      });
-      return;
-    }
+
     fields.birthday = fields.birthday.format('YYYY-MM-DD');
 
     if (id) {
@@ -134,6 +129,15 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
     setAvatar(info.file);
   };
 
+  const disabledBirthDay = birthday => {
+    const minValueDate = moment('1900-01-01', 'YYYY-MM-YY');
+    const currentValueDate = moment();
+
+    return (
+      birthday.isAfter(currentValueDate) || birthday.isBefore(minValueDate)
+    );
+  };
+
   return (
     <Card title={id ? 'Update parent' : 'Create New Parent'}>
       <Form style={{ padding: 16 }} layout="horizontal">
@@ -178,7 +182,12 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                         message: 'Birthday is required',
                       },
                     ],
-                  })(<DatePicker onChange={val => setBirthday(val)} />)}
+                  })(
+                    <DatePicker
+                      disabledDate={disabledBirthDay}
+                      onChange={val => setBirthday(val)}
+                    />
+                  )}
                 </Item>
               </Col>
               <Col md={12}>
@@ -204,6 +213,11 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                       {
                         required: true,
                         message: 'ID number is required',
+                      },
+                      {
+                        pattern: new RegExp('^(\\d{9}|\\d{12})$'),
+                        message:
+                          'ID/Passport number is required to 9-digit or 12-digit',
                       },
                     ],
                   })(

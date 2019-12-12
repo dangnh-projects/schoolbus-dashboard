@@ -12,12 +12,14 @@ import {
   Icon,
   message,
   Button,
+  InputNumber,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
+import { bool } from 'prop-types';
 
 const Item = Form.Item;
 
@@ -56,12 +58,6 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
     };
     if (avatar) {
       fields.image = avatar;
-    }
-    if (birthday > moment()) {
-      notification.error({
-        message: 'Birthday must not be after current date',
-      });
-      return;
     }
 
     fields.birthday = fields.birthday.format('YYYY-MM-DD');
@@ -122,6 +118,15 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
     setAvatar(info.file);
   };
 
+  const disabledBirthDay = birthday => {
+    const minValueDate = moment('1900-01-01', 'YYYY-MM-YY');
+    const currentValueDate = moment();
+
+    return (
+      birthday.isAfter(currentValueDate) || birthday.isBefore(minValueDate)
+    );
+  };
+
   return (
     <Card title={id ? 'Update Driver' : 'Create New Driver'}>
       <Form style={{ padding: 16 }} layout="horizontal">
@@ -159,6 +164,10 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
                         required: true,
                         message: 'ID number is required',
                       },
+                      {
+                        pattern: new RegExp('^(\\d{9}|\\d{12})$'),
+                        message: 'ID number is required to 9-digit or 12-digit',
+                      },
                     ],
                   })(<Input onChange={e => setIdNumber(e.target.value)} />)}
                 </Item>
@@ -188,7 +197,12 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
                         message: 'Birthday is required',
                       },
                     ],
-                  })(<DatePicker onChange={val => setBirthday(val)} />)}
+                  })(
+                    <DatePicker
+                      disabledDate={disabledBirthDay}
+                      onChange={val => setBirthday(val)}
+                    />
+                  )}
                 </Item>
               </Col>
               <Col md={12}>

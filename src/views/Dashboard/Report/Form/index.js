@@ -1,35 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Row, Col, Input, Button, Icon } from 'antd';
+import { Form, Row, Col, notification, Button } from 'antd';
 import { connect } from 'react-redux';
-import { navigate } from '@reach/router';
+//import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
-import { API } from 'api/metaData';
+//import { API } from 'api/metaData';
+import StudentRegistration from './Student/student-registration-bus';
+import RegistrationByMonth from './Student/student-registration-by-month';
+import StudentLateMiss from './Student/student-late-miss';
+import SupervisorAge from './Supervisor/supervisor-age';
+//import { ok } from 'assert';
 
 const ReportForm = ({ id, form }) => {
-  const { getFieldDecorator } = form;
-  const [expand, setExpand] = useState(false);
-
-  const getFields = () => {
-    const count = expand ? 10 : 6;
-    const children = [];
-    for (let i = 0; i < 10; i++) {
-      children.push(
-        <Col span={8} key={i} style={{ display: i < count ? 'block' : 'none' }}>
-          <Form.Item label={`Field ${i}`}>
-            {getFieldDecorator(`field-${i}`, {
-              rules: [
-                {
-                  required: true,
-                  message: 'Input something!',
-                },
-              ],
-            })(<Input placeholder="placeholder" />)}
-          </Form.Item>
-        </Col>
-      );
-    }
-    return children;
-  };
+  //const [expand, setExpand] = useState(false);
 
   const handleSearch = e => {
     e.preventDefault();
@@ -42,16 +24,54 @@ const ReportForm = ({ id, form }) => {
     form.resetFields();
   };
 
-  const toggle = () => {
-    setExpand(!expand);
-  };
-
   id = parseInt(id);
+
+  const handleReportOption = value => {
+    if (value === 0) {
+      {
+        switch (id) {
+          case 1:
+            return <StudentRegistration.GetFields />;
+          case 2:
+            return <RegistrationByMonth.GetFields />;
+          case 3:
+            return <StudentLateMiss.GetFields />;
+          case 4:
+            return <SupervisorAge.GetFields />;
+          default:
+            notification.error({
+              message: 'Report does not exists',
+            });
+            break;
+        }
+      }
+    } else if (value === 1) {
+      switch (id) {
+        case 1:
+          return <SupervisorAge.TableView />;
+        case 2:
+          return <RegistrationByMonth.TableView />;
+        case 3:
+          return <StudentLateMiss.TableView />;
+        case 4:
+          return <StudentRegistration.TableView />;
+        default:
+          notification.error({
+            message: 'Report does not exists',
+          });
+          break;
+      }
+    } else {
+      notification.error({
+        message: 'Error: Please contact to system admin',
+      });
+    }
+  };
 
   return (
     <div>
       <Form className="ant-advanced-search-form" onSubmit={handleSearch}>
-        <Row gutter={24}>{getFields()}</Row>
+        <Row gutter={24}>{handleReportOption(0)}</Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
             <Button type="primary" htmlType="submit">
@@ -60,9 +80,6 @@ const ReportForm = ({ id, form }) => {
             <Button style={{ marginLeft: 8 }} onClick={handleReset}>
               Clear
             </Button>
-            <a style={{ marginLeft: 8, fontSize: 12 }} onClick={toggle}>
-              Collapse <Icon type={expand ? 'up' : 'down'} />
-            </a>
           </Col>
         </Row>
       </Form>
@@ -76,9 +93,7 @@ const ReportForm = ({ id, form }) => {
         <Button type="dashed">Download</Button>
       </div>
 
-      <Form className="ant-advanced-search-form">
-        <div>Show Report</div>
-      </Form>
+      <Form className="ant-advanced-search-form">{handleReportOption(1)}</Form>
     </div>
   );
 };

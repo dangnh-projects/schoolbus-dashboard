@@ -135,7 +135,7 @@ const Home = () => {
             type: 'apartment',
             boderColor: 'black',
             content: 'Schools',
-            link: '/dashboard/bus',
+            link: '/dashboard/schools',
           }}
         />
       </Card>

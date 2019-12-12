@@ -9,52 +9,39 @@ export const Report = props => {
 
   const data = [
     {
-      title: 'Ant Design Title 1',
-      description:
-        'Ant Design, a design language for background applications 1',
+      title: 'Thống kê số lượng học sinh đi trong tháng',
+      description: 'Số lượng học sinh đi trong tháng',
       id: 1,
     },
     {
-      title: 'Ant Design Title 2',
-      description:
-        'Ant Design, a design language for background applications 2',
+      title: 'Thống kê tháng học sinh đi nhiều nhất',
+      description: 'Thống kê tháng học sinh đi nhiều nhất',
       id: 2,
     },
     {
-      title: 'Ant Design Title 3',
-      description:
-        'Ant Design, a design language for background applications 3',
+      title: 'Thống kê học sinh trễ, lỡ chuyến',
+      description: 'Thống kê học sinh trễ, lỡ chuyến',
       id: 3,
     },
     {
-      title: 'Ant Design Title 4',
-      description:
-        'Ant Design, a design language for background applications 4',
+      title: 'Thống kê độ tuổi giám sinh',
+      description: 'Thống kê độ tuổi giám sinh',
       id: 4,
     },
     {
-      title: 'Ant Design Title 5',
-      description:
-        'Ant Design, a design language for background applications 5',
+      title: 'Thống kê số lượng tin nhắn giám sinh gửi phụ huynh',
+      description: 'Thống kê số lượng tin nhắn giám sinh gửi phụ huynh',
       id: 5,
     },
     {
-      title: 'Ant Design Title 6',
-      description:
-        'Ant Design, a design language for background applications 6',
+      title: 'Thống kê số lượng tuyến tài xế đi trong tháng',
+      description: 'Thống kê số lượng tuyến tài xế đi trong tháng',
       id: 6,
     },
     {
-      title: 'Ant Design Title 7',
-      description:
-        'Ant Design, a design language for background applications 7',
+      title: 'Thống kê số lượng tuyến có học sinh bị lỡ',
+      description: 'Thống kê số lượng tuyến có học sinh bị lỡ',
       id: 7,
-    },
-    {
-      title: 'Ant Design Title 8',
-      description:
-        'Ant Design, a design language for background applications 8',
-      id: 8,
     },
   ];
 

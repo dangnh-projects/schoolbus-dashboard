@@ -104,18 +104,16 @@ const Information = ({ form }) => {
     if (!isLt2M) {
       message.error('Image must smaller than 2MB!');
     }
-
     return false;
   };
+
   const handleChange = info => {
     // Get this url from response in real world.
-
     const reader = new FileReader();
     reader.addEventListener('load', e => {
       if (e && e.target) setImgVal(e.target.result);
     });
     reader.readAsDataURL(info.file);
-
     setAvatar(info.file);
   };
 
@@ -128,6 +126,14 @@ const Information = ({ form }) => {
         handleSubmit && handleSubmit(fieldsValue);
       }
     });
+  };
+
+  const disabledBirthDay = birthday => {
+    const minValueDate = moment('1900-01-01', 'YYYY-MM-YY');
+    const currentValueDate = moment();
+    return (
+      birthday.isAfter(currentValueDate) || birthday.isBefore(minValueDate)
+    );
   };
 
   return (
@@ -199,7 +205,12 @@ const Information = ({ form }) => {
                       message: 'Birthday is required',
                     },
                   ],
-                })(<DatePicker onChange={val => setDob(val)} />)}
+                })(
+                  <DatePicker
+                    disabledDate={disabledBirthDay}
+                    onChange={val => setDob(val)}
+                  />
+                )}
               </Item>
             </Col>
             {/* <Col md={8}>

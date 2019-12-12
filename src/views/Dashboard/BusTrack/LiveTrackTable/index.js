@@ -205,7 +205,7 @@ const LiveTable = props => {
         }`,
     },
     {
-      title: 'No. of onboarding',
+      title: 'No of onboarding',
       align: 'center',
       render: (_, i) => (
         <Tag
@@ -221,7 +221,7 @@ const LiveTable = props => {
       ),
     },
     {
-      title: 'No. remaining',
+      title: 'No of remaining',
       align: 'center',
       render: (_, i) => (
         <Tag

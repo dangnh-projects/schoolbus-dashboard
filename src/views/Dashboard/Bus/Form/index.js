@@ -106,6 +106,10 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
                 required: true,
                 message: 'No of seat is required',
               },
+              {
+                pattern: new RegExp('^[0-9]*$'),
+                message: 'Invalid number',
+              },
             ],
             defaultValue: item ? item.number_of_seat : '',
           },

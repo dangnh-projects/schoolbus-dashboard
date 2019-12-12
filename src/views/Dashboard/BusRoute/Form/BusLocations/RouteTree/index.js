@@ -58,7 +58,7 @@ const PositionItem = memo(
           </Row>
         </Col>
         <Col>
-          <Icon
+          {/*<Icon
             type="edit"
             style={{ marginLeft: 12 }}
             onClick={() => setCurrentLocation(loc)}
@@ -78,6 +78,8 @@ const PositionItem = memo(
           >
             <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
           </Popconfirm>
+          */}
+
           {/* <Icon type="arrow-up" style={{ marginLeft: 12 }} />
           <Icon type="arrow-down" style={{ marginLeft: 8 }} /> */}
         </Col>
@@ -158,7 +160,7 @@ const RouteTree = props => {
                   }`}
               </Col>
               <Col>
-                <Icon
+                {/*  <Icon
                   type="edit"
                   style={{ marginLeft: 12 }}
                   onClick={() => setCurrentLocation(end)}
@@ -178,6 +180,8 @@ const RouteTree = props => {
                 >
                   <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
                 </Popconfirm>
+                */}
+
                 {/* <Icon type="arrow-up" style={{ marginLeft: 12 }} />
                 <Icon type="arrow-down" style={{ marginLeft: 8 }} /> */}
               </Col>

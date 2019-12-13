@@ -57,30 +57,33 @@ const PositionItem = memo(
             {time_to_next_location} min
           </Row>
         </Col>
-        <Col>
-          <Icon
-            type="edit"
-            style={{ marginLeft: 12 }}
-            onClick={() => setCurrentLocation(loc)}
-          />
-          <Popconfirm
-            title="Delete this location?"
-            onConfirm={() => {
-              if (route) {
-                dispatch(
-                  actionCreator.removeRouteLocation({
-                    location: id,
-                    route,
-                  })
-                );
-              }
-            }}
-          >
-            <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
-          </Popconfirm>
-          {/* <Icon type="arrow-up" style={{ marginLeft: 12 }} />
+        {dotType == 'start' ? null : (
+          <Col>
+            <Icon
+              type="edit"
+              style={{ marginLeft: 12 }}
+              onClick={() => setCurrentLocation(loc)}
+            />
+            <Popconfirm
+              title="Delete this location?"
+              onConfirm={() => {
+                if (route) {
+                  dispatch(
+                    actionCreator.removeRouteLocation({
+                      location: id,
+                      route,
+                    })
+                  );
+                }
+              }}
+            >
+              <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
+            </Popconfirm>
+          </Col>
+        )}
+
+        {/* <Icon type="arrow-up" style={{ marginLeft: 12 }} />
           <Icon type="arrow-down" style={{ marginLeft: 8 }} /> */}
-        </Col>
       </Row>
     </Timeline.Item>
   )

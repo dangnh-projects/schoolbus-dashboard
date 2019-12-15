@@ -129,7 +129,7 @@ const Information = ({ form }) => {
   };
 
   const disabledBirthDay = birthday => {
-    const minValueDate = moment('1900-01-01', 'YYYY-MM-YY');
+    const minValueDate = moment('1900-01-01', 'YYYY-MM-DD');
     const currentValueDate = moment();
     return (
       birthday.isAfter(currentValueDate) || birthday.isBefore(minValueDate)

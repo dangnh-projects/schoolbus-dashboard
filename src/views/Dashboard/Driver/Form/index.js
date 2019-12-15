@@ -119,7 +119,7 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
   };
 
   const disabledBirthDay = birthday => {
-    const minValueDate = moment('1900-01-01', 'YYYY-MM-YY');
+    const minValueDate = moment('1900-01-01', 'YYYY-MM-DD');
     const currentValueDate = moment();
 
     return (

@@ -22,11 +22,6 @@ export const Bus = props => {
       align: 'center',
     },
     {
-      title: 'Route Name',
-      dataIndex: 'name',
-      align: 'center',
-    },
-    {
       title: 'Transportation Brand',
       dataIndex: 'brand',
       align: 'center',

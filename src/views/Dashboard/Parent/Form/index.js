@@ -13,6 +13,7 @@ import {
   Icon,
   message,
   Button,
+  Modal,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -22,10 +23,71 @@ import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
 const Item = Form.Item;
 
+const ChangePasswordModal = props => {
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const submitNewPassword = e => {
+    e.preventDefault && e.preventDefault();
+    if (!newPassword || !confirmPassword) {
+      notification.error({
+        message: 'Please input new password and confirm password',
+      });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      notification.error({
+        message: 'New password and confirm password does not match',
+      });
+      return;
+    }
+
+    props.fields.birthday = props.fields.birthday.format('YYYY-MM-DD');
+
+    const data = { id: props.id, ...props.fields, password: newPassword };
+
+    props.updateItem({
+      url: '/core/api/parent/',
+      data,
+      afterSave: () => {
+        notification.success({
+          message: 'Save new password successful',
+        });
+
+        props.setVisible(false);
+      },
+    });
+  };
+
+  return (
+    <Modal
+      visible={props.visible}
+      onOk={submitNewPassword}
+      onCancel={() => props.setVisible(false)}
+    >
+      <Form>
+        <Item label="New password">
+          <Input
+            type="password"
+            onChange={e => setNewPassword(e.target.value)}
+          />
+        </Item>
+        <Item label="Confirm new password">
+          <Input
+            type="password"
+            onChange={e => setConfirmPassword(e.target.value)}
+          />
+        </Item>
+      </Form>
+    </Modal>
+  );
+};
+
 const ParentForm = ({ formSave, updateItem, id, data, form }) => {
   const { getFieldDecorator } = form;
   const [item, setItem] = useState(null);
   const [student, setStudent] = useState([]);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
@@ -57,11 +119,6 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       birthday,
       phone_number,
       id_number,
-      //chilren,
-      // homeNumber,
-      // homeWard,
-      // homeDistrict,
-      // homeProvince,
       username,
       password,
     };
@@ -73,7 +130,6 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
     if (id) {
       fields.id = id;
-      console.log('id: ' + fields.info);
       updateItem({
         url: '/core/api/parent/',
         data: fields,
@@ -140,6 +196,21 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
   return (
     <Card title={id ? 'Update parent' : 'Create New Parent'}>
+      <ChangePasswordModal
+        visible={showChangePassword}
+        setVisible={setShowChangePassword}
+        id={id}
+        updateItem={updateItem}
+        const
+        fields={{
+          first_name,
+          last_name,
+          birthday,
+          phone_number,
+          id_number,
+          username,
+        }}
+      />
       <Form style={{ padding: 16 }} layout="horizontal">
         <Row gutter={16}>
           <Col offset={3} md={10}>
@@ -287,8 +358,10 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                       })(<Input readOnly={true} />)}
                     </Item>
                   </Col>
-                  <Col md={12}>
-                    <Button>Update Password</Button>
+                  <Col md={24}>
+                    <Button onClick={() => setShowChangePassword(true)}>
+                      Change Password
+                    </Button>
                   </Col>
                 </Row>
               </div>
@@ -335,7 +408,15 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
             <Divider orientation="left">Children</Divider>
             <Table
               columns={[
-                { title: 'Name', dataIndex: 'alternative_name' },
+                {
+                  title: 'Name',
+                  render: (_, record) =>
+                    `${record.name} ${
+                      record.alternative_name
+                        ? '(' + record.alternative_name + ')'
+                        : ''
+                    }`,
+                },
                 { title: 'Class', dataIndex: 'classroom' },
                 { title: 'Street', dataIndex: 'street' },
               ]}

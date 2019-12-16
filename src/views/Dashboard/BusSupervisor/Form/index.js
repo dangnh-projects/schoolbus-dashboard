@@ -12,6 +12,7 @@ import {
   Icon,
   message,
   Button,
+  Modal,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -22,8 +23,73 @@ import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
 const Item = Form.Item;
 
+const ChangePasswordModal = props => {
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const submitNewPassword = e => {
+    e.preventDefault && e.preventDefault();
+    if (!newPassword || !confirmPassword) {
+      notification.error({
+        message: 'Please input new password and confirm password',
+      });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      notification.error({
+        message: 'New password and confirm password does not match',
+      });
+      return;
+    }
+
+    props.fields.birthday = props.fields.birthday.format('YYYY-MM-DD');
+    props.fields.start_working_date = props.fields.start_working_date.format(
+      'YYYY-MM-DD'
+    );
+
+    const data = { id: props.id, ...props.fields, password: newPassword };
+
+    props.updateItem({
+      url: '/core/api/supervisor/',
+      data,
+      afterSave: () => {
+        notification.success({
+          message: 'Save new password successful',
+        });
+
+        props.setVisible(false);
+      },
+    });
+  };
+
+  return (
+    <Modal
+      visible={props.visible}
+      onOk={submitNewPassword}
+      onCancel={() => props.setVisible(false)}
+    >
+      <Form>
+        <Item label="New password">
+          <Input
+            type="password"
+            onChange={e => setNewPassword(e.target.value)}
+          />
+        </Item>
+        <Item label="Confirm new password">
+          <Input
+            type="password"
+            onChange={e => setConfirmPassword(e.target.value)}
+          />
+        </Item>
+      </Form>
+    </Modal>
+  );
+};
+
 const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
   const { getFieldDecorator } = form;
+
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const [item, setItem] = useState(null);
   const [first_name, setFirstName] = useState('');
@@ -62,7 +128,6 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       phone_number,
       start_working_date,
       home_number,
-      //street: homeStreet,
       ward,
       district,
       province,
@@ -109,6 +174,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       setDistrict(found.district);
       setProvince(found.province);
       setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
+      setUsername(found.user_name);
     } else {
       InitDefaultFile(e => {
         setAvatar(dataURLtoBlob(e.target.result));
@@ -147,6 +213,26 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
 
   return (
     <Card title={id ? 'Update Bus Supervisor' : 'Create New Bus Supervisor'}>
+      <ChangePasswordModal
+        visible={showChangePassword}
+        setVisible={setShowChangePassword}
+        id={id}
+        updateItem={updateItem}
+        const
+        fields={{
+          first_name,
+          last_name,
+          birthday,
+          phone_number,
+          start_working_date,
+          home_number,
+          ward,
+          district,
+          province,
+          username,
+          password,
+        }}
+      />
       <Form
         onSubmit={handleSubmitCheck}
         style={{ padding: 16 }}
@@ -236,25 +322,31 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
                 </Item>
               </Col>
             </Row>
-            {!item && (
-              <div>
-                <Divider orientation="left" style={{ marginBottom: 0 }}>
-                  Account information
-                </Divider>
-                <Row gutter={16}>
-                  <Col md={12}>
-                    <Item label="Username">
-                      {getFieldDecorator('username', {
-                        initialValue: username,
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Username is required',
-                          },
-                        ],
-                      })(<Input onChange={e => setUsername(e.target.value)} />)}
-                    </Item>
-                  </Col>
+
+            <div>
+              <Divider orientation="left" style={{ marginBottom: 0 }}>
+                Account information
+              </Divider>
+              <Row gutter={16}>
+                <Col md={12}>
+                  <Item label="Username">
+                    {getFieldDecorator('username', {
+                      initialValue: username,
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Username is required',
+                        },
+                      ],
+                    })(
+                      <Input
+                        onChange={e => setUsername(e.target.value)}
+                        readOnly={!!item}
+                      />
+                    )}
+                  </Item>
+                </Col>
+                {!item && (
                   <Col md={12}>
                     <Item label="Password">
                       {getFieldDecorator('password', {
@@ -273,9 +365,16 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
                       )}
                     </Item>
                   </Col>
-                </Row>
-              </div>
-            )}
+                )}
+                {item && (
+                  <Col xs={24}>
+                    <Button onClick={() => setShowChangePassword(true)}>
+                      Change Password
+                    </Button>
+                  </Col>
+                )}
+              </Row>
+            </div>
 
             <Divider orientation="left" style={{ marginBottom: 0 }}>
               Address

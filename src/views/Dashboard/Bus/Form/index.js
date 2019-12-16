@@ -64,18 +64,6 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
           },
           {
             type: 'TEXT',
-            label: 'Route Name',
-            name: 'name',
-            rules: [
-              {
-                required: true,
-                message: 'Name is required',
-              },
-            ],
-            defaultValue: item ? item.name : '',
-          },
-          {
-            type: 'TEXT',
             label: 'Transportation Brand',
             name: 'brand',
             rules: [

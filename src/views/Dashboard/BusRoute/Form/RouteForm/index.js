@@ -171,6 +171,50 @@ const RouteForm = ({ form }) => {
 
         return false;
       }
+
+      const overlapsedRoute = supervisorRoutes.find(route => {
+        const timePlanStart = route.estimated_start_time
+          ? moment(route.estimated_start_time, 'HH:mm:ss')
+          : moment();
+
+        const timePlanEnd = route.estimated_end_time
+          ? moment(route.estimated_end_time, 'HH:mm:ss')
+          : moment();
+        // start is between
+        return (
+          startTime.isBetween(timePlanStart, timePlanEnd) ||
+          endTime.isBetween(timePlanStart, timePlanEnd)
+        );
+      });
+
+      if (overlapsedRoute) {
+        Modal.error({
+          width: 800,
+          content: (
+            <div>
+              Supervisor{' '}
+              <b>
+                {supervisorObj &&
+                  supervisorObj.first_name + ' ' + supervisorObj.last_name}{' '}
+              </b>
+              have time overlapsed with another route(s):
+              <div>
+                <b>
+                  {overlapsedRoute.route_type === 'P' ? 'Pick-up' : 'Drop-off'}
+                </b>
+                {` ${overlapsedRoute.name} - ${moment(
+                  overlapsedRoute.estimated_start_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')} - ${moment(
+                  overlapsedRoute.estimated_end_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')}`}
+              </div>
+            </div>
+          ),
+        });
+        return false;
+      }
     }
 
     return true;
@@ -213,6 +257,46 @@ const RouteForm = ({ form }) => {
 
         return false;
       }
+
+      const overlapsedRoute = driverRoutes.find(route => {
+        const timePlanStart = route.estimated_start_time
+          ? moment(route.estimated_start_time, 'HH:mm:ss')
+          : moment();
+
+        const timePlanEnd = route.estimated_end_time
+          ? moment(route.estimated_end_time, 'HH:mm:ss')
+          : moment();
+        // start is between
+        return (
+          startTime.isBetween(timePlanStart, timePlanEnd) ||
+          endTime.isBetween(timePlanStart, timePlanEnd)
+        );
+      });
+
+      if (overlapsedRoute) {
+        Modal.error({
+          width: 800,
+          content: (
+            <div>
+              Driver <b>{driverObj && driverObj.name} </b>
+              have time overlapsed with another route(s):
+              <div>
+                <b>
+                  {overlapsedRoute.route_type === 'P' ? 'Pick-up' : 'Drop-off'}
+                </b>
+                {` ${overlapsedRoute.name} - ${moment(
+                  overlapsedRoute.estimated_start_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')} - ${moment(
+                  overlapsedRoute.estimated_end_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')}`}
+              </div>
+            </div>
+          ),
+        });
+        return false;
+      }
     }
     return true;
   };
@@ -220,14 +304,11 @@ const RouteForm = ({ form }) => {
   const saveBusInfo = () => {
     // validate Bus
 
-    if (!checkBus() || !checkSupervisor() || !checkDriver()) {
-      return;
-    }
-
     if (startTime >= endTime) {
       notification.warning({ message: 'Start time must be before end time' });
       return;
     }
+
     if (!route) {
       const data = {
         route_type: type,
@@ -271,6 +352,9 @@ const RouteForm = ({ form }) => {
       if (err) {
         return;
       } else {
+        if (!checkBus() || !checkSupervisor() || !checkDriver()) {
+          return;
+        }
         saveBusInfo && saveBusInfo(fieldsValue);
       }
     });

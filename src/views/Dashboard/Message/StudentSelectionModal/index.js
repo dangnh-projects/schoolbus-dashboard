@@ -50,7 +50,7 @@ const StudentSelectionModal = props => {
       }
     }
     setSelectedRowKeys(selected);
-  }, [students]);
+  }, [students, selectedStudents]);
 
   return (
     <Modal

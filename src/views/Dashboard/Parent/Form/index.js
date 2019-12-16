@@ -335,7 +335,15 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
             <Divider orientation="left">Children</Divider>
             <Table
               columns={[
-                { title: 'Name', dataIndex: 'alternative_name' },
+                {
+                  title: 'Name',
+                  render: (_, record) =>
+                    `${record.name} ${
+                      record.alternative_name
+                        ? '(' + record.alternative_name + ')'
+                        : ''
+                    }`,
+                },
                 { title: 'Class', dataIndex: 'classroom' },
                 { title: 'Street', dataIndex: 'street' },
               ]}

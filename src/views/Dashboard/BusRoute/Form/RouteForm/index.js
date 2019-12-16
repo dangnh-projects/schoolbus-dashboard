@@ -114,6 +114,10 @@ const RouteForm = ({ form }) => {
   }, [route]);
 
   const saveBusInfo = () => {
+    if (startTime >= endTime) {
+      notification.warning({ message: 'Start time must be before end time' });
+      return;
+    }
     if (!route) {
       const data = {
         route_type: type,

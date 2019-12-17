@@ -244,6 +244,7 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
               showUploadList={false}
               beforeUpload={beforeUpload}
               onChange={handleChange}
+              accept="image/*"
             >
               {imgVal ? (
                 <img src={imgVal} alt="avatar" style={{ width: '100%' }} />

@@ -25,6 +25,9 @@ export const TYPES = {
 
   GET_ROUTES: 'GET_ROUTES',
   GET_ROUTES_SUCCESS: 'GET_ROUTES_SUCCESS',
+
+  UPDATE_ROUTE_WITH_LOCATION: 'UPDATE_ROUTE_WITH_LOCATION',
+  UPDATE_ROUTE_WITH_LOCATION_SUCCESS: 'UPDATE_ROUTE_WITH_LOCATION_SUCCESS',
 };
 
 export const actionCreator = {
@@ -51,4 +54,9 @@ export const actionCreator = {
 
   getRoutes: createAction(TYPES.GET_ROUTES),
   getRoutesSuccess: createAction(TYPES.GET_ROUTES_SUCCESS),
+
+  updateRouteWithLocation: createAction(TYPES.UPDATE_ROUTE_WITH_LOCATION),
+  updateRouteWithLocationSuccess: createAction(
+    TYPES.UPDATE_ROUTE_WITH_LOCATION_SUCCESS
+  ),
 };

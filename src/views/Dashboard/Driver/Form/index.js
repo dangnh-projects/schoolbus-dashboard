@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Card,
-  notification,
   Form,
   Col,
   Row,
@@ -12,15 +11,13 @@ import {
   Icon,
   message,
   Button,
-  InputNumber,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
-import { bool } from 'prop-types';
-
+import AvatarCropperModal from 'components/AvatarDropModal';
 const Item = Form.Item;
 
 const DriverForm = ({ formSave, updateItem, id, data, form }) => {
@@ -35,6 +32,7 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
   const [address, setAdress] = useState();
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState('/images/default-user.png');
+  const [showCropModal, setShowCropModal] = useState(false);
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -111,7 +109,10 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
   const handleChange = info => {
     const reader = new FileReader();
     reader.addEventListener('load', e => {
-      if (e && e.target) setImgVal(e.target.result);
+      if (e && e.target) {
+        setImgVal(e.target.result);
+        setShowCropModal(true);
+      }
     });
     reader.readAsDataURL(info.file);
 
@@ -129,6 +130,15 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
 
   return (
     <Card title={id ? 'Update Driver' : 'Create New Driver'}>
+      {showCropModal && (
+        <AvatarCropperModal
+          visible={showCropModal}
+          imgVal={imgVal}
+          setAvatar={setAvatar}
+          setImgVal={setImgVal}
+          setVisible={setShowCropModal}
+        />
+      )}
       <Form style={{ padding: 16 }} layout="horizontal">
         <Row gutter={16}>
           <Col offset={3} md={10}>

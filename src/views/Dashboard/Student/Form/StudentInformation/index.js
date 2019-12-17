@@ -13,6 +13,7 @@ import {
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
+import AvatarCropperModal from 'components/AvatarDropModal';
 
 import moment from 'moment';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
@@ -38,6 +39,8 @@ const Information = ({ form }) => {
   const [district, setDistrict] = useState('');
   const [province, setProvince] = useState('');
   // const [busRegistratedDate, setBusRegistratedDAta] = useState('moment');
+
+  const [showCropModal, setShowCropModal] = useState(false);
 
   const handleSubmit = e => {
     e && e.preventDefault && e.preventDefault();
@@ -111,7 +114,10 @@ const Information = ({ form }) => {
     // Get this url from response in real world.
     const reader = new FileReader();
     reader.addEventListener('load', e => {
-      if (e && e.target) setImgVal(e.target.result);
+      if (e && e.target) {
+        setImgVal(e.target.result);
+        setShowCropModal(true);
+      }
     });
     reader.readAsDataURL(info.file);
     setAvatar(info.file);
@@ -138,6 +144,15 @@ const Information = ({ form }) => {
 
   return (
     <Row style={{ display: 'flex', justifyContent: 'center' }}>
+      {showCropModal && (
+        <AvatarCropperModal
+          visible={showCropModal}
+          imgVal={imgVal}
+          setAvatar={setAvatar}
+          setImgVal={setImgVal}
+          setVisible={setShowCropModal}
+        />
+      )}
       <Col md={18}>
         <Form
           style={{ padding: 16 }}

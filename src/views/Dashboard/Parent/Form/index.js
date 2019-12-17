@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
+import AvatarCropperModal from 'components/AvatarDropModal';
 
 const Item = Form.Item;
 
@@ -100,6 +101,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState('/images/default-user.png');
+  const [showCropModal, setShowCropModal] = useState(false);
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -178,7 +180,10 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
     const reader = new FileReader();
     reader.addEventListener('load', e => {
-      if (e && e.target) setImgVal(e.target.result);
+      if (e && e.target) {
+        setImgVal(e.target.result);
+        setShowCropModal(true);
+      }
     });
     reader.readAsDataURL(info.file);
 
@@ -196,6 +201,15 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
   return (
     <Card title={id ? 'Update parent' : 'Create New Parent'}>
+      {showCropModal && (
+        <AvatarCropperModal
+          visible={showCropModal}
+          imgVal={imgVal}
+          setAvatar={setAvatar}
+          setImgVal={setImgVal}
+          setVisible={setShowCropModal}
+        />
+      )}
       <ChangePasswordModal
         visible={showChangePassword}
         setVisible={setShowChangePassword}
@@ -429,7 +443,6 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
               listType="picture-card"
               className="avatar-uploader"
               showUploadList={false}
-              //action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeUpload}
               onChange={handleChange}
               accept="image/*"

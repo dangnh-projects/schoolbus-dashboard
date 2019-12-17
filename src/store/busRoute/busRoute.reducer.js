@@ -24,6 +24,7 @@ const initialState = {
   routes: [],
   pickupRunningRoute: [],
   dropoffRunningRoute: [],
+  loading: false,
 };
 
 const postRouteSuccess = (state, action) => ({
@@ -75,8 +76,14 @@ const getRoutesSuccess = (state, action) => ({
     ),
 });
 
+const changeLoading = (state, action) => ({
+  ...state,
+  loading: !!action.payload,
+});
+
 export default handleActions(
   {
+    [TYPES.SET_LOADING]: changeLoading,
     [TYPES.POST_ROUTE_SUCCESS]: postRouteSuccess,
     [TYPES.POST_ROUTE_LOCATION_SUCCESS]: postRouteLocationSuccess,
     [TYPES.GET_ROUTE_LOCATION_SUCCESS]: getRouteLocationSuccess,

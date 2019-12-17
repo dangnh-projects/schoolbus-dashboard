@@ -82,7 +82,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
               Modal.error({
                 maskClosable: true,
                 onOk: () => {
-                  const data = { id: student.id, parent_id: 'null' };
+                  const data = { id: student.id, parent_id: -1 };
                   dispatch(
                     actionCreator.updateStudent({
                       data,

@@ -122,11 +122,81 @@ const RouteForm = ({ form }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
-  const checkBus = () => {
-    // check type
-    // const typedRoute = busRoutes.find();
+  const checkBus = fieldsValue => {
+    const busObj = buses.find(i => i.id === bus);
+    if (busRoutes && busRoutes.length > 0) {
+      // check overlapse
+      const overlapsedRoute = busRoutes.find(route => {
+        const timePlanStart = route.estimated_start_time
+          ? moment(route.estimated_start_time, 'HH:mm:ss')
+          : moment();
 
-    // return false;
+        const timePlanEnd = route.estimated_end_time
+          ? moment(route.estimated_end_time, 'HH:mm:ss')
+          : moment();
+        // start is between
+        return (
+          startTime.isBetween(timePlanStart, timePlanEnd) ||
+          endTime.isBetween(timePlanStart, timePlanEnd)
+        );
+      });
+
+      if (overlapsedRoute) {
+        Modal.error({
+          width: 800,
+          content: (
+            <div>
+              Driver <b>{bus && bus.name} </b>
+              have time overlapsed with another route(s):
+              <div>
+                <b>
+                  {overlapsedRoute.route_type === 'P' ? 'Pick-up' : 'Drop-off'}
+                </b>
+                {` ${overlapsedRoute.name} - ${moment(
+                  overlapsedRoute.estimated_start_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')} - ${moment(
+                  overlapsedRoute.estimated_end_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')}`}
+              </div>
+            </div>
+          ),
+        });
+        return false;
+      }
+
+      const sameRoutes = busRoutes.filter(route => route.route_type === type);
+
+      if (sameRoutes && sameRoutes.length > 0) {
+        Modal.warning({
+          onOk: () => saveBusInfo(fieldsValue),
+          width: 800,
+          maskClosable: true,
+          content: (
+            <div>
+              Bus <b>{busObj && busObj.name}</b> has already been assigned for
+              another route
+              <ul>
+                {sameRoutes.map(route => (
+                  <li key={route.id}>
+                    <b>{route.route_type === 'P' ? 'Pick-up' : 'Drop-off'}</b>
+                    {` ${route.name} - ${moment(
+                      route.estimated_start_time,
+                      'HH:mm:ss'
+                    ).format('HH:mm')} - ${moment(
+                      route.estimated_end_time,
+                      'HH:mm:ss'
+                    ).format('HH:mm')}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+        });
+        return false;
+      }
+    }
     return true;
   };
 
@@ -143,6 +213,7 @@ const RouteForm = ({ form }) => {
       if (sameRoutes && sameRoutes.length > 0) {
         Modal.error({
           width: 800,
+          maskClosable: true,
           content: (
             <div>
               Supervisor{' '}
@@ -190,6 +261,7 @@ const RouteForm = ({ form }) => {
       if (overlapsedRoute) {
         Modal.error({
           width: 800,
+          maskClosable: true,
           content: (
             <div>
               Supervisor{' '}
@@ -233,6 +305,7 @@ const RouteForm = ({ form }) => {
       if (sameRoutes && sameRoutes.length > 0) {
         Modal.error({
           width: 800,
+          maskClosable: true,
           content: (
             <div>
               Driver <b>{driverObj && driverObj.name}</b> has already been
@@ -276,6 +349,7 @@ const RouteForm = ({ form }) => {
       if (overlapsedRoute) {
         Modal.error({
           width: 800,
+          maskClosable: true,
           content: (
             <div>
               Driver <b>{driverObj && driverObj.name} </b>
@@ -302,8 +376,6 @@ const RouteForm = ({ form }) => {
   };
 
   const saveBusInfo = () => {
-    // validate Bus
-
     if (startTime >= endTime) {
       notification.warning({ message: 'Start time must be before end time' });
       return;
@@ -352,7 +424,7 @@ const RouteForm = ({ form }) => {
       if (err) {
         return;
       } else {
-        if (!checkBus() || !checkSupervisor() || !checkDriver()) {
+        if (!checkSupervisor() || !checkDriver() || !checkBus(fieldsValue)) {
           return;
         }
         saveBusInfo && saveBusInfo(fieldsValue);
@@ -478,7 +550,7 @@ const RouteForm = ({ form }) => {
               {buses &&
                 buses.map(bus => (
                   <Option key={bus.id} value={bus.id}>
-                    {bus.number}
+                    {bus.name}
                   </Option>
                 ))}
             </Select>

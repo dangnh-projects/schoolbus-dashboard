@@ -16,6 +16,8 @@ export const removeRouteLocationRequest = buildRequest(
   }
 );
 
+export const updateRouteLocation = buildRequest('/core/api/bus-route-location');
+
 const apiCallWrapper = handler =>
   function*(action) {
     yield put(actionCreator.setLoading(true));
@@ -180,6 +182,26 @@ function* getRoutes(_, user) {
   }
 }
 
+function* updateRouetWithLocation({ payload }, user) {
+  const formData = convertObjectToFormData({
+    id: payload.id,
+    order: payload.order,
+  });
+  yield call(updateRouteLocation.request, {
+    url: '/' + payload.id,
+    data: formData,
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${user.token.access}`,
+      // 'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  if (payload.afterSuccess) {
+    yield call(payload.afterSuccess);
+  }
+}
+
 export default function* busRouteSaga() {
   yield takeLatest(TYPES.POST_ROUTE, apiCallWrapper(postRoute));
   yield takeLatest(
@@ -195,4 +217,8 @@ export default function* busRouteSaga() {
 
   yield takeEvery(TYPES.UPDATE_LOCATION, apiCallWrapper(updateLocation));
   yield takeLatest(TYPES.GET_ROUTES, apiCallWrapper(getRoutes));
+  yield takeLatest(
+    TYPES.UPDATE_ROUTE_WITH_LOCATION,
+    apiCallWrapper(updateRouetWithLocation)
+  );
 }

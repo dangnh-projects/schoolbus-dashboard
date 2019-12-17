@@ -39,6 +39,10 @@ const PositionItem = memo(
     dispatch,
     setCurrentLocation,
     loc,
+    idx,
+    count,
+    handleGoUp,
+    handleGoDown,
   }) => (
     <Timeline.Item dot={buildDot(dotType)}>
       <Row type="flex" align="top" justify="space-between">
@@ -57,7 +61,7 @@ const PositionItem = memo(
             {time_to_next_location} min
           </Row>
         </Col>
-        {dotType == 'start' ? null : (
+        {dotType === 'start' ? null : (
           <Col>
             <Icon
               type="edit"
@@ -81,9 +85,22 @@ const PositionItem = memo(
             </Popconfirm>
           </Col>
         )}
-
-        {/* <Icon type="arrow-up" style={{ marginLeft: 12 }} />
-          <Icon type="arrow-down" style={{ marginLeft: 8 }} /> */}
+        {dotType !== 'start' && (
+          <Col>
+            {idx !== 0 && (
+              <Icon
+                onClick={() => handleGoUp(idx)}
+                type="arrow-up"
+                style={{ marginLeft: 12 }}
+              />
+            )}
+            <Icon
+              onClick={() => handleGoDown(idx)}
+              type="arrow-down"
+              style={{ marginLeft: 8 }}
+            />
+          </Col>
+        )}
       </Row>
     </Timeline.Item>
   )
@@ -103,7 +120,69 @@ const RouteTree = props => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, []);
 
-  const st = [...locations];
+  const handleGoUp = idx => {
+    if (idx === 0) return;
+    let currentOrder = locations[idx].order;
+    let previousOrder = locations[idx - 1].order;
+
+    dispatch(
+      actionCreator.updateRouteWithLocation({
+        id: locations[idx].id,
+        order: -1,
+        afterSuccess: () =>
+          dispatch(
+            actionCreator.updateRouteWithLocation({
+              id: locations[idx - 1].id,
+              order: currentOrder,
+              afterSuccess: () =>
+                dispatch(
+                  actionCreator.updateRouteWithLocation({
+                    id: locations[idx].id,
+                    order: previousOrder,
+                    afterSuccess: () => {
+                      dispatch(actionCreator.getRouteLocations(route.id));
+                      notification.success({ message: 'Update successfully' });
+                    },
+                  })
+                ),
+            })
+          ),
+      })
+    );
+  };
+
+  const handleGoDown = idx => {
+    if (idx === locations.length - 1) return;
+    let currentOrder = locations[idx].order;
+    let nextOrder = locations[idx + 1].order;
+
+    dispatch(
+      actionCreator.updateRouteWithLocation({
+        id: locations[idx].id,
+        order: -1,
+        afterSuccess: () =>
+          dispatch(
+            actionCreator.updateRouteWithLocation({
+              id: locations[idx + 1].id,
+              order: currentOrder,
+              afterSuccess: () =>
+                dispatch(
+                  actionCreator.updateRouteWithLocation({
+                    id: locations[idx].id,
+                    order: nextOrder,
+                    afterSuccess: () => {
+                      dispatch(actionCreator.getRouteLocations(route.id));
+                      notification.success({ message: 'Update successfully' });
+                    },
+                  })
+                ),
+            })
+          ),
+      })
+    );
+  };
+
+  const st = [...locations.sort((a, b) => a.order - b.order)];
   const end = st.pop();
   return (
     <Col span={24}>
@@ -128,6 +207,8 @@ const RouteTree = props => {
             <PositionItem
               loc={loc}
               key={idx}
+              idx={idx}
+              count={st.length}
               name={
                 loc.bus_location &&
                 `${loc.bus_location.address} ${loc.bus_location.street} ${loc
@@ -145,6 +226,8 @@ const RouteTree = props => {
               id={loc.bus_location && loc.bus_location.id}
               route={loc.bus_route && loc.bus_route.id}
               setCurrentLocation={setCurrentLocation}
+              handleGoUp={handleGoUp}
+              handleGoDown={handleGoDown}
             />
           ))}
         {end && (
@@ -181,8 +264,7 @@ const RouteTree = props => {
                 >
                   <Icon type="close" style={{ color: 'red', marginLeft: 4 }} />
                 </Popconfirm>
-                {/* <Icon type="arrow-up" style={{ marginLeft: 12 }} />
-                <Icon type="arrow-down" style={{ marginLeft: 8 }} /> */}
+                <Icon type="arrow-up" style={{ marginLeft: 12 }} />
               </Col>
             </Row>
           </Timeline.Item>

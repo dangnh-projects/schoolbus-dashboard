@@ -181,6 +181,7 @@ const Information = ({ form }) => {
                   beforeUpload={beforeUpload}
                   onChange={handleChange}
                   style={{ width: 'auto' }}
+                  accept="image/*"
                 >
                   {imgVal ? (
                     <img src={imgVal} alt="avatar" style={{ width: '100%' }} />

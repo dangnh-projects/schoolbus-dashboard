@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Card,
   notification,
@@ -18,6 +18,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+import AvatarCropperModal from 'components/AvatarDropModal';
 
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
@@ -109,6 +110,8 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState('/images/default-user.png');
 
+  const [showCropModal, setShowCropModal] = useState(false);
+
   const handleSubmitCheck = e => {
     e.preventDefault();
     form.validateFields((err, fieldsValue) => {
@@ -191,11 +194,12 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
     return false;
   };
   const handleChange = info => {
-    // Get this url from response in real world.
-
     const reader = new FileReader();
     reader.addEventListener('load', e => {
-      if (e && e.target) setImgVal(e.target.result);
+      if (e && e.target) {
+        setImgVal(e.target.result);
+        setShowCropModal(true);
+      }
     });
     reader.readAsDataURL(info.file);
 
@@ -213,6 +217,15 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
 
   return (
     <Card title={id ? 'Update Bus Supervisor' : 'Create New Bus Supervisor'}>
+      {showCropModal && (
+        <AvatarCropperModal
+          visible={showCropModal}
+          imgVal={imgVal}
+          setAvatar={setAvatar}
+          setImgVal={setImgVal}
+          setVisible={setShowCropModal}
+        />
+      )}
       <ChangePasswordModal
         visible={showChangePassword}
         setVisible={setShowChangePassword}

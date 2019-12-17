@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  notification,
   Form,
   Col,
   Row,
@@ -18,6 +17,7 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { actionCreator as studentActionCreator } from 'store/student/student.meta';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 //import { API } from 'api/metaData';
+import AvatarCropperModal from 'components/AvatarDropModal';
 
 const Item = Form.Item;
 
@@ -38,6 +38,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState('/images/default-user.png');
+  const [showCropModal, setShowCropModal] = useState(false);
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -106,7 +107,10 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
     const reader = new FileReader();
     reader.addEventListener('load', e => {
-      if (e && e.target) setImgVal(e.target.result);
+      if (e && e.target) {
+        setImgVal(e.target.result);
+        setShowCropModal(true);
+      }
     });
     reader.readAsDataURL(info.file);
 
@@ -124,6 +128,15 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
   return (
     <Form style={{ padding: 16 }} layout="horizontal">
+      {showCropModal && (
+        <AvatarCropperModal
+          visible={showCropModal}
+          imgVal={imgVal}
+          setAvatar={setAvatar}
+          setImgVal={setImgVal}
+          setVisible={setShowCropModal}
+        />
+      )}
       <Row gutter={16}>
         <Col>
           <Row gutter={16}>

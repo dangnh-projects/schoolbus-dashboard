@@ -52,15 +52,15 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
           },
           {
             type: 'TEXT',
-            label: 'Bus Number',
-            name: 'number',
+            label: 'Bus Name',
+            name: 'name',
             rules: [
               {
                 required: true,
-                message: 'Number is required',
+                message: 'Bus name is required',
               },
             ],
-            defaultValue: item ? item.number : '',
+            defaultValue: item ? item.name : '',
           },
           {
             type: 'TEXT',

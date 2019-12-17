@@ -8,6 +8,7 @@ import {
   Row,
   Button,
   notification,
+  Modal,
 } from 'antd';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
@@ -65,6 +66,14 @@ const RouteForm = ({ form }) => {
 
   const [type, setType] = useState('P');
 
+  /*
+    For validation
+  */
+
+  const [busRoutes, setBusRoutes] = useState([]);
+  const [supervisorRoutes, setSupervisorRoutes] = useState([]);
+  const [driverRoutes, setDriverRoutes] = useState([]);
+
   const { access } = token;
   if (!token) {
     navigate('/login');
@@ -113,11 +122,265 @@ const RouteForm = ({ form }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
+  const checkBus = fieldsValue => {
+    const busObj = buses.find(i => i.id === bus);
+    if (busRoutes && busRoutes.length > 0) {
+      // check overlapse
+      const overlapsedRoute = busRoutes.find(route => {
+        const timePlanStart = route.estimated_start_time
+          ? moment(route.estimated_start_time, 'HH:mm:ss')
+          : moment();
+
+        const timePlanEnd = route.estimated_end_time
+          ? moment(route.estimated_end_time, 'HH:mm:ss')
+          : moment();
+        // start is between
+        return (
+          startTime.isBetween(timePlanStart, timePlanEnd) ||
+          endTime.isBetween(timePlanStart, timePlanEnd)
+        );
+      });
+
+      if (overlapsedRoute) {
+        Modal.error({
+          width: 800,
+          content: (
+            <div>
+              Driver <b>{bus && bus.name} </b>
+              have time overlapsed with another route(s):
+              <div>
+                <b>
+                  {overlapsedRoute.route_type === 'P' ? 'Pick-up' : 'Drop-off'}
+                </b>
+                {` ${overlapsedRoute.name} - ${moment(
+                  overlapsedRoute.estimated_start_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')} - ${moment(
+                  overlapsedRoute.estimated_end_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')}`}
+              </div>
+            </div>
+          ),
+        });
+        return false;
+      }
+
+      const sameRoutes = busRoutes.filter(route => route.route_type === type);
+
+      if (sameRoutes && sameRoutes.length > 0) {
+        Modal.warning({
+          onOk: () => saveBusInfo(fieldsValue),
+          width: 800,
+          maskClosable: true,
+          content: (
+            <div>
+              Bus <b>{busObj && busObj.name}</b> has already been assigned for
+              another route
+              <ul>
+                {sameRoutes.map(route => (
+                  <li key={route.id}>
+                    <b>{route.route_type === 'P' ? 'Pick-up' : 'Drop-off'}</b>
+                    {` ${route.name} - ${moment(
+                      route.estimated_start_time,
+                      'HH:mm:ss'
+                    ).format('HH:mm')} - ${moment(
+                      route.estimated_end_time,
+                      'HH:mm:ss'
+                    ).format('HH:mm')}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+        });
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const checkSupervisor = () => {
+    if (supervisorRoutes && supervisorRoutes.length > 0) {
+      // check sameType
+
+      const supervisorObj = supervisors.find(sup => sup.id === busSupervisor);
+
+      const sameRoutes = supervisorRoutes.filter(
+        route => route.route_type === type
+      );
+
+      if (sameRoutes && sameRoutes.length > 0) {
+        Modal.error({
+          width: 800,
+          maskClosable: true,
+          content: (
+            <div>
+              Supervisor{' '}
+              <b>
+                {supervisorObj &&
+                  supervisorObj.first_name + ' ' + supervisorObj.last_name}{' '}
+              </b>
+              has already been assigned for another route(s):
+              <ul style={{ marginTop: 12 }}>
+                {sameRoutes.map(route => (
+                  <li key={route.id}>
+                    <b>{route.route_type === 'P' ? 'Pick-up' : 'Drop-off'}</b>
+                    {` ${route.name} - ${moment(
+                      route.estimated_start_time,
+                      'HH:mm:ss'
+                    ).format('HH:mm')} - ${moment(
+                      route.estimated_end_time,
+                      'HH:mm:ss'
+                    ).format('HH:mm')}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+        });
+
+        return false;
+      }
+
+      const overlapsedRoute = supervisorRoutes.find(route => {
+        const timePlanStart = route.estimated_start_time
+          ? moment(route.estimated_start_time, 'HH:mm:ss')
+          : moment();
+
+        const timePlanEnd = route.estimated_end_time
+          ? moment(route.estimated_end_time, 'HH:mm:ss')
+          : moment();
+        // start is between
+        return (
+          startTime.isBetween(timePlanStart, timePlanEnd) ||
+          endTime.isBetween(timePlanStart, timePlanEnd)
+        );
+      });
+
+      if (overlapsedRoute) {
+        Modal.error({
+          width: 800,
+          maskClosable: true,
+          content: (
+            <div>
+              Supervisor{' '}
+              <b>
+                {supervisorObj &&
+                  supervisorObj.first_name + ' ' + supervisorObj.last_name}{' '}
+              </b>
+              have time overlapsed with another route(s):
+              <div>
+                <b>
+                  {overlapsedRoute.route_type === 'P' ? 'Pick-up' : 'Drop-off'}
+                </b>
+                {` ${overlapsedRoute.name} - ${moment(
+                  overlapsedRoute.estimated_start_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')} - ${moment(
+                  overlapsedRoute.estimated_end_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')}`}
+              </div>
+            </div>
+          ),
+        });
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const checkDriver = () => {
+    const driverObj = drivers.find(i => i.id === driver);
+
+    if (driverRoutes && driverRoutes.length > 0) {
+      // check sameType
+
+      const sameRoutes = driverRoutes.filter(
+        route => route.route_type === type
+      );
+
+      if (sameRoutes && sameRoutes.length > 0) {
+        Modal.error({
+          width: 800,
+          maskClosable: true,
+          content: (
+            <div>
+              Driver <b>{driverObj && driverObj.name}</b> has already been
+              assigned for another route
+              <ul>
+                {sameRoutes.map(route => (
+                  <li key={route.id}>
+                    <b>{route.route_type === 'P' ? 'Pick-up' : 'Drop-off'}</b>
+                    {` ${route.name} - ${moment(
+                      route.estimated_start_time,
+                      'HH:mm:ss'
+                    ).format('HH:mm')} - ${moment(
+                      route.estimated_end_time,
+                      'HH:mm:ss'
+                    ).format('HH:mm')}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+        });
+
+        return false;
+      }
+
+      const overlapsedRoute = driverRoutes.find(route => {
+        const timePlanStart = route.estimated_start_time
+          ? moment(route.estimated_start_time, 'HH:mm:ss')
+          : moment();
+
+        const timePlanEnd = route.estimated_end_time
+          ? moment(route.estimated_end_time, 'HH:mm:ss')
+          : moment();
+        // start is between
+        return (
+          startTime.isBetween(timePlanStart, timePlanEnd) ||
+          endTime.isBetween(timePlanStart, timePlanEnd)
+        );
+      });
+
+      if (overlapsedRoute) {
+        Modal.error({
+          width: 800,
+          maskClosable: true,
+          content: (
+            <div>
+              Driver <b>{driverObj && driverObj.name} </b>
+              have time overlapsed with another route(s):
+              <div>
+                <b>
+                  {overlapsedRoute.route_type === 'P' ? 'Pick-up' : 'Drop-off'}
+                </b>
+                {` ${overlapsedRoute.name} - ${moment(
+                  overlapsedRoute.estimated_start_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')} - ${moment(
+                  overlapsedRoute.estimated_end_time,
+                  'HH:mm:ss'
+                ).format('HH:mm')}`}
+              </div>
+            </div>
+          ),
+        });
+        return false;
+      }
+    }
+    return true;
+  };
+
   const saveBusInfo = () => {
     if (startTime >= endTime) {
       notification.warning({ message: 'Start time must be before end time' });
       return;
     }
+
     if (!route) {
       const data = {
         route_type: type,
@@ -161,9 +424,51 @@ const RouteForm = ({ form }) => {
       if (err) {
         return;
       } else {
+        if (!checkSupervisor() || !checkDriver() || !checkBus(fieldsValue)) {
+          return;
+        }
         saveBusInfo && saveBusInfo(fieldsValue);
       }
     });
+  };
+
+  const getBusRoutes = async id => {
+    const res = await getMetaData(
+      '/core/api/bus/' + id + '/bus_routes',
+      access
+    );
+
+    if (res.data && res.data.routes) {
+      setBusRoutes(res.data.routes);
+      return;
+    }
+    setBusRoutes([]);
+  };
+
+  const getSupervisorRoutes = async id => {
+    const res = await getMetaData(
+      '/core/api/supervisor/' + id + '/bus_routes',
+      access
+    );
+
+    if (res.data && res.data.routes) {
+      setSupervisorRoutes(res.data.routes);
+      return;
+    }
+    setSupervisorRoutes([]);
+  };
+
+  const getDriverRoutes = async id => {
+    const res = await getMetaData(
+      '/core/api/driver/' + id + '/bus_routes',
+      access
+    );
+
+    if (res.data && res.data.routes) {
+      setDriverRoutes(res.data.routes);
+      return;
+    }
+    setDriverRoutes([]);
   };
 
   return (
@@ -202,7 +507,6 @@ const RouteForm = ({ form }) => {
             ],
           })(
             <TimePicker
-              value={startTime}
               format="HH:mm"
               minuteStep={5}
               onChange={val => setStartTime(val)}
@@ -220,7 +524,6 @@ const RouteForm = ({ form }) => {
             ],
           })(
             <TimePicker
-              value={endTime}
               format="HH:mm"
               minuteStep={5}
               onChange={val => setEndTime(val)}
@@ -237,11 +540,17 @@ const RouteForm = ({ form }) => {
               },
             ],
           })(
-            <Select style={{ minWidth: 200 }} onChange={val => setBus(val)}>
+            <Select
+              style={{ minWidth: 200 }}
+              onChange={val => {
+                getBusRoutes(val);
+                setBus(val);
+              }}
+            >
               {buses &&
                 buses.map(bus => (
                   <Option key={bus.id} value={bus.id}>
-                    {bus.number}
+                    {bus.name}
                   </Option>
                 ))}
             </Select>
@@ -258,11 +567,14 @@ const RouteForm = ({ form }) => {
             ],
           })(
             <Select
-              defaultValue={
-                supervisors && supervisors.length > 0 && supervisors[0].id
-              }
+              // defaultValue={
+              //   // supervisors && supervisors.length > 0 && supervisors[0].id
+              // }
               style={{ minWidth: 200 }}
-              onChange={val => setBusSupervisor(val)}
+              onChange={val => {
+                getSupervisorRoutes(val);
+                setBusSupervisor(val);
+              }}
             >
               {supervisors &&
                 supervisors.map(supervisor => (
@@ -284,9 +596,12 @@ const RouteForm = ({ form }) => {
             ],
           })(
             <Select
-              defaultValue={drivers && drivers.length > 0 && drivers[0].id}
+              // defaultValue={drivers && drivers.length > 0 && drivers[0].id}
               style={{ minWidth: 200 }}
-              onChange={val => setDriver(val)}
+              onChange={val => {
+                getDriverRoutes(val);
+                setDriver(val);
+              }}
             >
               {drivers &&
                 drivers.map(driver => (

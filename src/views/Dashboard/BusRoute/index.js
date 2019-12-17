@@ -16,10 +16,10 @@ export const Bus = props => {
       dataIndex: 'name',
     },
     {
-      title: 'Bus number',
+      title: 'Bus name',
       render: (_, i) =>
         // <a href={`/dashboard/bus/${i.bus.id}`}>{i.bus.number}</a>
-        i.bus && i.bus.number,
+        i.bus && i.bus.name,
     },
 
     {

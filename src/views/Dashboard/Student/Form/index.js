@@ -60,14 +60,17 @@ const StudentForm = ({ formSave, updateItem, id }) => {
           dispatch(actionCreator.postParentSuccess(found.parent));
 
           dispatch(actionCreator.setSibling(found.parent.children || []));
+          dispatch(actionCreator.setShowParentForm(false));
         }
       } else {
         dispatch(actionCreator.postParentSuccess(null));
         dispatch(actionCreator.postStudentSuccess(null));
+        dispatch(actionCreator.setShowParentForm(true));
       }
     } else {
       dispatch(actionCreator.postParentSuccess(null));
       dispatch(actionCreator.postStudentSuccess(null));
+      dispatch(actionCreator.setShowParentForm(true));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, data, id]);

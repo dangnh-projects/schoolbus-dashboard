@@ -8,6 +8,8 @@ import {
   Table,
   Input,
   Descriptions,
+  Icon,
+  Modal,
 } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
@@ -55,7 +57,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
   return (
     <Row>
       <Divider orientation="left">Parent</Divider>
-      <Descriptions>
+      <Descriptions column={4}>
         <Descriptions.Item label="Image">
           <img
             src={
@@ -72,6 +74,32 @@ const ParentData = memo(({ parent, siblings, student }) => {
         </Descriptions.Item>
         <Descriptions.Item label="ID number">
           {parent.id_number}
+        </Descriptions.Item>
+        <Descriptions.Item>
+          <Button
+            type="danger"
+            onClick={() => {
+              Modal.error({
+                maskClosable: true,
+                onOk: () => {
+                  const data = { id: student.id, parent_id: 'null' };
+                  dispatch(
+                    actionCreator.updateStudent({
+                      data,
+                      afterSuccess: () => {
+                        dispatch(actionCreator.searchParentSuccess(null));
+                        dispatch(actionCreator.setSibling([]));
+                        dispatch(actionCreator.setShowParentForm(true));
+                      },
+                    })
+                  );
+                },
+                content: 'Are you sure? This action cannot be rolled back',
+              });
+            }}
+          >
+            <Icon type="delete" />
+          </Button>
         </Descriptions.Item>
       </Descriptions>
       {siblings && siblings.length > 0 && (
@@ -91,7 +119,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
         </div>
       )}
 
-      <Row type="flex" align="center" style={{ marginTop: 24 }}>
+      <Row type="flex" align="middle" style={{ marginTop: 24 }}>
         <Button
           onClick={() => dispatch(actionCreator.changeStage(0))}
           type="primary"

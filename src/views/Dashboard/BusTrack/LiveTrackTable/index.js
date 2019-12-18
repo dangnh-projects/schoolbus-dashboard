@@ -115,10 +115,13 @@ const AttendanceTable = ({ visible, attendances = [], setVisible }) => {
 
 const processData = records => {
   return records.map(route => {
-    const { locations } = route;
+    let { locations } = route;
     const onboarding = [];
     const remaining = [];
     let nextLoc = null;
+    let currentLoc = null;
+    locations = locations.sort((a, b) => a.order - b.order);
+
     for (let i = 0; i < locations.length; i++) {
       const { attendances } = locations[i];
       if (attendances.length === 0) {
@@ -129,8 +132,13 @@ const processData = records => {
         item => item.status === STUDENT_STATUS.NOT_ON_BUS
       );
 
-      if (haveStudentNotOnBus) {
+      if (!nextLoc && haveStudentNotOnBus) {
         nextLoc = locations[i];
+        if (i > 0) {
+          currentLoc = locations[i - 1];
+        } else {
+          currentLoc = false;
+        }
       }
 
       attendances.forEach(atten => {
@@ -149,6 +157,7 @@ const processData = records => {
     route.nextLoc = nextLoc;
     route.onboarding = onboarding;
     route.remaining = remaining;
+    route.currentLoc = currentLoc;
     return route;
   });
 };
@@ -201,12 +210,16 @@ const LiveTable = props => {
     },
     {
       title: 'Next stop',
-      render: (_, i) =>
-        i.nextLoc &&
-        `${i.nextLoc.location.address} ${i.nextLoc.location.street} ${i.nextLoc
-          .location.ward !== '' && 'phường ' + i.nextLoc.location.ward} Quận ${
-          i.nextLoc.location.district
-        }`,
+      render: (_, i) => {
+        if (i.nextLoc)
+          return `${i.nextLoc.location.address} ${i.nextLoc.location.street} ${i
+            .nextLoc.location.ward !== '' &&
+            'phường ' + i.nextLoc.location.ward} Quận ${
+            i.nextLoc.location.district
+          }`;
+
+        return 'To school';
+      },
     },
     {
       title: 'No of onboarding',

@@ -81,6 +81,11 @@ const changeLoading = (state, action) => ({
   loading: !!action.payload,
 });
 
+const setCurrentRoute = (state, action) => ({
+  ...state,
+  currentRoute: action.payload,
+});
+
 export default handleActions(
   {
     [TYPES.SET_LOADING]: changeLoading,
@@ -91,6 +96,7 @@ export default handleActions(
     [TYPES.TOGGLE_MODAL]: toggleModal,
     [TYPES.SET_STUDENT]: setStudent,
     [TYPES.GET_ROUTES_SUCCESS]: getRoutesSuccess,
+    [TYPES.SET_CURRENT_ROUTE]: setCurrentRoute,
   },
   initialState
 );

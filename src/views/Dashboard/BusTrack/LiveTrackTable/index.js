@@ -1,6 +1,8 @@
 import React, { useState, Fragment, useEffect, lazy, Suspense } from 'react';
 import moment from 'moment';
 import { Table, Tag, Modal, Row, Button, Spin } from 'antd';
+import { actionCreator } from 'store/busRoute/busRoute.meta';
+import { useSelector, useDispatch } from 'react-redux';
 
 const BusRouteMap = lazy(() => import('./BusRouteMap'));
 
@@ -115,10 +117,13 @@ const AttendanceTable = ({ visible, attendances = [], setVisible }) => {
 
 const processData = records => {
   return records.map(route => {
-    const { locations } = route;
+    let { locations } = route;
     const onboarding = [];
     const remaining = [];
     let nextLoc = null;
+    let currentLoc = null;
+    locations = locations.sort((a, b) => a.order - b.order);
+
     for (let i = 0; i < locations.length; i++) {
       const { attendances } = locations[i];
       if (attendances.length === 0) {
@@ -129,8 +134,13 @@ const processData = records => {
         item => item.status === STUDENT_STATUS.NOT_ON_BUS
       );
 
-      if (haveStudentNotOnBus) {
+      if (!nextLoc && haveStudentNotOnBus) {
         nextLoc = locations[i];
+        if (i > 0) {
+          currentLoc = locations[i - 1];
+        } else {
+          currentLoc = false;
+        }
       }
 
       attendances.forEach(atten => {
@@ -149,16 +159,19 @@ const processData = records => {
     route.nextLoc = nextLoc;
     route.onboarding = onboarding;
     route.remaining = remaining;
+    route.currentLoc = currentLoc;
     return route;
   });
 };
 
 const LiveTable = props => {
+  const { currentRoute } = useSelector(store => store.busRoute);
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [attendances, setAttendances] = useState([]);
   const [isVisible, setVisible] = useState(false);
   const [isShowMap, setShowMap] = useState(false);
-  const [currentRoute, setCurrentRoute] = useState(null);
+  // const [currentRoute, setCurrentRoute] = useState(null);
 
   const columns = [
     {
@@ -201,12 +214,16 @@ const LiveTable = props => {
     },
     {
       title: 'Next stop',
-      render: (_, i) =>
-        i.nextLoc &&
-        `${i.nextLoc.location.address} ${i.nextLoc.location.street} ${i.nextLoc
-          .location.ward !== '' && 'phường ' + i.nextLoc.location.ward} Quận ${
-          i.nextLoc.location.district
-        }`,
+      render: (_, i) => {
+        if (i.nextLoc)
+          return `${i.nextLoc.location.address} ${i.nextLoc.location.street} ${i
+            .nextLoc.location.ward !== '' &&
+            'phường ' + i.nextLoc.location.ward} Quận ${
+            i.nextLoc.location.district
+          }`;
+
+        return 'To school';
+      },
     },
     {
       title: 'No of onboarding',
@@ -254,8 +271,9 @@ const LiveTable = props => {
         <Row>
           <Button
             onClick={() => {
-              setCurrentRoute(i);
+              // setCurrentRoute(i);
               setShowMap(true);
+              props.setCurrentRoute(i);
             }}
           >
             <img
@@ -272,6 +290,20 @@ const LiveTable = props => {
   useEffect(() => {
     const data = processData(props.dataSource);
     setData(data);
+    // check current route and update;
+    if (currentRoute) {
+      console.log(data, currentRoute);
+      const foundRoute = data.find(
+        route => route.bus_route.id === currentRoute.bus_route.id
+      );
+
+      if (foundRoute) {
+        dispatch(actionCreator.setCurrentRoute(foundRoute));
+      } else {
+        dispatch(actionCreator.setCurrentRoute(null));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dataSource]);
 
   return (

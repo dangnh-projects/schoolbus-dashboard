@@ -1,6 +1,8 @@
 import React, { useState, Fragment, useEffect, lazy, Suspense } from 'react';
 import moment from 'moment';
 import { Table, Tag, Modal, Row, Button, Spin } from 'antd';
+import { actionCreator } from 'store/busRoute/busRoute.meta';
+import { useSelector, useDispatch } from 'react-redux';
 
 const BusRouteMap = lazy(() => import('./BusRouteMap'));
 
@@ -163,11 +165,13 @@ const processData = records => {
 };
 
 const LiveTable = props => {
+  const { currentRoute } = useSelector(store => store.busRoute);
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [attendances, setAttendances] = useState([]);
   const [isVisible, setVisible] = useState(false);
   const [isShowMap, setShowMap] = useState(false);
-  const [currentRoute, setCurrentRoute] = useState(null);
+  // const [currentRoute, setCurrentRoute] = useState(null);
 
   const columns = [
     {
@@ -267,8 +271,9 @@ const LiveTable = props => {
         <Row>
           <Button
             onClick={() => {
-              setCurrentRoute(i);
+              // setCurrentRoute(i);
               setShowMap(true);
+              props.setCurrentRoute(i);
             }}
           >
             <img
@@ -285,6 +290,20 @@ const LiveTable = props => {
   useEffect(() => {
     const data = processData(props.dataSource);
     setData(data);
+    // check current route and update;
+    if (currentRoute) {
+      console.log(data, currentRoute);
+      const foundRoute = data.find(
+        route => route.bus_route.id === currentRoute.bus_route.id
+      );
+
+      if (foundRoute) {
+        dispatch(actionCreator.setCurrentRoute(foundRoute));
+      } else {
+        dispatch(actionCreator.setCurrentRoute(null));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dataSource]);
 
   return (

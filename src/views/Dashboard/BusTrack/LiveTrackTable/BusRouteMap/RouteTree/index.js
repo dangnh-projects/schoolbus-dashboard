@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
-import { Row, Col, Timeline, Icon } from 'antd';
+import { Row, Col, Timeline, Icon, Button } from 'antd';
+import { useDispatch } from 'react-redux';
+import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 const buildDot = type => {
   if (type === 'start') {
@@ -20,23 +22,13 @@ const buildDot = type => {
 };
 
 const PositionItem = memo(
-  ({
-    name,
-    dotType,
-    handleSelect,
-    loc,
-    selectedLoc,
-    currentLoc,
-    have_bus,
-    id,
-  }) => (
+  ({ name, dotType, handleSelect, loc, selectedLoc, have_bus, clickOnBus }) => (
     <Timeline.Item dot={buildDot(dotType)}>
       <Row
         type="flex"
         align="top"
         justify="space-between"
-        onClick={() => handleSelect(loc)}
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', flexDirection: 'column' }}
       >
         <Col
           style={{
@@ -54,22 +46,23 @@ const PositionItem = memo(
                 ? 'bold'
                 : '',
           }}
+          onClick={() => loc && handleSelect(loc)}
         >
           {name}
-          <br key="break" />
-          <Row
-            key="time"
-            style={{
-              marginTop: 16,
-              fontSize: 12,
-              fontStyle: 'italic',
-              color: 'rgba(0,0,0,0.45)',
-            }}
-          >
-            {have_bus && (
-              <img src="/images/yellow-bus-icon.png" alt="pin" width={28} />
-            )}
-          </Row>
+        </Col>
+        <Col
+          key="time"
+          style={{
+            marginTop: 16,
+            fontSize: 12,
+            fontStyle: 'italic',
+            color: 'rgba(0,0,0,0.45)',
+          }}
+          onClick={() => {
+            clickOnBus();
+          }}
+        >
+          {have_bus && <img src="/images/ic_bus.png" alt="pin" width={40} />}
         </Col>
       </Row>
     </Timeline.Item>
@@ -83,7 +76,10 @@ const RouteTree = props => {
     selectedLoc,
     currentLoc,
     nextLoc,
+    clickOnBus,
   } = props;
+
+  const dispatch = useDispatch();
 
   const st = [...locations.sort((a, b) => a.order - b.order)];
   const end = st.pop();
@@ -104,6 +100,8 @@ const RouteTree = props => {
           time_to_next_location={
             st && st.length > 0 && st[0].estimated_travelling_time
           }
+          handleSelect={handleSelect}
+          clickOnBus={clickOnBus}
         />
         {st &&
           st.length > 0 &&
@@ -135,6 +133,7 @@ const RouteTree = props => {
                 currentLoc.location &&
                 currentLoc.location.id === loc.location.id
               }
+              clickOnBus={clickOnBus}
             />
           ))}
         {end && (
@@ -148,7 +147,24 @@ const RouteTree = props => {
               onClick={() => handleSelect(end)}
               style={{ cursor: 'pointer', flexDirection: 'column' }}
             >
-              <Col span={24} style={{ flex: 1 }}>
+              <Col
+                span={24}
+                style={{
+                  flex: 1,
+                  color:
+                    selectedLoc &&
+                    selectedLoc.location &&
+                    selectedLoc.location.id === end.location.id
+                      ? '#0d5321'
+                      : '',
+                  fontWeight:
+                    selectedLoc &&
+                    selectedLoc.location &&
+                    selectedLoc.location.id === end.location.id
+                      ? 'bold'
+                      : '',
+                }}
+              >
                 {end.location &&
                   `${end.location.address} ${end.location.street} ${end.location
                     .ward !== '' && 'phường ' + end.location.ward} ${
@@ -166,8 +182,11 @@ const RouteTree = props => {
                     fontStyle: 'italic',
                     color: 'rgba(0,0,0,0.45)',
                   }}
+                  onClick={() => {
+                    clickOnBus();
+                  }}
                 >
-                  <img src="/images/yellow-bus-icon.png" alt="pin" width={28} />
+                  <img src="/images/ic_bus.png" alt="pin" width={40} />
                 </Row>
               )}
             </Row>
@@ -184,6 +203,16 @@ const RouteTree = props => {
           School
         </Timeline.Item>
       </Timeline>
+      <Row type="flex" justify="center">
+        <Button
+          style={{ paddingLeft: 40, paddingRight: 40 }}
+          onClick={e => {
+            dispatch(actionCreator.getRoutes());
+          }}
+        >
+          Refresh
+        </Button>
+      </Row>
     </Col>
   );
 };

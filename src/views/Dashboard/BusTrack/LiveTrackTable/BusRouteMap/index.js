@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Col, Row } from 'antd';
+import { Modal, Col, Row, Button } from 'antd';
 import GoogleMapReact from 'google-map-react';
 import RouteTree from './RouteTree';
+import { useSelector, useDispatch } from 'react-redux';
+import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 import Firebase from 'utils/firebase-service';
 
 const BusRouteMap = props => {
-  const { route = {} } = props;
+  const dispatch = useDispatch();
+  const { currentRoute } = useSelector(store => store.busRoute);
 
-  const { locations = [], currentLoc, nextLoc } = route || {};
+  const { locations = [], currentLoc, nextLoc } = currentRoute || {};
 
   const [loc, setLoc] = useState();
   const [isFollowBus, setIsFollowBus] = useState(true);
@@ -16,9 +19,9 @@ const BusRouteMap = props => {
   const [busLocation, setBusLocation] = useState(null);
 
   useEffect(() => {
-    if (route) {
+    if (currentRoute) {
       let ref = Firebase.database().ref(
-        'locations/route_' + route.bus_route.id
+        'locations/route_' + currentRoute.bus_route.id
       );
       ref.on('value', snapshot => {
         const state = snapshot.val();
@@ -39,7 +42,7 @@ const BusRouteMap = props => {
       return () => {};
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route]);
+  }, [currentRoute]);
 
   const handleSelect = location => {
     setIsFollowBus(false);
@@ -50,11 +53,62 @@ const BusRouteMap = props => {
     });
   };
 
+  const clickOnBus = () => {
+    setIsFollowBus(true);
+    setSelectedLoc(null);
+    if (busLocation && busLocation.lng) {
+      setLoc({
+        lng: busLocation.lng,
+        lat: busLocation.lat,
+      });
+    }
+  };
+
+  if (locations.length === 0) {
+    return (
+      <Modal
+        visible={props.visible}
+        onOk={() => {
+          props.setVisible && props.setVisible(false);
+          dispatch(actionCreator.setCurrentRoute(null));
+        }}
+        onCancel={() => {
+          props.setVisible && props.setVisible(false);
+          dispatch(actionCreator.setCurrentRoute(null));
+        }}
+        footer={false}
+        // width={1200}
+      >
+        <Row
+          type="flex"
+          align="middle"
+          justify="center"
+          style={{ fontSize: 14 }}
+        >
+          This bus route currently has not started yet or already reached
+          school. <br /> Please refresh this page to get latest data.
+          <Button
+            onClick={() => window.location.reload()}
+            style={{ marginTop: 24 }}
+          >
+            Refresh page
+          </Button>
+        </Row>
+      </Modal>
+    );
+  }
+
   return (
     <Modal
       visible={props.visible}
-      onOk={() => props.setVisible && props.setVisible(false)}
-      onCancel={() => props.setVisible && props.setVisible(false)}
+      onOk={() => {
+        props.setVisible && props.setVisible(false);
+        dispatch(actionCreator.setCurrentRoute(null));
+      }}
+      onCancel={() => {
+        props.setVisible && props.setVisible(false);
+        dispatch(actionCreator.setCurrentRoute(null));
+      }}
       width={1200}
     >
       <Row type="flex" gutter={16}>
@@ -65,6 +119,7 @@ const BusRouteMap = props => {
             selectedLoc={selectedLoc}
             currentLoc={currentLoc}
             nextLoc={nextLoc}
+            clickOnBus={clickOnBus}
           />
         </Col>
         <Col span={18} style={{ minHeight: 480 }}>
@@ -89,7 +144,7 @@ const BusRouteMap = props => {
             // layerTypes={['TrafficLayer']}
             yesIWantToUseGoogleMapApiInternals={true}
           >
-            {busLocation && busLocation.loc && (
+            {busLocation && busLocation.lat && (
               <div lat={busLocation.lat} lng={busLocation.lng}>
                 <img
                   src="/images/yellow-bus-icon.png"

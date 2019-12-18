@@ -30,6 +30,8 @@ export const TYPES = {
   UPDATE_ROUTE_WITH_LOCATION_SUCCESS: 'UPDATE_ROUTE_WITH_LOCATION_SUCCESS',
 
   SWAP_LOCATIONS: 'SWAP_LOCATION',
+
+  SET_CURRENT_ROUTE: 'SET_CURRENT_ROUTE',
 };
 
 export const actionCreator = {
@@ -63,4 +65,5 @@ export const actionCreator = {
   ),
 
   swapLocation: createAction(TYPES.SWAP_LOCATIONS),
+  setCurrentRoute: createAction(TYPES.SET_CURRENT_ROUTE),
 };

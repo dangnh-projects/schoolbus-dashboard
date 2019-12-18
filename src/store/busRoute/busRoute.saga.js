@@ -169,15 +169,6 @@ function* getRoutes(_, user) {
     },
   });
   if (body && body.data) {
-    // console.log(body.data);
-    // // get attendance with Route
-    // const data = yield call(
-    //   Promise.all,
-    //   body.data.map(route => {
-    //     console.log(route);
-    //     return route;
-    //   })
-    // );
     yield put(actionCreator.getRoutesSuccess(body.data.routes));
   }
 }

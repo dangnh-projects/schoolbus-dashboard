@@ -45,7 +45,12 @@ export const Bus = props => {
           key="Pickup"
         >
           <Suspense fallback={<Spin />}>
-            <LiveTrackTable dataSource={pickupRunningRoute} />
+            <LiveTrackTable
+              setCurrentRoute={item =>
+                dispatch(actionCreator.setCurrentRoute(item))
+              }
+              dataSource={pickupRunningRoute}
+            />
           </Suspense>
         </TabPane>
         <TabPane
@@ -61,7 +66,12 @@ export const Bus = props => {
           key="drop-off"
         >
           <Suspense fallback={<Spin />}>
-            <LiveTrackTable dataSource={dropoffRunningRoute} />
+            <LiveTrackTable
+              setCurrentRoute={item =>
+                dispatch(actionCreator.setCurrentRoute(item))
+              }
+              dataSource={dropoffRunningRoute}
+            />
           </Suspense>
         </TabPane>
       </Tabs>

@@ -1,49 +1,15 @@
 import React from 'react';
-import { Card, Row, Col, Input, Tabs, Icon } from 'antd';
+import { Card, Tabs, Icon, Divider, Input, Row, Col } from 'antd';
 import { connect } from 'react-redux';
-import DataTable from 'components/DataTable';
+//import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 const { TabPane } = Tabs;
-const { Search } = Input;
+const { TextArea } = Input;
 
-export const Notification = props => {
-  const columns = [
-    {
-      title: 'Route type',
-      dataIndex: 'routetype',
-    },
-    {
-      title: 'Route name',
-      dataIndex: 'routename',
-    },
-    {
-      title: 'Datetime',
-      dataIndex: 'datetime',
-    },
-    {
-      title: 'Sender',
-      dataIndex: 'sender',
-    },
-    {
-      title: 'Receiver',
-      dataIndex: 'receiver',
-    },
-    {
-      title: 'Contents',
-      dataIndex: 'contents',
-    },
-  ];
-
-  const handleOnSearch = term => {
-    props.getList({
-      url: '/core/api/notification',
-      search: term,
-    });
-  };
-
+export const Notification = () => {
   return (
-    <Card title="Activity History">
+    <Card title="Notification">
       <Tabs defaultActiveKey="1">
         <TabPane
           tab={
@@ -54,15 +20,96 @@ export const Notification = props => {
           }
           key="1"
         >
-          <Row type="flex" gutter={16}>
-            <Col>
-              <Search
-                style={{ marginBottom: '24px' }}
-                onSearch={handleOnSearch}
+          <Divider orientation="left">
+            <Icon type="mail" /> Pick-up messages
+          </Divider>
+          <h4>
+            Student onboard to school <Icon type="form" />
+          </h4>
+          <Row gutter={16} style={{ marginBottom: '12px' }}>
+            <Col md={12}>
+              EN
+              <TextArea rows={2} value="%S onboard to school" />
+            </Col>
+            <Col md={12}>
+              VN
+              <TextArea
+                rows={2}
+                value="%S đã lên xe buýt. Khởi hành đến trường."
               />
             </Col>
           </Row>
-          <DataTable columns={columns} url="/core/api/notification" />
+          <h4>
+            Student reached school <Icon type="form" />
+          </h4>
+          <Row gutter={16} style={{ marginBottom: '24px' }}>
+            <Col md={12}>
+              EN
+              <TextArea rows={2} value="%S reached school" />
+            </Col>
+            <Col md={12}>
+              VN
+              <TextArea rows={2} value="%S đã đến trường." />
+            </Col>
+          </Row>
+          <Divider orientation="left">
+            <Icon type="mail" /> Drop-off messages
+          </Divider>
+          <h4>
+            Student onboard to home <Icon type="form" />
+          </h4>
+          <Row gutter={16} style={{ marginBottom: '12px' }}>
+            <Col md={12}>
+              EN
+              <TextArea rows={2} value="%S onboard to home" />
+            </Col>
+            <Col md={12}>
+              VN
+              <TextArea rows={2} value="%S đã lên xe. Bắt đầu về nhà." />
+            </Col>
+          </Row>
+          <h4>
+            Student reached home <Icon type="form" />
+          </h4>
+          <Row gutter={16} style={{ marginBottom: '24px' }}>
+            <Col md={12}>
+              EN
+              <TextArea rows={2} value="%S reached home." />
+            </Col>
+            <Col md={12}>
+              VN
+              <TextArea rows={2} value="%S đã đến trạm." />
+            </Col>
+          </Row>
+          <Divider orientation="left">
+            <Icon type="mail" /> Other messages
+          </Divider>
+          <h4>
+            Student onboard to school <Icon type="form" />
+          </h4>
+          <Row gutter={16} style={{ marginBottom: '12px' }}>
+            <Col md={12}>
+              EN
+              <TextArea rows={2} value="%S has miss the bus." />
+            </Col>
+            <Col md={12}>
+              VN
+              <TextArea rows={2} value="%S đã lỡ chuyến hôm nay." />
+            </Col>
+          </Row>
+          <h4>
+            Student reached school <Icon type="form" />
+          </h4>
+          <Row gutter={16} style={{ marginBottom: '24px' }}>
+            <Col md={12}>
+              EN
+              <TextArea rows={2} value="%S absent today." />
+            </Col>
+            <Col md={12}>
+              VN
+              <TextArea rows={2} value="%S đã báo vắng mặt hôm nay." />
+            </Col>
+          </Row>
         </TabPane>
         <TabPane
           tab={

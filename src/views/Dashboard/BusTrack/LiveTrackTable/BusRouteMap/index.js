@@ -10,7 +10,6 @@ import Firebase from 'utils/firebase-service';
 const BusRouteMap = props => {
   const dispatch = useDispatch();
   const { currentRoute, loading } = useSelector(store => store.busRoute);
-  console.log('====== loading', loading);
 
   const { locations = [], currentLoc, nextLoc } = currentRoute || {};
 
@@ -134,15 +133,7 @@ const BusRouteMap = props => {
                 lat: 10.8000835,
                 lng: 106.7042577,
               }}
-              center={
-                isFollowBus
-                  ? busLocation
-                    ? { lat: busLocation.lat, lng: busLocation.lng }
-                    : null
-                  : loc
-                  ? { lat: loc.lat, lng: loc.lng }
-                  : null
-              }
+              center={isFollowBus ? busLocation : loc}
               defaultZoom={15}
               // layerTypes={['TrafficLayer']}
               yesIWantToUseGoogleMapApiInternals={true}

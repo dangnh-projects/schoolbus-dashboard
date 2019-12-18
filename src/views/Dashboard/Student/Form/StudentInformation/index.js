@@ -38,6 +38,7 @@ const Information = ({ form }) => {
   const [ward, setWard] = useState('');
   const [district, setDistrict] = useState('');
   const [province, setProvince] = useState('');
+  const [tempImg, setTempImg] = useState(null);
   // const [busRegistratedDate, setBusRegistratedDAta] = useState('moment');
 
   const [showCropModal, setShowCropModal] = useState(false);
@@ -115,7 +116,7 @@ const Information = ({ form }) => {
     const reader = new FileReader();
     reader.addEventListener('load', e => {
       if (e && e.target) {
-        setImgVal(e.target.result);
+        setTempImg(e.target.result);
         setShowCropModal(true);
       }
     });
@@ -147,7 +148,7 @@ const Information = ({ form }) => {
       {showCropModal && (
         <AvatarCropperModal
           visible={showCropModal}
-          imgVal={imgVal}
+          imgVal={tempImg}
           setAvatar={setAvatar}
           setImgVal={setImgVal}
           setVisible={setShowCropModal}

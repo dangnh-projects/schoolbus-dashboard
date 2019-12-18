@@ -10,7 +10,6 @@ import Firebase from 'utils/firebase-service';
 const BusRouteMap = props => {
   const dispatch = useDispatch();
   const { currentRoute, loading } = useSelector(store => store.busRoute);
-  console.log('====== loading', loading);
 
   const { locations = [], currentLoc, nextLoc } = currentRoute || {};
 
@@ -98,8 +97,6 @@ const BusRouteMap = props => {
       </Modal>
     );
   }
-
-  console.log(isFollowBus, busLocation, loc);
 
   return (
     <Modal

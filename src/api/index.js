@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { navigate } from '@reach/router';
-const BASE_URL = 'http://ischool-bus-api.nhg.vn';
-// const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+// const BASE_URL = 'http://ischool-bus-api.nhg.vn';
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const baseHeader = {
   'Content-Type': 'application/json',
 };

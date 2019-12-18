@@ -18,7 +18,12 @@ const AvatarCropperModal = props => {
     props.setVisible(false);
   };
   return (
-    <Modal visible={props.visible} onOk={handleOnOk}>
+    <Modal
+      maskClosable={true}
+      visible={props.visible}
+      onCancel={() => props.setVisible(false)}
+      onOk={handleOnOk}
+    >
       <Cropper
         ref={cropper}
         src={props.imgVal}

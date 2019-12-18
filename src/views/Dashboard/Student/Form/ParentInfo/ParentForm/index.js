@@ -39,6 +39,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState('/images/default-user.png');
   const [showCropModal, setShowCropModal] = useState(false);
+  const [tempImg, setTempImg] = useState(null);
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -108,7 +109,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
     const reader = new FileReader();
     reader.addEventListener('load', e => {
       if (e && e.target) {
-        setImgVal(e.target.result);
+        setTempImg(e.target.result);
         setShowCropModal(true);
       }
     });
@@ -131,7 +132,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       {showCropModal && (
         <AvatarCropperModal
           visible={showCropModal}
-          imgVal={imgVal}
+          imgVal={tempImg}
           setAvatar={setAvatar}
           setImgVal={setImgVal}
           setVisible={setShowCropModal}

@@ -109,6 +109,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
   const [province, setProvince] = useState();
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState('/images/default-user.png');
+  const [tempImg, setTempImg] = useState(null);
 
   const [showCropModal, setShowCropModal] = useState(false);
 
@@ -197,7 +198,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
     const reader = new FileReader();
     reader.addEventListener('load', e => {
       if (e && e.target) {
-        setImgVal(e.target.result);
+        setTempImg(e.target.result);
         setShowCropModal(true);
       }
     });
@@ -220,7 +221,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       {showCropModal && (
         <AvatarCropperModal
           visible={showCropModal}
-          imgVal={imgVal}
+          imgVal={tempImg}
           setAvatar={setAvatar}
           setImgVal={setImgVal}
           setVisible={setShowCropModal}

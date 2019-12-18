@@ -185,6 +185,13 @@ const SliderMenu = ({ location }) => {
           <Icon type="setting" />
           <span>Settings</span>
         </Menu.Item>
+        <Menu.Item
+          key="activity-history"
+          onClick={() => navigate('/dashboard/activity-history')}
+        >
+          <Icon type="history" />
+          <span>Activity History</span>
+        </Menu.Item>
         <Menu.Item key="message" onClick={() => navigate('/dashboard/message')}>
           <Icon type="message" />
           <span>Message</span>

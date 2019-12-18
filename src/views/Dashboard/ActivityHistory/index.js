@@ -43,16 +43,7 @@ export const ActivityHistory = props => {
   };
 
   return (
-    <Card
-      title="Activity History"
-      extra={[
-        <Row type="flex" gutter={16}>
-          <Col>
-            <Search onSearch={handleOnSearch} />
-          </Col>
-        </Row>,
-      ]}
-    >
+    <Card title="Activity History">
       <Tabs defaultActiveKey="1">
         <TabPane
           tab={
@@ -63,6 +54,15 @@ export const ActivityHistory = props => {
           }
           key="1"
         >
+          <Row
+            style={{ marginBottom: '12px', float: 'right' }}
+            type="flex"
+            gutter={16}
+          >
+            <Col>
+              <Search onSearch={handleOnSearch} />
+            </Col>
+          </Row>
           <DataTable columns={columns} url="/core/api/activity-history" />
         </TabPane>
         <TabPane

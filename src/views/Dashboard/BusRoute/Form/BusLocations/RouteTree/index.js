@@ -125,69 +125,13 @@ const RouteTree = props => {
 
   const handleGoUp = idx => {
     if (idx === 0) return;
-    let currentOrder = locations[idx].order;
-    let previousOrder = locations[idx - 1].order;
 
-    dispatch(actionCreator.setLoading(true));
-
-    dispatch(
-      actionCreator.updateRouteWithLocation({
-        id: locations[idx].id,
-        order: -1,
-        afterSuccess: () =>
-          dispatch(
-            actionCreator.updateRouteWithLocation({
-              id: locations[idx - 1].id,
-              order: currentOrder,
-              afterSuccess: () =>
-                dispatch(
-                  actionCreator.updateRouteWithLocation({
-                    id: locations[idx].id,
-                    order: previousOrder,
-                    afterSuccess: () => {
-                      dispatch(actionCreator.getRouteLocations(route.id));
-                      notification.success({ message: 'Update successfully' });
-                      dispatch(actionCreator.setLoading(false));
-                    },
-                  })
-                ),
-            })
-          ),
-      })
-    );
+    dispatch(actionCreator.swapLocation([locations[idx], locations[idx - 1]]));
   };
 
   const handleGoDown = idx => {
     if (idx === locations.length - 1) return;
-    let currentOrder = locations[idx].order;
-    let nextOrder = locations[idx + 1].order;
-    dispatch(actionCreator.setLoading(true));
-
-    dispatch(
-      actionCreator.updateRouteWithLocation({
-        id: locations[idx].id,
-        order: -1,
-        afterSuccess: () =>
-          dispatch(
-            actionCreator.updateRouteWithLocation({
-              id: locations[idx + 1].id,
-              order: currentOrder,
-              afterSuccess: () =>
-                dispatch(
-                  actionCreator.updateRouteWithLocation({
-                    id: locations[idx].id,
-                    order: nextOrder,
-                    afterSuccess: () => {
-                      dispatch(actionCreator.getRouteLocations(route.id));
-                      notification.success({ message: 'Update successfully' });
-                      dispatch(actionCreator.setLoading(false));
-                    },
-                  })
-                ),
-            })
-          ),
-      })
-    );
+    dispatch(actionCreator.swapLocation([locations[idx], locations[idx + 1]]));
   };
 
   const st = [...locations.sort((a, b) => a.order - b.order)];

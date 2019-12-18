@@ -144,10 +144,10 @@ const RouteTree = props => {
               type="flex"
               align="top"
               justify="space-between"
-              onClick={() => handleSelect(end)}
               style={{ cursor: 'pointer', flexDirection: 'column' }}
             >
               <Col
+                onClick={() => handleSelect(end)}
                 span={24}
                 style={{
                   flex: 1,

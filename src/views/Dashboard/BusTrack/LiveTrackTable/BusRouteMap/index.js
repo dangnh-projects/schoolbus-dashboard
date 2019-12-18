@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Col, Row, Button } from 'antd';
+import { Modal, Col, Row, Button, Spin } from 'antd';
 import GoogleMapReact from 'google-map-react';
 import RouteTree from './RouteTree';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,7 +9,8 @@ import Firebase from 'utils/firebase-service';
 
 const BusRouteMap = props => {
   const dispatch = useDispatch();
-  const { currentRoute } = useSelector(store => store.busRoute);
+  const { currentRoute, loading } = useSelector(store => store.busRoute);
+  console.log('====== loading', loading);
 
   const { locations = [], currentLoc, nextLoc } = currentRoute || {};
 
@@ -110,70 +111,73 @@ const BusRouteMap = props => {
         dispatch(actionCreator.setCurrentRoute(null));
       }}
       width={1200}
+      loading={loading}
     >
-      <Row type="flex" gutter={16}>
-        <Col span={5}>
-          <RouteTree
-            locations={locations}
-            handleSelect={handleSelect}
-            selectedLoc={selectedLoc}
-            currentLoc={currentLoc}
-            nextLoc={nextLoc}
-            clickOnBus={clickOnBus}
-          />
-        </Col>
-        <Col span={18} style={{ minHeight: 480 }}>
-          <GoogleMapReact
-            bootstrapURLKeys={{
-              key: 'AIzaSyDxn1JyUEjelPN8IoDNWYO-HBTExzyaxE4',
-            }}
-            defaultCenter={{
-              lat: 10.8000835,
-              lng: 106.7042577,
-            }}
-            center={
-              isFollowBus
-                ? busLocation
-                  ? { lat: busLocation.lat, lng: busLocation.lng }
+      <Spin spinning={loading}>
+        <Row type="flex" gutter={16}>
+          <Col span={5}>
+            <RouteTree
+              locations={locations}
+              handleSelect={handleSelect}
+              selectedLoc={selectedLoc}
+              currentLoc={currentLoc}
+              nextLoc={nextLoc}
+              clickOnBus={clickOnBus}
+            />
+          </Col>
+          <Col span={18} style={{ minHeight: 480 }}>
+            <GoogleMapReact
+              bootstrapURLKeys={{
+                key: 'AIzaSyDxn1JyUEjelPN8IoDNWYO-HBTExzyaxE4',
+              }}
+              defaultCenter={{
+                lat: 10.8000835,
+                lng: 106.7042577,
+              }}
+              center={
+                isFollowBus
+                  ? busLocation
+                    ? { lat: busLocation.lat, lng: busLocation.lng }
+                    : null
+                  : loc
+                  ? { lat: loc.lat, lng: loc.lng }
                   : null
-                : loc
-                ? { lat: loc.lat, lng: loc.lng }
-                : null
-            }
-            defaultZoom={15}
-            // layerTypes={['TrafficLayer']}
-            yesIWantToUseGoogleMapApiInternals={true}
-          >
-            {busLocation && busLocation.lat && (
-              <div lat={busLocation.lat} lng={busLocation.lng}>
-                <img
-                  src="/images/yellow-bus-icon.png"
-                  alt="pin"
-                  width={48}
-                  style={{ transform: 'translate(-50%, -50%)' }}
-                />
-              </div>
-            )}
-            {locations &&
-              locations.map(loc => {
-                return (
-                  <div
-                    lat={loc.location.lat}
-                    lng={loc.location.lng}
-                    key={loc.location.id}
-                  >
-                    <img
-                      src="/images/map-pin.png"
-                      alt="pin"
-                      width={32}
-                      style={{ transform: 'translate(-50%, -100%)' }}
-                    />
-                  </div>
-                );
-              })}
-          </GoogleMapReact>
-        </Col>
-      </Row>
+              }
+              defaultZoom={15}
+              // layerTypes={['TrafficLayer']}
+              yesIWantToUseGoogleMapApiInternals={true}
+            >
+              {busLocation && busLocation.lat && (
+                <div lat={busLocation.lat} lng={busLocation.lng}>
+                  <img
+                    src="/images/yellow-bus-icon.png"
+                    alt="pin"
+                    width={48}
+                    style={{ transform: 'translate(-50%, -50%)' }}
+                  />
+                </div>
+              )}
+              {locations &&
+                locations.map(loc => {
+                  return (
+                    <div
+                      lat={loc.location.lat}
+                      lng={loc.location.lng}
+                      key={loc.location.id}
+                    >
+                      <img
+                        src="/images/map-pin.png"
+                        alt="pin"
+                        width={32}
+                        style={{ transform: 'translate(-50%, -100%)' }}
+                      />
+                    </div>
+                  );
+                })}
+            </GoogleMapReact>
+          </Col>
+        </Row>
+      </Spin>
     </Modal>
   );
 };

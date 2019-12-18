@@ -202,6 +202,81 @@ function* updateRouetWithLocation({ payload }, user) {
   }
 }
 
+function* swapLocation({ payload }, user) {
+  const [first, second] = payload;
+  yield put(actionCreator.setLoading(true));
+
+  if (!first || !second) {
+    yield call(notification.error, {
+      message: "Swap call don't have enough arguments",
+    });
+    return;
+  }
+
+  const firstOrder = first.order;
+  const secondOrder = second.order;
+  const tempOrder = Math.floor(Math.random() * 1000 + 100);
+
+  function* callUpdate(id, order) {
+    const formData = convertObjectToFormData({
+      id: id,
+      order: order,
+    });
+
+    yield call(updateRouteLocation.request, {
+      url: '/' + id,
+      data: formData,
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${user.token.access}`,
+      },
+    });
+  }
+
+  try {
+    // Set first to temp
+    yield call(callUpdate, first.id, tempOrder);
+
+    // Set second to first
+    yield call(callUpdate, second.id, firstOrder);
+
+    // Set first to second
+    yield call(callUpdate, first.id, secondOrder);
+
+    yield put(actionCreator.getRouteLocations(first.bus_route.id));
+    yield call(notification.success, {
+      message: 'Locations update successfully',
+    });
+  } catch (error) {
+    yield call(notification.error, {
+      message: 'Error in swap locations, rolling back',
+    });
+
+    const tempOrder1 = Math.floor(Math.random() * 1000 + 100);
+    const tempOrder2 = Math.floor(Math.random() * 1000 + 100);
+
+    // Set first to temp
+    yield call(callUpdate, first.id, tempOrder1);
+
+    // Set second to temp
+    yield call(callUpdate, second.id, tempOrder2);
+
+    // Set first to original
+    yield call(callUpdate, first.id, firstOrder);
+
+    // Set second to original
+    yield call(callUpdate, second.id, secondOrder);
+
+    yield call(notification.success, {
+      message: 'Rollback successfully',
+    });
+
+    yield put(actionCreator.getRouteLocations(first.bus_route.id));
+  }
+
+  yield put(actionCreator.setLoading(false));
+}
+
 export default function* busRouteSaga() {
   yield takeLatest(TYPES.POST_ROUTE, apiCallWrapper(postRoute));
   yield takeLatest(
@@ -221,4 +296,6 @@ export default function* busRouteSaga() {
     TYPES.UPDATE_ROUTE_WITH_LOCATION,
     apiCallWrapper(updateRouetWithLocation)
   );
+
+  yield takeLatest(TYPES.SWAP_LOCATIONS, apiCallWrapper(swapLocation));
 }

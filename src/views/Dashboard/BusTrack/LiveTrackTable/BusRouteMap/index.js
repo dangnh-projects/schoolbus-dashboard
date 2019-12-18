@@ -99,6 +99,8 @@ const BusRouteMap = props => {
     );
   }
 
+  console.log(isFollowBus, busLocation, loc);
+
   return (
     <Modal
       visible={props.visible}
@@ -134,15 +136,7 @@ const BusRouteMap = props => {
                 lat: 10.8000835,
                 lng: 106.7042577,
               }}
-              center={
-                isFollowBus
-                  ? busLocation
-                    ? { lat: busLocation.lat, lng: busLocation.lng }
-                    : null
-                  : loc
-                  ? { lat: loc.lat, lng: loc.lng }
-                  : null
-              }
+              center={isFollowBus ? busLocation : loc}
               defaultZoom={15}
               // layerTypes={['TrafficLayer']}
               yesIWantToUseGoogleMapApiInternals={true}

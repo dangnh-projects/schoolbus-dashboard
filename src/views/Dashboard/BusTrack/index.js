@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
 
 const LiveTrackTable = lazy(() => import('./LiveTrackTable'));
+const DropOffTable = lazy(() => import('./DropOffTable'));
 const { TabPane } = Tabs;
 
 export const Bus = props => {
@@ -74,7 +75,7 @@ export const Bus = props => {
             key="drop-off"
           >
             <Suspense fallback={<Spin />}>
-              <LiveTrackTable
+              <DropOffTable
                 setCurrentRoute={item =>
                   dispatch(actionCreator.setCurrentRoute(item))
                 }

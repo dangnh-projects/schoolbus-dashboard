@@ -2,6 +2,7 @@ import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { notification } from 'antd';
 import { types, actionCreator } from './dataTable.meta';
 import { authenticate } from 'store/utils';
+import { navigate } from '@reach/router';
 
 import { buildRequest } from 'api';
 
@@ -21,6 +22,11 @@ const apiCallWrapper = handler =>
     try {
       yield call(handler, action, user);
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+        return;
+      }
+
       if (error.response && error.response.status === 403) {
         notification.error({
           message:

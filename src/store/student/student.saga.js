@@ -49,6 +49,11 @@ function* postStudent({ payload }) {
       message: 'Save student information successfully',
     });
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate('/login');
+      return;
+    }
+
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
@@ -110,6 +115,10 @@ function* searchParent({ payload }) {
       message: 'Search parent successfully',
     });
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate('/login');
+      return;
+    }
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
@@ -172,6 +181,10 @@ function* updateStudent({ payload }) {
     }
     // yield put(actionCreator.changeStage(2));
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate('/login');
+      return;
+    }
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
@@ -227,6 +240,10 @@ function* addToLocation({ payload }) {
     yield put(actionCreator.changeStage(0));
     yield call(navigate, '/dashboard/student');
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate('/login');
+      return;
+    }
     if (error.response && error.response.status === 403) {
       notification.error({
         message:

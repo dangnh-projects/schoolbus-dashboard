@@ -3,6 +3,7 @@ import { TYPES, actionCreator } from './busRoute.meta';
 import { convertObjectToFormData } from 'utils/requestUtil';
 import { notification } from 'antd';
 import { authenticate } from 'store/utils';
+import { navigate } from '@reach/router';
 
 import { buildRequest } from 'api';
 export const routeRequest = buildRequest('/core/api/bus-route');
@@ -26,6 +27,11 @@ const apiCallWrapper = handler =>
     try {
       yield call(handler, action, user);
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+        return;
+      }
+
       if (error.response && error.response.status === 403) {
         notification.error({
           message:

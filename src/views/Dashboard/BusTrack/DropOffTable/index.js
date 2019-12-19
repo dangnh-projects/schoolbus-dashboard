@@ -13,6 +13,7 @@ export const STUDENT_STATUS = {
   ON_THE_WAY_TO_SCHOOL: 3,
   ON_THE_WAY_TO_HOME: 4,
   OFF_BUS: 5,
+  STUDENT_REACH_HOME: 6,
 };
 
 const STATUS_TEXT = {
@@ -22,6 +23,7 @@ const STATUS_TEXT = {
   3: 'Student on the way to school',
   4: 'Student on the way to home',
   5: 'Student off the bus',
+  6: 'Student already reached home',
 };
 
 const processAttendanceTableData = items => {
@@ -121,6 +123,7 @@ const processData = records => {
   return records.map(route => {
     let { locations } = route;
     const onboarding = [];
+    const offboarded = [];
     const remaining = [];
     let nextLoc = null;
     let currentLoc = null;
@@ -132,11 +135,11 @@ const processData = records => {
         continue;
       }
 
-      const haveStudentNotOnBus = attendances.some(
-        item => item.status === STUDENT_STATUS.NOT_ON_BUS
+      const ofboarding = attendances.some(
+        item => item.status === STUDENT_STATUS.ON_THE_WAY_TO_HOME
       );
 
-      if (!nextLoc && haveStudentNotOnBus) {
+      if (!nextLoc && ofboarding) {
         nextLoc = locations[i];
         if (i > 0) {
           currentLoc = locations[i - 1];
@@ -147,13 +150,10 @@ const processData = records => {
 
       attendances.forEach(atten => {
         atten.location = locations[i].location;
-        if (
-          atten.status === STUDENT_STATUS.ON_THE_WAY_TO_SCHOOL ||
-          atten.status === STUDENT_STATUS.ON_THE_WAY_TO_HOME
-        ) {
-          onboarding.push(atten);
-        } else {
+        if (atten.status === STUDENT_STATUS.ON_THE_WAY_TO_HOME) {
           remaining.push(atten);
+        } else if (atten.status === STUDENT_STATUS.STUDENT_REACH_HOME) {
+          offboarded.push(atten);
         }
       });
     }
@@ -162,6 +162,7 @@ const processData = records => {
     route.onboarding = onboarding;
     route.remaining = remaining;
     route.currentLoc = currentLoc;
+    route.offboarded = offboarded;
     return route;
   });
 };
@@ -216,6 +217,13 @@ const LiveTable = props => {
     {
       title: 'Next stop',
       render: (_, i) => {
+        if (
+          i.offboarded &&
+          i.offboarded.length === 0 &&
+          i.remaining.length === 0
+        ) {
+          return 'Onboarding';
+        }
         if (i.nextLoc)
           return `${i.nextLoc.location.address} ${i.nextLoc.location.street} ${i
             .nextLoc.location.ward !== '' &&
@@ -227,7 +235,7 @@ const LiveTable = props => {
       },
     },
     {
-      title: 'No of onboarding',
+      title: 'No of offboarded',
       align: 'center',
       render: (_, i) => (
         <Tag
@@ -235,10 +243,10 @@ const LiveTable = props => {
           style={{ paddingLeft: 12, paddingRight: 12, cursor: 'pointer' }}
           onClick={() => {
             setVisible(true);
-            setAttendances(i.onboarding);
+            setAttendances(i.offboarded);
           }}
         >
-          {i.onboarding ? i.onboarding.length : 0}
+          {i.offboarded ? i.offboarded.length : 0}
         </Tag>
       ),
     },
@@ -290,10 +298,10 @@ const LiveTable = props => {
 
   useEffect(() => {
     const data = processData(props.dataSource);
+    console.log(data);
     setData(data);
     // check current route and update;
     if (currentRoute) {
-      console.log(data, currentRoute);
       const foundRoute = data.find(
         route => route.bus_route.id === currentRoute.bus_route.id
       );

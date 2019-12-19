@@ -30,11 +30,21 @@ const apiCallWrapper = handler =>
       }
 
       if (error.response && error.response.status === 500) {
-        notification.error({
-          message: error.response.data
-            ? error.response.data.message
-            : 'Request Error',
-        });
+        if (error.response.data.message) {
+          notification.error({
+            message: error.response.data
+              ? error.response.data.message
+              : 'Request Error',
+          });
+        } else {
+          const [message, second] = error.response.data.split('\n');
+          notification.error({
+            message: `
+              ${message}
+              ${second}
+            `,
+          });
+        }
         return;
       }
 

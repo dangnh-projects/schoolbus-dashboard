@@ -49,7 +49,6 @@ function* postStudent({ payload }) {
       message: 'Save student information successfully',
     });
   } catch (error) {
-    console.log(error);
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
@@ -57,6 +56,26 @@ function* postStudent({ payload }) {
       });
       return;
     }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
+      return;
+    }
+
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
@@ -103,6 +122,25 @@ function* searchParent({ payload }) {
       notification.error({ message: 'Parent not found' });
       return;
     }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
+      return;
+    }
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
@@ -141,6 +179,25 @@ function* updateStudent({ payload }) {
       });
       return;
     }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
+      return;
+    }
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
@@ -170,12 +227,30 @@ function* addToLocation({ payload }) {
     yield put(actionCreator.changeStage(0));
     yield call(navigate, '/dashboard/student');
   } catch (error) {
-    console.log(error);
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
           "You don't have permission to perform this action, please try login again or contact administrator for more information",
       });
+      return;
+    }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
       return;
     }
     notification.error({ message: 'Request error' });
@@ -226,6 +301,25 @@ function* postParent({ payload }) {
         message:
           "You don't have permission to perform this action, please try login again or contact administrator for more information",
       });
+      return;
+    }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
       return;
     }
     notification.error({ message: 'Request error' });

@@ -85,8 +85,8 @@ const BusRouteSection = memo(props => {
         );
 
         if (found) {
-          setCurrentLocation(found.id);
-          props.setLocation(found.id);
+          setCurrentLocation(found.bus_location.id);
+          props.setLocation(found.bus_location.id);
         } else {
           if (locationRes.data.length > 0) {
             setCurrentLocation(locationRes.data[0].bus_location.id);
@@ -211,24 +211,54 @@ const BusInfo = props => {
   const [dropOffRoute, setDropOffRoute] = useState();
   const [dropOffLocation, setDropOffLocation] = useState();
 
+  const [originalPickup, setOriginalPickup] = useState();
+  const [originalDropOff, setOriginalDropOff] = useState();
+
   const handleOnSave = () => {
-    if (pickUpRoute && pickUpLocation) {
-      dispatch(
-        actionCreator.addToLocation({
-          student: student.id,
-          route: pickUpRoute,
-          location: pickUpLocation,
-        })
-      );
+    if (pickupEnabled) {
+      if (pickUpRoute && pickUpLocation) {
+        dispatch(
+          actionCreator.addToLocation({
+            student: student.id,
+            route: pickUpRoute,
+            location: pickUpLocation,
+          })
+        );
+      }
+    } else {
+      if (originalPickup) {
+        // remove original
+        dispatch(
+          actionCreator.addToLocation({
+            student: student.id,
+            route: -1,
+            location: originalPickup && originalPickup.location.id,
+          })
+        );
+      }
     }
-    if (dropOffRoute && dropOffLocation) {
-      dispatch(
-        actionCreator.addToLocation({
-          student: student.id,
-          route: dropOffRoute,
-          location: dropOffLocation,
-        })
-      );
+
+    if (dropOffEnable) {
+      if (dropOffRoute && dropOffLocation) {
+        dispatch(
+          actionCreator.addToLocation({
+            student: student.id,
+            route: dropOffRoute,
+            location: dropOffLocation,
+          })
+        );
+      }
+    } else {
+      if (originalDropOff) {
+        // remove original
+        dispatch(
+          actionCreator.addToLocation({
+            student: student.id,
+            route: -1,
+            location: originalDropOff && originalDropOff.location.id,
+          })
+        );
+      }
     }
   };
 
@@ -239,14 +269,17 @@ const BusInfo = props => {
       );
 
       if (pickup) {
+        setOriginalPickup(pickup);
         setPickupEnabled(true);
         setPickupRoute(pickup.route.id);
         setPickupLocation(pickup.location.id);
       }
+
       const dropOff = student.bus_routes.find(
         bus_route => bus_route.route && bus_route.route.route_type === 'D'
       );
       if (dropOff) {
+        setOriginalDropOff(dropOff);
         setDropOffEnable(true);
         setDropOffRoute(dropOff.route.id);
         setDropOffLocation(dropOff.location.id);

@@ -18,6 +18,7 @@ import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 import AvatarCropperModal from 'components/AvatarDropModal';
+import { BASE_URL } from 'api';
 const Item = Form.Item;
 
 const DriverForm = ({ formSave, updateItem, id, data, form }) => {
@@ -89,7 +90,7 @@ const DriverForm = ({ formSave, updateItem, id, data, form }) => {
       setStartDate(moment(found.start_working_date));
       setAdress(found.address);
       if (found.image) {
-        setImgVal(process.env.REACT_APP_BACKEND_URL + found.image);
+        setImgVal(BASE_URL + found.image);
       }
     } else {
       InitDefaultFile(e => {

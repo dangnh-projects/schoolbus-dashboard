@@ -14,6 +14,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
 import ParentForm from './ParentForm';
+import { BASE_URL } from 'api';
 
 const { Search } = Input;
 
@@ -62,7 +63,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
           <img
             src={
               parent.avatar
-                ? process.env.REACT_APP_BACKEND_URL + parent.avatar
+                ? BASE_URL + parent.avatar
                 : '/images/default-user.png'
             }
             alt="Parent"

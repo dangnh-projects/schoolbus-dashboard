@@ -13,13 +13,14 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { navigate } from '@reach/router';
 import axios from 'axios';
+import { BASE_URL } from 'api';
 
 import { actionCreator } from 'store/student/student.meta';
 
 const getMetaData = async (url, token) => {
   try {
     const response = await axios.get(
-      process.env.REACT_APP_BACKEND_URL + url + '?records_per_page=1000',
+      BASE_URL + url + '?records_per_page=1000',
       {
         headers: {
           Authorization: `Bearer ${token}`,

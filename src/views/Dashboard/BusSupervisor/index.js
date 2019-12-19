@@ -3,6 +3,8 @@ import { Card, Button, Popconfirm, Icon, Row, Tag, Col, Input } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
+
+import { BASE_URL } from 'api';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 const { Search } = Input;
@@ -16,7 +18,7 @@ export const Bus = props => {
           <img
             alt="avatar"
             style={{ width: '60px', height: 'auto', textAlign: 'center' }}
-            src={process.env.REACT_APP_BACKEND_URL + record.avatar}
+            src={BASE_URL + record.avatar}
           />
         ) : (
           ''

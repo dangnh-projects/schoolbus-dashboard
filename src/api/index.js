@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { navigate } from '@reach/router';
-// const BASE_URL = 'http://ischool-bus-api.nhg.vn';
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
+export const BASE_URL = 'http://ischool-bus-api.nhg.vn';
+// export const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const baseHeader = {
   'Content-Type': 'application/json',
 };
@@ -10,7 +11,7 @@ const HTTP_STATUS = {
   UNAUTHORIZE: 401,
 };
 
-export function buildRequest(url, requestConfig = {}) {
+export const buildRequest = (url, requestConfig = {}) => {
   const instance = axios.create({
     baseURL: BASE_URL + url,
     ...requestConfig,
@@ -38,4 +39,4 @@ export function buildRequest(url, requestConfig = {}) {
       return { body, httpStatus };
     },
   };
-}
+};

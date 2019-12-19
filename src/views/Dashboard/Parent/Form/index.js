@@ -21,6 +21,7 @@ import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 import AvatarCropperModal from 'components/AvatarDropModal';
+import { BASE_URL } from 'api';
 
 const Item = Form.Item;
 
@@ -157,7 +158,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       setBirthday(moment(found.birthday));
       setIdPassport(found.id_number);
       setPhoneNumber(found.phone_number);
-      setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
+      setImgVal(BASE_URL + found.avatar);
 
       setStudent(found.children);
     } else {

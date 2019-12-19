@@ -4,6 +4,7 @@ import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+import { BASE_URL } from 'api';
 
 const { Search } = Input;
 
@@ -27,7 +28,7 @@ export const Parent = props => {
           <img
             alt="avatar"
             style={{ width: '80px', height: 'auto', textAlign: 'center' }}
-            src={process.env.REACT_APP_BACKEND_URL + record.avatar}
+            src={BASE_URL + record.avatar}
           />
         ) : (
           ''

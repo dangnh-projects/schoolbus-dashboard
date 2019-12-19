@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import AvatarCropperModal from 'components/AvatarDropModal';
+import { BASE_URL } from 'api';
 
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
@@ -177,7 +178,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       setWard(found.ward);
       setDistrict(found.district);
       setProvince(found.province);
-      setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
+      setImgVal(BASE_URL + found.avatar);
       setUsername(found.user_name);
     } else {
       InitDefaultFile(e => {

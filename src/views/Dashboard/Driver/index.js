@@ -4,6 +4,7 @@ import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+import { BASE_URL } from 'api';
 
 //const ButtonGroup = Button.Group;
 
@@ -22,7 +23,7 @@ export const Driver = props => {
           <img
             alt="avatar"
             style={{ width: '60px', height: 'auto', textAlign: 'center' }}
-            src={process.env.REACT_APP_BACKEND_URL + record.image}
+            src={BASE_URL + record.image}
           />
         ) : (
           ''

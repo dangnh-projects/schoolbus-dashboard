@@ -27,9 +27,9 @@ const registerRequest = buildRequest('/user/register', {
 function* login(action) {
   try {
     var bodyFormData = new FormData();
-    bodyFormData.set('username', action.payload.username);
-    bodyFormData.set('password', action.payload.password);
-    bodyFormData.set('device_type', 'web');
+    bodyFormData.append('username', action.payload.username);
+    bodyFormData.append('password', action.payload.password);
+    bodyFormData.append('device_type', 'web');
     const { body } = yield call(
       loginRequest.request,
       {

@@ -532,13 +532,13 @@ const RouteForm = ({ form }) => {
             />
           )}
         </FormItem>
-        <FormItem label="Bus">
+        <FormItem label="Bus number">
           {getFieldDecorator('bus', {
             initialValue: bus,
             rules: [
               {
                 required: true,
-                message: 'Bus is required',
+                message: 'Bus number is required',
               },
             ],
           })(

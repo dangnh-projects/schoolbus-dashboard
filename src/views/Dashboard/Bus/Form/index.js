@@ -40,31 +40,35 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
         fields={[
           {
             type: 'TEXT',
-            label: 'License Plate',
+            label: 'License plate',
             name: 'vehicle_registration_plate',
             rules: [
               {
                 required: true,
-                message: 'Name is required',
+                message: 'License plate is required',
               },
             ],
             defaultValue: item ? item.vehicle_registration_plate : '',
           },
           {
             type: 'TEXT',
-            label: 'Bus Name',
+            label: 'Bus number',
             name: 'name',
             rules: [
               {
                 required: true,
-                message: 'Bus name is required',
+                message: 'Bus number is required',
+              },
+              {
+                pattern: new RegExp('^[0-9]*$'),
+                message: 'Invalid number',
               },
             ],
             defaultValue: item ? item.name : '',
           },
           {
             type: 'TEXT',
-            label: 'Transportation Brand',
+            label: 'Transportation brand',
             name: 'brand',
             rules: [
               {
@@ -87,7 +91,7 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
           },
           {
             type: 'TEXT',
-            label: 'No of Seat',
+            label: 'No of seat',
             name: 'number_of_seat',
             rules: [
               {

@@ -27,7 +27,6 @@ const registerRequest = buildRequest('/user/register', {
 function* login(action) {
   try {
     var bodyFormData = new FormData();
-    console.log(bodyFormData);
     bodyFormData.append('username', action.payload.username);
     bodyFormData.append('password', action.payload.password);
     bodyFormData.append('device_type', 'web');
@@ -50,7 +49,6 @@ function* login(action) {
       navigate('/dashboard/bus-track');
     }, 500);
   } catch (error) {
-    console.log(error);
     if (
       error.response &&
       error.response.status === 404 &&

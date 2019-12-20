@@ -17,7 +17,7 @@ export const Bus = props => {
       align: 'center',
     },
     {
-      title: 'Name',
+      title: 'Bus number',
       dataIndex: 'name',
       align: 'center',
     },

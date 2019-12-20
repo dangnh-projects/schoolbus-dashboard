@@ -16,7 +16,7 @@ export const Bus = props => {
       dataIndex: 'name',
     },
     {
-      title: 'Bus name',
+      title: 'Bus number',
       render: (_, i) =>
         // <a href={`/dashboard/bus/${i.bus.id}`}>{i.bus.number}</a>
         i.bus && i.bus.name,

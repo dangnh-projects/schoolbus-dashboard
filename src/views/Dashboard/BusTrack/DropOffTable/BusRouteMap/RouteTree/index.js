@@ -83,7 +83,7 @@ const RouteTree = props => {
 
   const dispatch = useDispatch();
 
-  const st = [...locations.sort((a, b) => a.order - b.order)];
+  const st = [...locations.sort((a, b) => (a.order > b.order ? 1 : -1))];
   const end = st.pop();
   return (
     <Col span={24}>

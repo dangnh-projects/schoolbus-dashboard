@@ -134,7 +134,7 @@ const RouteTree = props => {
     dispatch(actionCreator.swapLocation([locations[idx], locations[idx + 1]]));
   };
 
-  const st = [...locations.sort((a, b) => a.order - b.order)];
+  const st = [...locations.sort((a, b) => (a.order > b.order ? 1 : -1))];
   const end = st.pop();
   return (
     <Spin spinning={loading}>

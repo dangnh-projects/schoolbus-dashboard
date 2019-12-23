@@ -86,8 +86,8 @@ const BusRouteMap = props => {
           justify="center"
           style={{ fontSize: 14 }}
         >
-          This bus route currently has not started yet or already reached
-          school. <br /> Please refresh this page to get latest data.
+          This bus route currently has not started yet or already ended. <br />
+          Please refresh this page to get latest data.
           <Button
             onClick={() => window.location.reload()}
             style={{ marginTop: 24 }}

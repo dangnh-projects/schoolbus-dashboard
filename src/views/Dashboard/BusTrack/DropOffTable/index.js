@@ -26,6 +26,16 @@ const STATUS_TEXT = {
   6: 'Student already reached home',
 };
 
+const STATUS_TAG_COLOR = {
+  0: '#108ee9',
+  1: '#f50',
+  2: 'orange',
+  3: '#108ee9',
+  4: '#108ee9',
+  5: '',
+  6: '',
+};
+
 const processAttendanceTableData = items => {
   const output = {};
   items.forEach(item => {
@@ -98,14 +108,18 @@ const AttendanceTable = ({ visible, attendances = [], setVisible }) => {
                     <td rowSpan={children.length}>{address}</td>
                     <td>{first.student.name}</td>
                     <td>
-                      <Tag>{STATUS_TEXT[first.status]}</Tag>
+                      <Tag color={STATUS_TAG_COLOR[first.status]}>
+                        {STATUS_TEXT[first.status]}
+                      </Tag>
                     </td>
                   </tr>
                   {last.map(attend => (
                     <tr key={attend.student.id}>
                       <td>{attend.student.name}</td>
                       <td>
-                        <Tag>{STATUS_TEXT[attend.status]}</Tag>
+                        <Tag color={STATUS_TAG_COLOR[attend.status]}>
+                          {STATUS_TEXT[attend.status]}
+                        </Tag>
                       </td>
                     </tr>
                   ))}

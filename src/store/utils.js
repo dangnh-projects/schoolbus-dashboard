@@ -16,3 +16,17 @@ export const convertObjectToFormData = obj => {
   Object.keys(obj).forEach(key => formData.append(key, obj[key] || ''));
   return formData;
 };
+
+export const parseError = str => {
+  str = str.toLowerCase().trim();
+  if (str.indexOf('unique') > -1) {
+    const field = str
+      .split(' ')
+      .pop()
+      .split('.')
+      .pop();
+    return `${field} must be unique`;
+  }
+
+  return str;
+};

@@ -1,7 +1,7 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { notification } from 'antd';
 import { types, actionCreator } from './dataTable.meta';
-import { authenticate } from 'store/utils';
+import { authenticate, parseError } from 'store/utils';
 import { navigate } from '@reach/router';
 
 import { buildRequest } from 'api';
@@ -44,11 +44,10 @@ const apiCallWrapper = handler =>
           });
         } else {
           const [message, second] = error.response.data.split('\n');
+          const str = `${message} ${second}`;
+          const parsed = parseError(str);
           notification.error({
-            message: `
-              ${message}
-              ${second}
-            `,
+            message: parsed,
           });
         }
         return;

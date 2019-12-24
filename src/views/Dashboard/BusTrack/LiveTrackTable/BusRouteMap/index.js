@@ -85,8 +85,8 @@ const BusRouteMap = props => {
           justify="center"
           style={{ fontSize: 14 }}
         >
-          This bus route currently has not started yet or already reached
-          school. <br /> Please refresh this page to get latest data.
+          This bus route currently has not started yet or already ended. <br />
+          Please refresh this page to get latest data.
           <Button
             onClick={() => window.location.reload()}
             style={{ marginTop: 24 }}
@@ -127,7 +127,7 @@ const BusRouteMap = props => {
           <Col span={18} style={{ minHeight: 480 }}>
             <GoogleMapReact
               bootstrapURLKeys={{
-                key: 'AIzaSyDxn1JyUEjelPN8IoDNWYO-HBTExzyaxE4',
+                key: process.env.REACT_APP_GOOGLE_MAP_KEY,
               }}
               defaultCenter={{
                 lat: 10.8000835,

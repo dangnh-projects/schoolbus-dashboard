@@ -185,7 +185,7 @@ const LiveTable = props => {
       render: (_, i) => i.bus_route && i.bus_route.name,
     },
     {
-      title: 'Bus name',
+      title: 'Bus number',
       render: (_, i) => i.bus_route && i.bus_route.bus && i.bus_route.bus.name,
     },
 

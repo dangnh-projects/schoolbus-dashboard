@@ -14,6 +14,8 @@ const Dashboard = ({ children, location }) => {
           style={{
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'scroll',
+            height: '80vh',
             // backgroundColor: 'white',
           }}
         >
@@ -35,18 +37,18 @@ const Dashboard = ({ children, location }) => {
             {/* content here */}
             {children}
           </div>
+          <Footer
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: 50,
+              padding: 8,
+            }}
+          >
+            ©2019 Powered by Nguyen Hoang Group
+          </Footer>
         </Content>
-        <Footer
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 50,
-            padding: 8,
-          }}
-        >
-          ©2019 Powered by Nguyen Hoang Group
-        </Footer>
       </Layout>
     </Layout>
   );

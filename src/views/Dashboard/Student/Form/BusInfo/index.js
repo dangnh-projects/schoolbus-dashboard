@@ -63,7 +63,7 @@ const RouteInfo = memo(({ currentRoute }) => {
           {currentRoute && currentRoute.bus && currentRoute.bus.number_of_seat}
         </Descriptions.Item>
         <Descriptions.Item label="Number remaining">
-          <div style={{ color: (!remaining || remaining === 0) && 'red' }}>
+          <div style={{ color: (!remaining || remaining <= 0) && 'red' }}>
             {remaining}
           </div>
         </Descriptions.Item>
@@ -185,7 +185,7 @@ const BusRouteSection = memo(props => {
                     selectedRoute.bus &&
                     selectedRoute.bus.number_of_seat -
                       selectedRoute.students.length;
-                  if (remain === 0) {
+                  if (remain <= 0) {
                     notification.error({
                       message:
                         'This bus route has reached limit seat, please choose another route',

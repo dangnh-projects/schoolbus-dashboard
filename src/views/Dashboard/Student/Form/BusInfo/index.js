@@ -36,27 +36,41 @@ const getMetaData = async (url, token) => {
 
 const Item = Form.Item;
 
-const RouteInfo = memo(({ currentRoute }) => (
-  <Col span={24}>
-    <Descriptions column={1} title="Route information" bordered size="small">
-      <Descriptions.Item label="Bus">
-        {currentRoute &&
-          currentRoute.bus &&
-          currentRoute.bus.vehicle_registration_plate}
-      </Descriptions.Item>
-      <Descriptions.Item label="Driver">
-        {currentRoute && currentRoute.driver && currentRoute.driver.name}
-      </Descriptions.Item>
-      <Descriptions.Item label="Supervisor">
-        {currentRoute &&
-          currentRoute.bus_supervisor &&
-          currentRoute.bus_supervisor.first_name +
-            ' ' +
-            currentRoute.bus_supervisor.last_name}
-      </Descriptions.Item>
-    </Descriptions>
-  </Col>
-));
+const RouteInfo = memo(({ currentRoute }) => {
+  const remaining =
+    currentRoute &&
+    currentRoute.bus &&
+    currentRoute.bus.number_of_seat - currentRoute.students.length;
+  return (
+    <Col span={24}>
+      <Descriptions column={1} title="Route information" bordered size="small">
+        <Descriptions.Item label="Bus">
+          {currentRoute &&
+            currentRoute.bus &&
+            currentRoute.bus.vehicle_registration_plate}
+        </Descriptions.Item>
+        <Descriptions.Item label="Driver">
+          {currentRoute && currentRoute.driver && currentRoute.driver.name}
+        </Descriptions.Item>
+        <Descriptions.Item label="Supervisor">
+          {currentRoute &&
+            currentRoute.bus_supervisor &&
+            currentRoute.bus_supervisor.first_name +
+              ' ' +
+              currentRoute.bus_supervisor.last_name}
+        </Descriptions.Item>
+        <Descriptions.Item label="Number of seats">
+          {currentRoute && currentRoute.bus && currentRoute.bus.number_of_seat}
+        </Descriptions.Item>
+        <Descriptions.Item label="Number remaining">
+          <div style={{ color: (!remaining || remaining === 0) && 'red' }}>
+            {remaining}
+          </div>
+        </Descriptions.Item>
+      </Descriptions>
+    </Col>
+  );
+});
 
 const BusRouteSection = memo(props => {
   const { token } = useSelector(store => store.user);

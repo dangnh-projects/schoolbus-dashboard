@@ -102,6 +102,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
 
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  const [email, setEmail] = useState();
 
   const [home_number, setHomeNumber] = useState();
   const [street, setStreet] = useState();
@@ -138,6 +139,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       province,
       username,
       password,
+      email,
     };
     if (avatar) {
       fields.avatar = avatar;
@@ -180,6 +182,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       setProvince(found.province);
       setImgVal(BASE_URL + found.avatar);
       setUsername(found.user_name);
+      setEmail(found.email);
     } else {
       InitDefaultFile(e => {
         setAvatar(dataURLtoBlob(e.target.result));
@@ -292,7 +295,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="Birthday">
-                  {getFieldDecorator('email', {
+                  {getFieldDecorator('birthday', {
                     initialValue: birthday,
                     rules: [
                       {
@@ -309,6 +312,21 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
                 </Item>
               </Col>
               <Col md={12}>
+                <Item label="Start working date">
+                  {getFieldDecorator('startworkingdate', {
+                    initialValue: start_working_date,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Start working date is required',
+                      },
+                    ],
+                  })(<DatePicker onChange={val => setStartWorkingDate(val)} />)}
+                </Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col md={12}>
                 <Item label="Phone number">
                   {getFieldDecorator('phone_number', {
                     initialValue: phone_number,
@@ -321,19 +339,17 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
                   })(<Input onChange={e => setPhoneNumber(e.target.value)} />)}
                 </Item>
               </Col>
-            </Row>
-            <Row gutter={16}>
               <Col md={12}>
-                <Item label="Start working date">
-                  {getFieldDecorator('startworkingdate', {
-                    initialValue: start_working_date,
+                <Item label="Email">
+                  {getFieldDecorator('email', {
+                    initialValue: email,
                     rules: [
-                      {
-                        required: true,
-                        message: 'Start working date is required',
-                      },
+                      // {
+                      //   required: true,
+                      //   message: 'Phone number is required',
+                      // },
                     ],
-                  })(<DatePicker onChange={val => setStartWorkingDate(val)} />)}
+                  })(<Input onChange={e => setEmail(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>

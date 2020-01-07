@@ -228,6 +228,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
           phone_number,
           id_number,
           username,
+          email,
         }}
       />
       <Form style={{ padding: 16 }} layout="horizontal">

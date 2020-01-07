@@ -552,7 +552,7 @@ const RouteForm = ({ form }) => {
               {buses &&
                 buses.map(bus => (
                   <Option key={bus.id} value={bus.id}>
-                    {bus.name}
+                    {bus.name} ({bus.number_of_seat} seats)
                   </Option>
                 ))}
             </Select>

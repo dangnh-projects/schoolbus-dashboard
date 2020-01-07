@@ -63,7 +63,7 @@ const RouteInfo = memo(({ currentRoute }) => {
           {currentRoute && currentRoute.bus && currentRoute.bus.number_of_seat}
         </Descriptions.Item>
         <Descriptions.Item label="Number remaining">
-          <div style={{ color: (!remaining || remaining === 0) && 'red' }}>
+          <div style={{ color: (!remaining || remaining <= 0) && 'red' }}>
             {remaining}
           </div>
         </Descriptions.Item>
@@ -76,6 +76,7 @@ const BusRouteSection = memo(props => {
   const { token } = useSelector(store => store.user);
   const [currentRoute, setCurrentRoute] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
+  const { originalRoute, setCanSubmit } = props;
 
   const { access } = token;
   if (!token) {
@@ -167,7 +168,30 @@ const BusRouteSection = memo(props => {
                 onChange={val => {
                   props.setRoute && props.setRoute(val);
                   getLocations(val);
-                  setCurrentRoute(routes.find(item => item.id === val));
+                  const selectedRoute = routes.find(item => item.id === val);
+
+                  setCurrentRoute(selectedRoute);
+                  setCanSubmit(true);
+                  if (
+                    originalRoute &&
+                    originalRoute.route &&
+                    originalRoute.route.id === selectedRoute.id
+                  ) {
+                    return;
+                  }
+
+                  const remain =
+                    selectedRoute &&
+                    selectedRoute.bus &&
+                    selectedRoute.bus.number_of_seat -
+                      selectedRoute.students.length;
+                  if (remain <= 0) {
+                    notification.error({
+                      message:
+                        'This bus route has reached limit seat, please choose another route',
+                    });
+                    setCanSubmit(false);
+                  }
                   props.setLocation(null);
                 }}
               >
@@ -227,6 +251,8 @@ const BusInfo = props => {
 
   const [originalPickup, setOriginalPickup] = useState();
   const [originalDropOff, setOriginalDropOff] = useState();
+
+  const [canSubmit, setCanSubmit] = useState(true);
 
   const handleOnSave = () => {
     if (pickupEnabled) {
@@ -316,6 +342,8 @@ const BusInfo = props => {
               setLocation={setPickupLocation}
               enable={pickupEnabled}
               toggleEnable={setPickupEnabled}
+              originalRoute={originalPickup}
+              setCanSubmit={setCanSubmit}
             />
           </Col>
           <Col md={12}>
@@ -328,13 +356,17 @@ const BusInfo = props => {
               setLocation={setDropOffLocation}
               enable={dropOffEnable}
               toggleEnable={setDropOffEnable}
+              originalRoute={originalDropOff}
+              setCanSubmit={setCanSubmit}
             />
           </Col>
           <Col
             md={24}
             style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}
           >
-            <Button onClick={handleOnSave}>Save</Button>
+            <Button disabled={!canSubmit} onClick={handleOnSave}>
+              Save
+            </Button>
           </Col>
         </Row>
       </Form>

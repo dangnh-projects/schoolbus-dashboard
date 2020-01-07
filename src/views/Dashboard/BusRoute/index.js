@@ -54,6 +54,14 @@ export const Bus = props => {
       render: (_, i) =>
         moment(i.estimated_end_time, 'HH:mm:ss').format('HH:mm'),
     },
+
+    {
+      title: 'Seat status',
+      render: (_, i) => {
+        return `${i.students && i.students.length}/${i.bus &&
+          i.bus.number_of_seat}`;
+      },
+    },
     {
       title: 'Action',
       align: 'center',

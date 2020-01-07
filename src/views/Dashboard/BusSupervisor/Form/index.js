@@ -102,7 +102,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
 
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState('');
 
   const [home_number, setHomeNumber] = useState();
   const [street, setStreet] = useState();
@@ -245,6 +245,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
           start_working_date,
           home_number,
           ward,
+          email,
           district,
           province,
           username,

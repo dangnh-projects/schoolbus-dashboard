@@ -1,15 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from 'antd';
+import { Card, notification } from 'antd';
 import moment from 'moment';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { navigate } from '@reach/router';
 import BaseForm from 'components/Form';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+import { BASE_URL } from 'api';
+import axios from 'axios';
+
+const getMetaData = async (url, token) => {
+  try {
+    const response = await axios.get(
+      BASE_URL + url + '?records_per_page=1000',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    notification.error({ message: `Load fail with url: ${url}` });
+  }
+};
 
 const BusForm = ({ formSave, updateItem, id, data }) => {
   const [item, setItem] = useState(null);
+  const [routes, setRoutes] = useState([]);
+  const { token } = useSelector(store => store.user);
+  const { access } = token;
+
+  const getBusRoutes = async id => {
+    const res = await getMetaData(
+      '/core/api/bus/' + id + '/bus_routes',
+      access
+    );
+
+    if (res.data && res.data.routes) {
+      setRoutes(res.data.routes);
+      return;
+    }
+    setRoutes([]);
+  };
 
   const handleSubmit = fields => {
+    if (routes && routes.length > 0) {
+      let { number_of_seat } = fields;
+      number_of_seat = parseInt(number_of_seat);
+      const haveRoute = routes.find(
+        route => route.students.length > number_of_seat
+      );
+
+      if (haveRoute) {
+        notification.error({
+          message: `The No of Seats cannot be updated to ${number_of_seat}, less than ${haveRoute.students.length} - the number of registered students. Please remove from the assigned route "${haveRoute.name}" first.`,
+          duration: 2,
+        });
+        return;
+      }
+    }
     fields.start_working_date = fields.start_working_date.format('YYYY-MM-DD');
     if (id) {
       fields.id = id;
@@ -26,12 +76,15 @@ const BusForm = ({ formSave, updateItem, id, data }) => {
       });
     }
   };
+
   id = parseInt(id);
   useEffect(() => {
     if (id) {
       const found = data.find(item => item.id === id);
       setItem(found);
+      getBusRoutes(found.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, data, id]);
 
   return (

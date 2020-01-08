@@ -7,7 +7,7 @@ import {
   takeEvery,
 } from 'redux-saga/effects';
 import { types, actionCreator } from './student.meta';
-import { convertObjectToFormData } from 'utils/requestUtil';
+import { convertObjectToFormData } from '../utils';
 import { notification } from 'antd';
 import { navigate } from '@reach/router';
 

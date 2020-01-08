@@ -31,6 +31,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
   const [birthday, setBirthday] = useState();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [idPassport, setIdPassport] = useState('');
+  const [email, setEmail] = useState('');
   //const [chilren, setChildren] = useState('');
 
   const [username, setUsername] = useState();
@@ -61,7 +62,9 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       id_number: idPassport,
       username,
       password,
+      email,
     };
+
     if (avatar) {
       fields.avatar = avatar;
     }
@@ -218,6 +221,19 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                     },
                   ],
                 })(<Input onChange={e => setIdPassport(e.target.value)} />)}
+              </Item>
+            </Col>
+            <Col md={12}>
+              <Item label="Email">
+                {getFieldDecorator('email', {
+                  initialValue: email,
+                  rules: [
+                    // {
+                    //   pattern: /^[a-z][a-z0-9_\.]{1,}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$/gim,
+                    //   message: 'Email not exists',
+                    // },
+                  ],
+                })(<Input onChange={e => setEmail(e.target.value)} />)}
               </Item>
             </Col>
           </Row>

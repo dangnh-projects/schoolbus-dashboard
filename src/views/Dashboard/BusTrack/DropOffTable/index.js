@@ -139,6 +139,7 @@ const processData = records => {
     const onboarding = [];
     const offboarded = [];
     const remaining = [];
+    const absents = [];
     let nextLoc = null;
     let currentLoc = null;
     locations = locations.sort((a, b) => a.order - b.order);
@@ -164,10 +165,18 @@ const processData = records => {
 
       attendances.forEach(atten => {
         atten.location = locations[i].location;
-        if (atten.status === STUDENT_STATUS.ON_THE_WAY_TO_HOME) {
-          remaining.push(atten);
-        } else if (atten.status === STUDENT_STATUS.STUDENT_REACH_HOME) {
-          offboarded.push(atten);
+        switch (atten.status) {
+          case STUDENT_STATUS.ON_THE_WAY_TO_HOME:
+            remaining.push(atten);
+            break;
+          case STUDENT_STATUS.STUDENT_REACH_HOME:
+            offboarded.push(atten);
+            break;
+          case STUDENT_STATUS.ABSENCE_WITH_REPORT:
+            absents.push(atten);
+            break;
+          default:
+            break;
         }
       });
     }
@@ -177,6 +186,7 @@ const processData = records => {
     route.remaining = remaining;
     route.currentLoc = currentLoc;
     route.offboarded = offboarded;
+    route.absents = absents;
     return route;
   });
 };
@@ -277,6 +287,23 @@ const LiveTable = props => {
           }}
         >
           {i.remaining ? i.remaining.length : 0}
+        </Tag>
+      ),
+    },
+
+    {
+      title: 'No of absents',
+      align: 'center',
+      render: (_, i) => (
+        <Tag
+          color="#009688"
+          style={{ paddingLeft: 12, paddingRight: 12, cursor: 'pointer' }}
+          onClick={() => {
+            setVisible(true);
+            setAttendances(i.absents);
+          }}
+        >
+          {i.absents ? i.absents.length : 0}
         </Tag>
       ),
     },

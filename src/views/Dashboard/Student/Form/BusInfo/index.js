@@ -255,51 +255,56 @@ const BusInfo = props => {
   const [canSubmit, setCanSubmit] = useState(true);
 
   const handleOnSave = () => {
+    const tasks = [];
     if (pickupEnabled) {
       if (pickUpRoute && pickUpLocation) {
-        dispatch(
-          actionCreator.addToLocation({
-            student: student.id,
-            route: pickUpRoute,
-            location: pickUpLocation,
-          })
-        );
+        tasks.push({
+          student: student.id,
+          route: pickUpRoute,
+          location: pickUpLocation,
+        });
       }
     } else {
       if (originalPickup) {
         // remove original
-        dispatch(
-          actionCreator.addToLocation({
-            student: student.id,
-            route: -1,
-            location: originalPickup && originalPickup.location.id,
-          })
-        );
+
+        tasks.push({
+          student: student.id,
+          route: -1,
+          location: originalPickup && originalPickup.location.id,
+        });
       }
     }
 
     if (dropOffEnable) {
       if (dropOffRoute && dropOffLocation) {
-        dispatch(
-          actionCreator.addToLocation({
-            student: student.id,
-            route: dropOffRoute,
-            location: dropOffLocation,
-          })
-        );
+        tasks.push({
+          student: student.id,
+          route: dropOffRoute,
+          location: dropOffLocation,
+        });
       }
     } else {
       if (originalDropOff) {
         // remove original
-        dispatch(
-          actionCreator.addToLocation({
-            student: student.id,
-            route: -1,
-            location: originalDropOff && originalDropOff.location.id,
-          })
-        );
+        tasks.push({
+          student: student.id,
+          route: -1,
+          location: originalDropOff && originalDropOff.location.id,
+        });
       }
     }
+
+    if (tasks.length > 0) {
+      dispatch(actionCreator.addToLocation(tasks));
+      return;
+    }
+
+    notification.success({
+      message: 'Student saved successfully',
+    });
+
+    navigate('/dashboard/student');
   };
 
   useEffect(() => {

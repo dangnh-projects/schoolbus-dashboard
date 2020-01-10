@@ -28,5 +28,19 @@ export const parseError = str => {
     return `${field} must be unique`;
   }
 
+  if (str.indexOf('duplicate entry')) {
+    let [value, key] = str
+      .split('duplicate entry')
+      .pop()
+      .replace(/[()'"]/g, '')
+      .split('for key');
+
+    key = key.trim().split('');
+    key[0] = key[0].toUpperCase();
+    key = key.join('');
+
+    return `${key} has duplicated value '${value}'`;
+  }
+
   return str;
 };

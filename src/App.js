@@ -55,23 +55,34 @@ function App() {
           <WaitingComponent Component={Home} path="/" />
 
           <WaitingComponent Component={Bus} path="bus" />
+          <WaitingComponent Component={Bus} path="bus/search/:term" />
           <WaitingComponent Component={BusForm} path="bus/new" />
           <WaitingComponent Component={BusForm} path="bus/:id" />
 
           <WaitingComponent Component={BusRoute} path="bus-route" />
+          <WaitingComponent
+            Component={BusRoute}
+            path="bus-route/search/:term"
+          />
           <WaitingComponent Component={BusRouteForm} path="bus-route/new" />
           <WaitingComponent Component={BusRouteForm} path="bus-route/:id" />
           <WaitingComponent Component={BusTrack} path="bus-track" />
 
           <WaitingComponent Component={Driver} path="driver" />
+          <WaitingComponent Component={Driver} path="driver/search/:term" />
           <WaitingComponent Component={DriverForm} path="driver/new" />
           <WaitingComponent Component={DriverForm} path="driver/:id" />
 
           <WaitingComponent Component={Parent} path="parent" />
+          <WaitingComponent Component={Parent} path="parent/search/:term" />
           <WaitingComponent Component={ParentForm} path="parent/new" />
           <WaitingComponent Component={ParentForm} path="parent/:id" />
 
           <WaitingComponent Component={BusSupervisor} path="bus-supervisor" />
+          <WaitingComponent
+            Component={BusSupervisor}
+            path="bus-supervisor/search/:term"
+          />
           <WaitingComponent
             Component={BusSupervisorForm}
             path="bus-supervisor/new"
@@ -81,6 +92,7 @@ function App() {
             path="bus-supervisor/:id"
           />
           <WaitingComponent Component={Student} path="student" />
+          <WaitingComponent Component={Student} path="student/search/:term" />
           <WaitingComponent Component={StudentForm} path="student/new" />
           <WaitingComponent Component={StudentForm} path="student/:id" />
 

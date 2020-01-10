@@ -3,20 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table } from 'antd';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 
-const DataTable = ({ columns = [], url, setPage, dataTranform }) => {
+const DataTable = ({ columns = [], url, setPage, dataTranform, term = '' }) => {
   const { data = [], count = 0, loading, page } = useSelector(
     state => state.dataTable
   );
   const dispatch = useDispatch();
   const getTableData = () => {
-    url && dispatch(actionCreator.getList({ url }));
+    url && dispatch(actionCreator.getList({ url, search: term }));
   };
 
   useEffect(() => {
     dispatch(actionCreator.setPage(0));
     getTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, true);
+  }, [term]);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 

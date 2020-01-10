@@ -99,16 +99,13 @@ export const Bus = props => {
 
   useEffect(() => {
     // get bus route
-    props.getList({ url: '/core/api/bus-route' });
+    props.getList({ url: '/core/api/bus-route', search: props.term });
+    setSearch(props.term);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [props.term]);
 
   const handleOnSearch = term => {
-    setSearch(term);
-    props.getList({
-      url: '/core/api/bus-route',
-      search: term,
-    });
+    navigate('/dashboard/bus-route/search/' + term);
   };
 
   return (
@@ -117,7 +114,11 @@ export const Bus = props => {
       extra={[
         <Row type="flex" gutter={16}>
           <Col>
-            <Search onSearch={handleOnSearch} />
+            <Search
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onSearch={handleOnSearch}
+            />
           </Col>
           <Col>
             <Button
@@ -144,7 +145,7 @@ export const Bus = props => {
           props.setPage(pagination.current - 1);
           props.getList({
             url: '/core/api/bus-route',
-            search: search || '',
+            search: search || props.term || '',
           });
         }}
       />

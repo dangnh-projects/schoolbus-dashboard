@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Popconfirm, Icon, Row, Tag, Col, Input } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
@@ -10,6 +10,7 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 const { Search } = Input;
 
 export const BusSupervisor = props => {
+  const [search, setSearch] = useState();
   const columns = [
     {
       title: 'Avatar',
@@ -96,11 +97,12 @@ export const BusSupervisor = props => {
   ];
 
   const handleOnSearch = term => {
-    props.getList({
-      url: '/core/api/supervisor',
-      search: term,
-    });
+    navigate('/dashboard/bus-supervisor/search/' + term);
   };
+
+  useEffect(() => {
+    setSearch(props.term);
+  }, [props.term]);
 
   return (
     <Card
@@ -108,7 +110,11 @@ export const BusSupervisor = props => {
       extra={[
         <Row key="extra-group" type="flex" gutter={16}>
           <Col>
-            <Search onSearch={handleOnSearch} />
+            <Search
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onSearch={handleOnSearch}
+            />
           </Col>
           <Col>
             <Button
@@ -121,7 +127,11 @@ export const BusSupervisor = props => {
         </Row>,
       ]}
     >
-      <DataTable columns={columns} url="/core/api/supervisor" />
+      <DataTable
+        columns={columns}
+        url="/core/api/supervisor"
+        term={props.term || ''}
+      />
     </Card>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Popconfirm, Icon, Row, Input, Col } from 'antd';
 import { navigate } from '@reach/router';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,7 @@ import { BASE_URL } from 'api';
 const { Search } = Input;
 
 export const Student = props => {
+  const [search, setSearch] = useState();
   const dispatch = useDispatch();
 
   const columns = [
@@ -129,13 +130,12 @@ export const Student = props => {
   ];
 
   const handleOnSearch = term => {
-    dispatch(
-      actionCreator.getList({
-        url: '/core/api/student',
-        search: term,
-      })
-    );
+    navigate('/dashboard/student/search/' + term);
   };
+
+  useEffect(() => {
+    setSearch(props.term);
+  }, [props.term]);
 
   return (
     <Card
@@ -143,7 +143,11 @@ export const Student = props => {
       extra={[
         <Row type="flex" gutter={16}>
           <Col>
-            <Search onSearch={handleOnSearch} />
+            <Search
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onSearch={handleOnSearch}
+            />
           </Col>
           <Col>
             <Button
@@ -156,7 +160,7 @@ export const Student = props => {
         </Row>,
       ]}
     >
-      <DataTable columns={columns} url="/core/api/student" />
+      <DataTable columns={columns} url="/core/api/student" term={props.term} />
     </Card>
   );
 };

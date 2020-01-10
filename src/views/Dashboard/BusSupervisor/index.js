@@ -9,7 +9,7 @@ import { actionCreator } from 'store/dataTable/dataTable.meta';
 
 const { Search } = Input;
 
-export const Bus = props => {
+export const BusSupervisor = props => {
   const columns = [
     {
       title: 'Avatar',
@@ -136,4 +136,4 @@ const mapStateToProps = state => state.dataTable;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Bus);
+)(BusSupervisor);

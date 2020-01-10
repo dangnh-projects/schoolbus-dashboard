@@ -39,7 +39,7 @@ export const parseError = str => {
     key[0] = key[0].toUpperCase();
     key = key.join('');
 
-    return `${key} has duplicated value '${value}'`;
+    return `${key} has duplicated value '${value.trim()}'`;
   }
 
   return str;

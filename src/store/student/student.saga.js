@@ -216,7 +216,19 @@ function* updateStudent({ payload }) {
   yield put(actionCreator.setLoading(false));
 }
 
-function* addToLocation({ payload }) {
+function* saveStudentBusLocation(data, user) {
+  const formData = convertObjectToFormData(data);
+  yield call(postStudentRequest.request, {
+    url: '/bus-route',
+    method: 'POST',
+    data: formData,
+    headers: {
+      Authorization: `Bearer ${user.token.access}`,
+    },
+  });
+}
+
+function* addToLocation({ payload = [] }) {
   yield put(actionCreator.setLoading(true));
 
   const user = yield select(store => store.user);
@@ -226,17 +238,20 @@ function* addToLocation({ payload }) {
   }
 
   try {
-    const formData = convertObjectToFormData(payload);
-    yield call(postStudentRequest.request, {
-      url: '/bus-route',
-      method: 'POST',
-      data: formData,
-      headers: {
-        Authorization: `Bearer ${user.token.access}`,
-      },
-    });
+    // const formData = convertObjectToFormData(payload);
+    for (let i = 0; i < payload.length; i++) {
+      yield call(saveStudentBusLocation, payload[i], user);
+    }
+    // yield call(postStudentRequest.request, {
+    //   url: '/bus-route',
+    //   method: 'POST',
+    //   data: formData,
+    //   headers: {
+    //     Authorization: `Bearer ${user.token.access}`,
+    //   },
+    // });
 
-    notification.success({ message: 'Student added successfully' });
+    notification.success({ message: 'Student saved successfully' });
     yield put(actionCreator.changeStage(0));
     yield call(navigate, '/dashboard/student');
   } catch (error) {

@@ -11,11 +11,11 @@ export const ActivityHistory = props => {
   const columns = [
     {
       title: 'Route type',
-      dataIndex: 'routetype',
+      dataIndex: 'route_type',
     },
     {
       title: 'Route name',
-      dataIndex: 'routename',
+      dataIndex: 'route_name',
     },
     {
       title: 'Datetime',
@@ -31,7 +31,7 @@ export const ActivityHistory = props => {
     },
     {
       title: 'Contents',
-      dataIndex: 'contents',
+      dataIndex: 'content',
     },
   ];
 
@@ -63,7 +63,7 @@ export const ActivityHistory = props => {
               <Search onSearch={handleOnSearch} />
             </Col>
           </Row>
-          <DataTable columns={columns} url="/core/api/activity-history" />
+          <DataTable columns={columns} url="/core/api/log/messages" />
         </TabPane>
         <TabPane
           tab={

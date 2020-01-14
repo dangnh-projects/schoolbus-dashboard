@@ -13,13 +13,14 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { navigate } from '@reach/router';
 import axios from 'axios';
+import { BASE_URL } from 'api';
 
 import { actionCreator } from 'store/student/student.meta';
 
 const getMetaData = async (url, token) => {
   try {
     const response = await axios.get(
-      process.env.REACT_APP_BACKEND_URL + url + '?records_per_page=1000',
+      BASE_URL + url + '?records_per_page=1000',
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -35,32 +36,47 @@ const getMetaData = async (url, token) => {
 
 const Item = Form.Item;
 
-const RouteInfo = memo(({ currentRoute }) => (
-  <Col span={24}>
-    <Descriptions column={1} title="Route information" bordered size="small">
-      <Descriptions.Item label="Bus">
-        {currentRoute &&
-          currentRoute.bus &&
-          currentRoute.bus.vehicle_registration_plate}
-      </Descriptions.Item>
-      <Descriptions.Item label="Driver">
-        {currentRoute && currentRoute.driver && currentRoute.driver.name}
-      </Descriptions.Item>
-      <Descriptions.Item label="Supervisor">
-        {currentRoute &&
-          currentRoute.bus_supervisor &&
-          currentRoute.bus_supervisor.first_name +
-            ' ' +
-            currentRoute.bus_supervisor.last_name}
-      </Descriptions.Item>
-    </Descriptions>
-  </Col>
-));
+const RouteInfo = memo(({ currentRoute }) => {
+  const remaining =
+    currentRoute &&
+    currentRoute.bus &&
+    currentRoute.bus.number_of_seat - currentRoute.students.length;
+  return (
+    <Col span={24}>
+      <Descriptions column={1} title="Route information" bordered size="small">
+        <Descriptions.Item label="Bus">
+          {currentRoute &&
+            currentRoute.bus &&
+            currentRoute.bus.vehicle_registration_plate}
+        </Descriptions.Item>
+        <Descriptions.Item label="Driver">
+          {currentRoute && currentRoute.driver && currentRoute.driver.name}
+        </Descriptions.Item>
+        <Descriptions.Item label="Supervisor">
+          {currentRoute &&
+            currentRoute.bus_supervisor &&
+            currentRoute.bus_supervisor.first_name +
+              ' ' +
+              currentRoute.bus_supervisor.last_name}
+        </Descriptions.Item>
+        <Descriptions.Item label="Number of seats">
+          {currentRoute && currentRoute.bus && currentRoute.bus.number_of_seat}
+        </Descriptions.Item>
+        <Descriptions.Item label="Number remaining">
+          <div style={{ color: (!remaining || remaining <= 0) && 'red' }}>
+            {remaining}
+          </div>
+        </Descriptions.Item>
+      </Descriptions>
+    </Col>
+  );
+});
 
 const BusRouteSection = memo(props => {
   const { token } = useSelector(store => store.user);
   const [currentRoute, setCurrentRoute] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
+  const { originalRoute, setCanSubmit } = props;
 
   const { access } = token;
   if (!token) {
@@ -84,8 +100,8 @@ const BusRouteSection = memo(props => {
         );
 
         if (found) {
-          setCurrentLocation(found.id);
-          props.setLocation(found.id);
+          setCurrentLocation(found.bus_location.id);
+          props.setLocation(found.bus_location.id);
         } else {
           if (locationRes.data.length > 0) {
             setCurrentLocation(locationRes.data[0].bus_location.id);
@@ -152,7 +168,30 @@ const BusRouteSection = memo(props => {
                 onChange={val => {
                   props.setRoute && props.setRoute(val);
                   getLocations(val);
-                  setCurrentRoute(routes.find(item => item.id === val));
+                  const selectedRoute = routes.find(item => item.id === val);
+
+                  setCurrentRoute(selectedRoute);
+                  setCanSubmit(true);
+                  if (
+                    originalRoute &&
+                    originalRoute.route &&
+                    originalRoute.route.id === selectedRoute.id
+                  ) {
+                    return;
+                  }
+
+                  const remain =
+                    selectedRoute &&
+                    selectedRoute.bus &&
+                    selectedRoute.bus.number_of_seat -
+                      selectedRoute.students.length;
+                  if (remain <= 0) {
+                    notification.error({
+                      message:
+                        'This bus route has reached limit seat, please choose another route',
+                    });
+                    setCanSubmit(false);
+                  }
                   props.setLocation(null);
                 }}
               >
@@ -210,25 +249,62 @@ const BusInfo = props => {
   const [dropOffRoute, setDropOffRoute] = useState();
   const [dropOffLocation, setDropOffLocation] = useState();
 
+  const [originalPickup, setOriginalPickup] = useState();
+  const [originalDropOff, setOriginalDropOff] = useState();
+
+  const [canSubmit, setCanSubmit] = useState(true);
+
   const handleOnSave = () => {
-    if (pickUpRoute && pickUpLocation) {
-      dispatch(
-        actionCreator.addToLocation({
+    const tasks = [];
+    if (pickupEnabled) {
+      if (pickUpRoute && pickUpLocation) {
+        tasks.push({
           student: student.id,
           route: pickUpRoute,
           location: pickUpLocation,
-        })
-      );
+        });
+      }
+    } else {
+      if (originalPickup) {
+        // remove original
+
+        tasks.push({
+          student: student.id,
+          route: -1,
+          location: originalPickup && originalPickup.location.id,
+        });
+      }
     }
-    if (dropOffRoute && dropOffLocation) {
-      dispatch(
-        actionCreator.addToLocation({
+
+    if (dropOffEnable) {
+      if (dropOffRoute && dropOffLocation) {
+        tasks.push({
           student: student.id,
           route: dropOffRoute,
           location: dropOffLocation,
-        })
-      );
+        });
+      }
+    } else {
+      if (originalDropOff) {
+        // remove original
+        tasks.push({
+          student: student.id,
+          route: -1,
+          location: originalDropOff && originalDropOff.location.id,
+        });
+      }
     }
+
+    if (tasks.length > 0) {
+      dispatch(actionCreator.addToLocation(tasks));
+      return;
+    }
+
+    notification.success({
+      message: 'Student saved successfully',
+    });
+
+    navigate('/dashboard/student');
   };
 
   useEffect(() => {
@@ -238,14 +314,17 @@ const BusInfo = props => {
       );
 
       if (pickup) {
+        setOriginalPickup(pickup);
         setPickupEnabled(true);
         setPickupRoute(pickup.route.id);
         setPickupLocation(pickup.location.id);
       }
+
       const dropOff = student.bus_routes.find(
         bus_route => bus_route.route && bus_route.route.route_type === 'D'
       );
       if (dropOff) {
+        setOriginalDropOff(dropOff);
         setDropOffEnable(true);
         setDropOffRoute(dropOff.route.id);
         setDropOffLocation(dropOff.location.id);
@@ -268,6 +347,8 @@ const BusInfo = props => {
               setLocation={setPickupLocation}
               enable={pickupEnabled}
               toggleEnable={setPickupEnabled}
+              originalRoute={originalPickup}
+              setCanSubmit={setCanSubmit}
             />
           </Col>
           <Col md={12}>
@@ -280,13 +361,17 @@ const BusInfo = props => {
               setLocation={setDropOffLocation}
               enable={dropOffEnable}
               toggleEnable={setDropOffEnable}
+              originalRoute={originalDropOff}
+              setCanSubmit={setCanSubmit}
             />
           </Col>
           <Col
             md={24}
             style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}
           >
-            <Button onClick={handleOnSave}>Save</Button>
+            <Button disabled={!canSubmit} onClick={handleOnSave}>
+              Save
+            </Button>
           </Col>
         </Row>
       </Form>

@@ -61,6 +61,10 @@ const StudentForm = ({ formSave, updateItem, id }) => {
 
           dispatch(actionCreator.setSibling(found.parent.children || []));
           dispatch(actionCreator.setShowParentForm(false));
+        } else {
+          dispatch(actionCreator.postParentSuccess(null));
+          dispatch(actionCreator.setSibling([]));
+          dispatch(actionCreator.setShowParentForm(true));
         }
       } else {
         dispatch(actionCreator.postParentSuccess(null));

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   notification,
@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import AvatarCropperModal from 'components/AvatarDropModal';
+import { BASE_URL } from 'api';
 
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 
@@ -101,6 +102,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
 
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  const [email, setEmail] = useState('');
 
   const [home_number, setHomeNumber] = useState();
   const [street, setStreet] = useState();
@@ -137,6 +139,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       province,
       username,
       password,
+      email,
     };
     if (avatar) {
       fields.avatar = avatar;
@@ -177,8 +180,9 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
       setWard(found.ward);
       setDistrict(found.district);
       setProvince(found.province);
-      setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
+      setImgVal(BASE_URL + found.avatar);
       setUsername(found.user_name);
+      setEmail(found.email);
     } else {
       InitDefaultFile(e => {
         setAvatar(dataURLtoBlob(e.target.result));
@@ -241,6 +245,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
           start_working_date,
           home_number,
           ward,
+          email,
           district,
           province,
           username,
@@ -291,7 +296,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
             <Row gutter={16}>
               <Col md={12}>
                 <Item label="Birthday">
-                  {getFieldDecorator('email', {
+                  {getFieldDecorator('birthday', {
                     initialValue: birthday,
                     rules: [
                       {
@@ -308,6 +313,21 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
                 </Item>
               </Col>
               <Col md={12}>
+                <Item label="Start working date">
+                  {getFieldDecorator('startworkingdate', {
+                    initialValue: start_working_date,
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Start working date is required',
+                      },
+                    ],
+                  })(<DatePicker onChange={val => setStartWorkingDate(val)} />)}
+                </Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col md={12}>
                 <Item label="Phone number">
                   {getFieldDecorator('phone_number', {
                     initialValue: phone_number,
@@ -320,19 +340,17 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
                   })(<Input onChange={e => setPhoneNumber(e.target.value)} />)}
                 </Item>
               </Col>
-            </Row>
-            <Row gutter={16}>
               <Col md={12}>
-                <Item label="Start working date">
-                  {getFieldDecorator('startworkingdate', {
-                    initialValue: start_working_date,
+                <Item label="Email">
+                  {getFieldDecorator('email', {
+                    initialValue: email,
                     rules: [
-                      {
-                        required: true,
-                        message: 'Start working date is required',
-                      },
+                      // {
+                      //   required: true,
+                      //   message: 'Phone number is required',
+                      // },
                     ],
-                  })(<DatePicker onChange={val => setStartWorkingDate(val)} />)}
+                  })(<Input onChange={e => setEmail(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>

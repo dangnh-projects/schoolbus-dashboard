@@ -11,7 +11,8 @@ const BusRouteMap = props => {
   const dispatch = useDispatch();
   const { currentRoute, loading } = useSelector(store => store.busRoute);
 
-  const { locations = [], currentLoc, nextLoc } = currentRoute || {};
+  const { locations = [], currentLoc, nextLoc, offboarded, remaining } =
+    currentRoute || {};
 
   const [loc, setLoc] = useState();
   const [isFollowBus, setIsFollowBus] = useState(true);
@@ -122,6 +123,8 @@ const BusRouteMap = props => {
               currentLoc={currentLoc}
               nextLoc={nextLoc}
               clickOnBus={clickOnBus}
+              offboarded={offboarded}
+              remaining={remaining}
             />
           </Col>
           <Col span={18} style={{ minHeight: 480 }}>

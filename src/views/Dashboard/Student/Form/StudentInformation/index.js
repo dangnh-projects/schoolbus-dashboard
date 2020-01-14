@@ -14,6 +14,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
 import AvatarCropperModal from 'components/AvatarDropModal';
+import { BASE_URL } from 'api';
 
 import moment from 'moment';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
@@ -85,7 +86,7 @@ const Information = ({ form }) => {
       setDistrict(student.district);
       setWard(student.ward);
       setProvince(student.province);
-      setImgVal(process.env.REACT_APP_BACKEND_URL + student.image);
+      setImgVal(BASE_URL + student.image);
     } else {
       setName('');
       setAltName('');

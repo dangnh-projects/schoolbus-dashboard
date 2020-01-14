@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Popconfirm, Icon, Row, Tag, Col, Input } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
 import DataTable from 'components/DataTable';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
+import { BASE_URL } from 'api';
 
 const { Search } = Input;
 
 export const Parent = props => {
+  const [search, setSearch] = useState();
   const dataTranform = records => {
     return records.map(record => {
       const new_record = { ...record };
@@ -27,7 +29,7 @@ export const Parent = props => {
           <img
             alt="avatar"
             style={{ width: '80px', height: 'auto', textAlign: 'center' }}
-            src={process.env.REACT_APP_BACKEND_URL + record.avatar}
+            src={BASE_URL + record.avatar}
           />
         ) : (
           ''
@@ -103,11 +105,12 @@ export const Parent = props => {
   ];
 
   const handleOnSearch = term => {
-    props.getList({
-      url: '/core/api/parent',
-      search: term,
-    });
+    navigate('/dashboard/parent/search/' + term);
   };
+
+  useEffect(() => {
+    setSearch(props.term);
+  }, [props.term]);
 
   return (
     <Card
@@ -115,7 +118,11 @@ export const Parent = props => {
       extra={[
         <Row type="flex" gutter={16}>
           <Col>
-            <Search onSearch={handleOnSearch} />
+            <Search
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onSearch={handleOnSearch}
+            />
           </Col>
           <Col>
             <Button
@@ -132,6 +139,7 @@ export const Parent = props => {
         columns={columns}
         url="/core/api/parent"
         dataTranform={dataTranform}
+        term={props.term}
       />
     </Card>
   );

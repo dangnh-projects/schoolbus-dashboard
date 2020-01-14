@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import { navigate } from '@reach/router';
 import { connect } from 'react-redux';
@@ -12,7 +12,11 @@ const { SubMenu } = Menu;
 const getActiveKey = path => {
   let [, group, item, action] = path.split('/');
   if (group === 'dashboard' && item) {
-    group = 'manage';
+    if (['bus-route', 'bus', 'bus-track'].indexOf(item) > -1) {
+      group = 'bus-management';
+    } else {
+      group = 'manage';
+    }
   }
   return { group, item, action };
 };
@@ -27,12 +31,24 @@ const getActiveKey = path => {
 
 const SliderMenu = ({ location }) => {
   const [collapsed, setColapsed] = useState(false);
-  const { group, item } = getActiveKey(location.pathname);
+  const [group, setGroup] = useState('');
+  const [item, setItem] = useState('');
+
   //const [checker, setChecker] = useState(null);
 
-  // useEffect(() => {
-  //   setChecker(() => checkPermission(permissions, groups));
-  // }, []);
+  const handleChangeRoute = () => {
+    const { group, item } = getActiveKey(location.pathname);
+
+    setGroup(group);
+    setItem(item);
+  };
+
+  useEffect(() => {
+    handleChangeRoute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  console.log('rerender :', group, item);
 
   return (
     <Sider
@@ -55,8 +71,12 @@ const SliderMenu = ({ location }) => {
       </div>
       <Menu
         theme="light"
-        defaultSelectedKeys={[item]}
-        defaultOpenKeys={[group]}
+        selectedKeys={[item]}
+        openKeys={[group]}
+        onOpenChange={lst => {
+          const [, newKey] = lst;
+          setGroup(newKey);
+        }}
         mode="inline"
         style={{
           // backgroundColor: '#f0f2f5',
@@ -97,7 +117,7 @@ const SliderMenu = ({ location }) => {
             Parent
           </Menu.Item>
           <Menu.Item
-            key="supervisor"
+            key="bus-supervisor"
             onClick={() => navigate('/dashboard/bus-supervisor')}
             // style={{ backgroundColor: '#6db273', color: 'white', margin: 0 }}
           >
@@ -172,6 +192,13 @@ const SliderMenu = ({ location }) => {
         >
           <Icon type="notification" />
           <span>Notification</span>
+        </Menu.Item>
+        <Menu.Item
+          key="activity-history"
+          onClick={() => navigate('/dashboard/activity-history')}
+        >
+          <Icon type="history" />
+          <span>Activity History</span>
         </Menu.Item>
         <Menu.Item key="message" onClick={() => navigate('/dashboard/message')}>
           <Icon type="message" />

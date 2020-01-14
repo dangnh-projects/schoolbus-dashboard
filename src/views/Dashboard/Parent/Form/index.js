@@ -21,6 +21,7 @@ import { navigate } from '@reach/router';
 import { actionCreator } from 'store/dataTable/dataTable.meta';
 import { dataURLtoBlob, InitDefaultFile } from 'utils/file';
 import AvatarCropperModal from 'components/AvatarDropModal';
+import { BASE_URL } from 'api';
 
 const Item = Form.Item;
 
@@ -98,6 +99,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
 
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  const [email, setEmail] = useState();
 
   const [avatar, setAvatar] = useState();
   const [imgVal, setImgVal] = useState('/images/default-user.png');
@@ -124,6 +126,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       id_number,
       username,
       password,
+      email,
     };
     if (avatar) {
       fields.avatar = avatar;
@@ -157,7 +160,8 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
       setBirthday(moment(found.birthday));
       setIdPassport(found.id_number);
       setPhoneNumber(found.phone_number);
-      setImgVal(process.env.REACT_APP_BACKEND_URL + found.avatar);
+      setImgVal(BASE_URL + found.avatar);
+      setEmail(found.email);
 
       setStudent(found.children);
     } else {
@@ -224,6 +228,7 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
           phone_number,
           id_number,
           username,
+          email,
         }}
       />
       <Form style={{ padding: 16 }} layout="horizontal">
@@ -306,12 +311,20 @@ const ParentForm = ({ formSave, updateItem, id, data, form }) => {
                           'ID/Passport number is required to 9-digit or 12-digit',
                       },
                     ],
-                  })(
-                    <Input
-                      value={id_number}
-                      onChange={e => setIdPassport(e.target.value)}
-                    />
-                  )}
+                  })(<Input onChange={e => setIdPassport(e.target.value)} />)}
+                </Item>
+              </Col>
+              <Col md={12}>
+                <Item label="Email">
+                  {getFieldDecorator('email', {
+                    initialValue: email,
+                    rules: [
+                      // {
+                      //   required: true,
+                      //   message: 'ID number is required',
+                      // },
+                    ],
+                  })(<Input onChange={e => setEmail(e.target.value)} />)}
                 </Item>
               </Col>
             </Row>

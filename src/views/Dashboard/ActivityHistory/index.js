@@ -37,7 +37,7 @@ export const ActivityHistory = props => {
 
   const handleOnSearch = term => {
     props.getList({
-      url: '/core/api/activity-history',
+      url: '/core/api/log/messages',
       search: term,
     });
   };

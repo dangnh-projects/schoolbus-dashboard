@@ -87,18 +87,27 @@ const Notification = () => {
       getMetaData('/core/api/settings/notification', access),
     ]);
 
-    setMissBusEN(notification.data[1].en);
-    setMissBusVN(notification.data[1].vn);
-    setAbsentEN(notification.data[2].en);
-    setAbsentVN(notification.data[2].vn);
-    setOnboardedSchoolEN(notification.data[3].en);
-    setOnboardedSchoolVN(notification.data[3].vn);
-    setOnboardedHomeEN(notification.data[4].en);
-    setOnboardedHomeVN(notification.data[4].vn);
-    setReachedSchoolEN(notification.data[5].en);
-    setReachedSchoolVN(notification.data[5].vn);
-    setReachedHomeEN(notification.data[6].en);
-    setReachedHomeVN(notification.data[6].vn);
+    const {
+      1: missBus,
+      2: absent,
+      3: onboardedSchool,
+      4: onboardedHome,
+      5: reachedSchool,
+      6: reachedHome,
+    } = notification.data;
+
+    setMissBusEN(missBus.en);
+    setMissBusVN(missBus.vn);
+    setAbsentEN(absent.en);
+    setAbsentVN(absent.vn);
+    setOnboardedSchoolEN(onboardedSchool.en);
+    setOnboardedSchoolVN(onboardedSchool.vn);
+    setOnboardedHomeEN(onboardedHome.en);
+    setOnboardedHomeVN(onboardedHome.vn);
+    setReachedSchoolEN(reachedSchool.en);
+    setReachedSchoolVN(reachedSchool.vn);
+    setReachedHomeEN(reachedHome.en);
+    setReachedHomeVN(reachedHome.vn);
   };
 
   useEffect(() => {

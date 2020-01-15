@@ -35,19 +35,6 @@ const getMetaData = async (url, token) => {
   }
 };
 
-// const useFetch = url => {
-//   const [data, setData] = useState(null);
-
-//   useEffect(async () => {
-//     const response = await fetch(url);
-//     const data = await response.json();
-//     const [item] = data.result;
-
-//     setData(item);
-//   }, []);
-//   return data;
-// };
-
 const Notification = () => {
   const [isVisible, setVisible] = useState(false);
   const [noNotifiction, setNoNotification] = useState(0);
@@ -84,7 +71,7 @@ const Notification = () => {
 
   const getMeta = async () => {
     const [notification] = await Promise.all([
-      getMetaData('/core/api/settings/notification', access),
+      getMetaData('/core/api/settings/notification-template', access),
     ]);
 
     const {
@@ -96,18 +83,18 @@ const Notification = () => {
       6: reachedHome,
     } = notification.data || {};
 
-    setMissBusEN(missBus.en);
-    setMissBusVN(missBus.vn);
-    setAbsentEN(absent.en);
-    setAbsentVN(absent.vn);
-    setOnboardedSchoolEN(onboardedSchool.en);
-    setOnboardedSchoolVN(onboardedSchool.vn);
-    setOnboardedHomeEN(onboardedHome.en);
-    setOnboardedHomeVN(onboardedHome.vn);
-    setReachedSchoolEN(reachedSchool.en);
-    setReachedSchoolVN(reachedSchool.vn);
-    setReachedHomeEN(reachedHome.en);
-    setReachedHomeVN(reachedHome.vn);
+    setMissBusEN(missBus.en_text);
+    setMissBusVN(missBus.vn_text);
+    setAbsentEN(absent.en_text);
+    setAbsentVN(absent.vn_text);
+    setOnboardedSchoolEN(onboardedSchool.en_text);
+    setOnboardedSchoolVN(onboardedSchool.vn_text);
+    setOnboardedHomeEN(onboardedHome.en_text);
+    setOnboardedHomeVN(onboardedHome.vn_text);
+    setReachedSchoolEN(reachedSchool.en_text);
+    setReachedSchoolVN(reachedSchool.vn_text);
+    setReachedHomeEN(reachedHome.en_text);
+    setReachedHomeVN(reachedHome.vn_text);
   };
 
   useEffect(() => {
@@ -118,11 +105,16 @@ const Notification = () => {
     setVisible(true);
   };
 
-  const ModalInf = () => {
+  const ModalInf = props => {
     const [newNotificationEN, setNewNotificationEN] = useState('');
     const [newNotificationVN, setNewNotificationVN] = useState('');
 
-    const setTextNotification = () => {
+    const submitNewNotification = () => {
+      return;
+    };
+
+    const setTextNotification = props => {
+      console.log(props);
       //const { getFieldDecorator } = form;
       switch (noNotifiction) {
         case 1:
@@ -257,11 +249,11 @@ const Notification = () => {
       <Modal
         title="Update notification"
         visible={isVisible}
-        //onOk={this.handleOk}
+        onOk={submitNewNotification}
         //confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
-        {setTextNotification()}
+        {setTextNotification(props)}
       </Modal>
     );
   };
@@ -473,7 +465,24 @@ const Notification = () => {
               />
             </Col>
           </Row>
-          <ModalInf setVisible={setVisible} visible={isVisible} />
+          <ModalInf
+            setVisible={setVisible}
+            visible={isVisible}
+            fields={{
+              missBusEN,
+              missBusVN,
+              absentEN,
+              absentVN,
+              onboardedSchoolEN,
+              onboardedSchoolVN,
+              onboardedHomeEN,
+              setOnboardedHomeVN,
+              reachedSchoolEN,
+              reachedSchoolVN,
+              reachedHomeEN,
+              reachedHomeVN,
+            }}
+          />
         </TabPane>
         <TabPane
           tab={

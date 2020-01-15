@@ -194,7 +194,7 @@ const Notification = () => {
               <Col md={12}>
                 <Item label="EN">
                   <TextArea
-                    defaultValue={setOnboardedHomeEN}
+                    defaultValue={onboardedHomeEN}
                     onChange={e => setNewNotificationEN(e.target.value)}
                   />
                 </Item>

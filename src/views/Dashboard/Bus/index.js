@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Popconfirm, Icon, Row, Tag, Input, Col } from 'antd';
 import { navigate } from '@reach/router';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,7 @@ const { Search } = Input;
 
 export const Bus = props => {
   const dispatch = useDispatch();
+  const [search, setSearch] = useState();
   const columns = [
     {
       title: 'License Plate',
@@ -17,7 +18,7 @@ export const Bus = props => {
       align: 'center',
     },
     {
-      title: 'Name',
+      title: 'Bus number',
       dataIndex: 'name',
       align: 'center',
     },
@@ -75,13 +76,12 @@ export const Bus = props => {
   ];
 
   const handleOnSearch = term => {
-    dispatch(
-      actionCreator.getList({
-        url: '/core/api/bus',
-        search: term,
-      })
-    );
+    navigate('/dashboard/bus/search/' + term);
   };
+
+  useEffect(() => {
+    setSearch(props.term);
+  }, [props.term]);
 
   return (
     <Card
@@ -90,7 +90,11 @@ export const Bus = props => {
       extra={[
         <Row type="flex" gutter={16}>
           <Col>
-            <Search onSearch={handleOnSearch} />
+            <Search
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onSearch={handleOnSearch}
+            />
           </Col>
           <Col>
             <Button
@@ -103,7 +107,7 @@ export const Bus = props => {
         </Row>,
       ]}
     >
-      <DataTable columns={columns} url="/core/api/bus" />
+      <DataTable columns={columns} url="/core/api/bus" term={props.term} />
     </Card>
   );
 };

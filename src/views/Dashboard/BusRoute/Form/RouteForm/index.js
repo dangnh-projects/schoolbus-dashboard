@@ -15,6 +15,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { navigate } from '@reach/router';
 import axios from 'axios';
 import { actionCreator } from 'store/busRoute/busRoute.meta';
+import { BASE_URL } from 'api';
+
 const FormItem = Form.Item;
 const Option = Select;
 
@@ -32,7 +34,7 @@ const formItemLayout = {
 const getMetaData = async (url, token) => {
   try {
     const response = await axios.get(
-      process.env.REACT_APP_BACKEND_URL + url + '?records_per_page=1000',
+      BASE_URL + url + '?records_per_page=1000',
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -530,13 +532,13 @@ const RouteForm = ({ form }) => {
             />
           )}
         </FormItem>
-        <FormItem label="Bus">
+        <FormItem label="Bus number">
           {getFieldDecorator('bus', {
             initialValue: bus,
             rules: [
               {
                 required: true,
-                message: 'Bus is required',
+                message: 'Bus number is required',
               },
             ],
           })(
@@ -550,7 +552,7 @@ const RouteForm = ({ form }) => {
               {buses &&
                 buses.map(bus => (
                   <Option key={bus.id} value={bus.id}>
-                    {bus.name}
+                    {bus.name} ({bus.number_of_seat} seats)
                   </Option>
                 ))}
             </Select>

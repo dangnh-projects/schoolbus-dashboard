@@ -1,7 +1,8 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { notification } from 'antd';
 import { types, actionCreator } from './dataTable.meta';
-import { authenticate } from 'store/utils';
+import { authenticate, parseError } from 'store/utils';
+import { navigate } from '@reach/router';
 
 import { buildRequest } from 'api';
 
@@ -21,6 +22,11 @@ const apiCallWrapper = handler =>
     try {
       yield call(handler, action, user);
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+        return;
+      }
+
       if (error.response && error.response.status === 403) {
         notification.error({
           message:
@@ -30,11 +36,20 @@ const apiCallWrapper = handler =>
       }
 
       if (error.response && error.response.status === 500) {
-        notification.error({
-          message: error.response.data
-            ? error.response.data.message
-            : 'Request Error',
-        });
+        if (error.response.data.message) {
+          notification.error({
+            message: error.response.data
+              ? error.response.data.message
+              : 'Request Error',
+          });
+        } else {
+          const [message, second] = error.response.data.split('\n');
+          const str = `${message} ${second}`;
+          const parsed = parseError(str);
+          notification.error({
+            message: parsed,
+          });
+        }
         return;
       }
 

@@ -19,7 +19,7 @@ export const TYPES = {
 
   TOGGLE_MODAL: 'TOGGLE_MODAL',
 
-  SET_LOADING: 'SET_LOADING',
+  SET_LOADING: 'SET_BUS_ROUTE_LOADING',
 
   SET_STUDENT: 'SET_STUDENT',
 
@@ -28,6 +28,10 @@ export const TYPES = {
 
   UPDATE_ROUTE_WITH_LOCATION: 'UPDATE_ROUTE_WITH_LOCATION',
   UPDATE_ROUTE_WITH_LOCATION_SUCCESS: 'UPDATE_ROUTE_WITH_LOCATION_SUCCESS',
+
+  SWAP_LOCATIONS: 'SWAP_LOCATION',
+
+  SET_CURRENT_ROUTE: 'SET_CURRENT_ROUTE',
 };
 
 export const actionCreator = {
@@ -59,4 +63,7 @@ export const actionCreator = {
   updateRouteWithLocationSuccess: createAction(
     TYPES.UPDATE_ROUTE_WITH_LOCATION_SUCCESS
   ),
+
+  swapLocation: createAction(TYPES.SWAP_LOCATIONS),
+  setCurrentRoute: createAction(TYPES.SET_CURRENT_ROUTE),
 };

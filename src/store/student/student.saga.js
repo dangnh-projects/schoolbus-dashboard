@@ -7,7 +7,7 @@ import {
   takeEvery,
 } from 'redux-saga/effects';
 import { types, actionCreator } from './student.meta';
-import { convertObjectToFormData } from 'utils/requestUtil';
+import { convertObjectToFormData } from '../utils';
 import { notification } from 'antd';
 import { navigate } from '@reach/router';
 
@@ -49,7 +49,11 @@ function* postStudent({ payload }) {
       message: 'Save student information successfully',
     });
   } catch (error) {
-    console.log(error);
+    if (error.response && error.response.status === 401) {
+      navigate('/login');
+      return;
+    }
+
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
@@ -57,6 +61,26 @@ function* postStudent({ payload }) {
       });
       return;
     }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
+      return;
+    }
+
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
@@ -91,6 +115,10 @@ function* searchParent({ payload }) {
       message: 'Search parent successfully',
     });
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate('/login');
+      return;
+    }
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
@@ -101,6 +129,25 @@ function* searchParent({ payload }) {
 
     if (error.response && error.response.status === 404) {
       notification.error({ message: 'Parent not found' });
+      return;
+    }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
       return;
     }
     notification.error({ message: 'Request error' });
@@ -134,6 +181,10 @@ function* updateStudent({ payload }) {
     }
     // yield put(actionCreator.changeStage(2));
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      navigate('/login');
+      return;
+    }
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
@@ -141,12 +192,43 @@ function* updateStudent({ payload }) {
       });
       return;
     }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
+      return;
+    }
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
 }
 
-function* addToLocation({ payload }) {
+function* saveStudentBusLocation(data, user) {
+  const formData = convertObjectToFormData(data);
+  yield call(postStudentRequest.request, {
+    url: '/bus-route',
+    method: 'POST',
+    data: formData,
+    headers: {
+      Authorization: `Bearer ${user.token.access}`,
+    },
+  });
+}
+
+function* addToLocation({ payload = [] }) {
   yield put(actionCreator.setLoading(true));
 
   const user = yield select(store => store.user);
@@ -156,26 +238,51 @@ function* addToLocation({ payload }) {
   }
 
   try {
-    const formData = convertObjectToFormData(payload);
-    yield call(postStudentRequest.request, {
-      url: '/bus-route',
-      method: 'POST',
-      data: formData,
-      headers: {
-        Authorization: `Bearer ${user.token.access}`,
-      },
-    });
+    // const formData = convertObjectToFormData(payload);
+    for (let i = 0; i < payload.length; i++) {
+      yield call(saveStudentBusLocation, payload[i], user);
+    }
+    // yield call(postStudentRequest.request, {
+    //   url: '/bus-route',
+    //   method: 'POST',
+    //   data: formData,
+    //   headers: {
+    //     Authorization: `Bearer ${user.token.access}`,
+    //   },
+    // });
 
-    notification.success({ message: 'Student added successfully' });
+    notification.success({ message: 'Student saved successfully' });
     yield put(actionCreator.changeStage(0));
     yield call(navigate, '/dashboard/student');
   } catch (error) {
-    console.log(error);
+    if (error.response && error.response.status === 401) {
+      navigate('/login');
+      return;
+    }
     if (error.response && error.response.status === 403) {
       notification.error({
         message:
           "You don't have permission to perform this action, please try login again or contact administrator for more information",
       });
+      return;
+    }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
       return;
     }
     notification.error({ message: 'Request error' });
@@ -226,6 +333,25 @@ function* postParent({ payload }) {
         message:
           "You don't have permission to perform this action, please try login again or contact administrator for more information",
       });
+      return;
+    }
+
+    if (error.response && error.response.status === 500) {
+      if (error.response.data.message) {
+        notification.error({
+          message: error.response.data
+            ? error.response.data.message
+            : 'Request Error',
+        });
+      } else {
+        const [message, second] = error.response.data.split('\n');
+        notification.error({
+          message: `
+            ${message}
+            ${second}
+          `,
+        });
+      }
       return;
     }
     notification.error({ message: 'Request error' });

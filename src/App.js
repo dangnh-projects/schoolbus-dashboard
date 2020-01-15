@@ -31,6 +31,7 @@ const BusSupervisorForm = lazy(() =>
 const Student = lazy(() => import('./views/Dashboard/Student'));
 const StudentForm = lazy(() => import('./views/Dashboard/Student/Form'));
 
+const Notification = lazy(() => import('./views/Dashboard/Notification'));
 const ActivityHistory = lazy(() => import('./views/Dashboard/ActivityHistory'));
 
 const Message = lazy(() => import('./views/Dashboard/Message'));
@@ -95,6 +96,8 @@ function App() {
           <WaitingComponent Component={Student} path="student/search/:term" />
           <WaitingComponent Component={StudentForm} path="student/new" />
           <WaitingComponent Component={StudentForm} path="student/:id" />
+
+          <WaitingComponent Component={Notification} path="notification" />
 
           <WaitingComponent
             Component={ActivityHistory}

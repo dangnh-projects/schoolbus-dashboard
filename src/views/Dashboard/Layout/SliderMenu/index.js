@@ -45,6 +45,7 @@ const SliderMenu = ({ location }) => {
 
   useEffect(() => {
     handleChangeRoute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   console.log('rerender :', group, item);
@@ -184,6 +185,13 @@ const SliderMenu = ({ location }) => {
         <Menu.Item key="9">
           <Icon type="setting" />
           <span>Settings</span>
+        </Menu.Item>
+        <Menu.Item
+          key="notification"
+          onClick={() => navigate('/dashboard/notification')}
+        >
+          <Icon type="notification" />
+          <span>Notification</span>
         </Menu.Item>
         <Menu.Item
           key="activity-history"

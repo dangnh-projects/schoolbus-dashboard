@@ -230,7 +230,7 @@ const Notification = () => {
               </Col>
             </Row>
           );
-        case 5:
+        case 6:
           return (
             <Row gutter={16}>
               <Col md={12}>

@@ -94,7 +94,7 @@ const Notification = () => {
       4: onboardedHome,
       5: reachedSchool,
       6: reachedHome,
-    } = notification.data;
+    } = notification.data || {};
 
     setMissBusEN(missBus.en);
     setMissBusVN(missBus.vn);

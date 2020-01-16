@@ -35,19 +35,6 @@ const getMetaData = async (url, token) => {
   }
 };
 
-// const useFetch = url => {
-//   const [data, setData] = useState(null);
-
-//   useEffect(async () => {
-//     const response = await fetch(url);
-//     const data = await response.json();
-//     const [item] = data.result;
-
-//     setData(item);
-//   }, []);
-//   return data;
-// };
-
 const Notification = () => {
   const [isVisible, setVisible] = useState(false);
   const [noNotifiction, setNoNotification] = useState(0);
@@ -67,10 +54,6 @@ const Notification = () => {
 
   const { token } = useSelector(store => store.user);
 
-  // const data = useFetch(
-  //   'http://it-staging.nhg.vn/core/api/settings/notification'
-  // );
-  //const dataIndex = () => props.getList({ url: '/core/api/driver' });
   const disabledTextInput = true;
   const { access } = token;
 
@@ -84,7 +67,7 @@ const Notification = () => {
 
   const getMeta = async () => {
     const [notification] = await Promise.all([
-      getMetaData('/core/api/settings/notification', access),
+      getMetaData('/core/api/settings/notification-template', access),
     ]);
 
     const {
@@ -96,18 +79,18 @@ const Notification = () => {
       6: reachedHome,
     } = notification.data || {};
 
-    setMissBusEN(missBus.en);
-    setMissBusVN(missBus.vn);
-    setAbsentEN(absent.en);
-    setAbsentVN(absent.vn);
-    setOnboardedSchoolEN(onboardedSchool.en);
-    setOnboardedSchoolVN(onboardedSchool.vn);
-    setOnboardedHomeEN(onboardedHome.en);
-    setOnboardedHomeVN(onboardedHome.vn);
-    setReachedSchoolEN(reachedSchool.en);
-    setReachedSchoolVN(reachedSchool.vn);
-    setReachedHomeEN(reachedHome.en);
-    setReachedHomeVN(reachedHome.vn);
+    setMissBusEN(missBus.en_text);
+    setMissBusVN(missBus.vn_text);
+    setAbsentEN(absent.en_text);
+    setAbsentVN(absent.vn_text);
+    setOnboardedSchoolEN(onboardedSchool.en_text);
+    setOnboardedSchoolVN(onboardedSchool.vn_text);
+    setOnboardedHomeEN(onboardedHome.en_text);
+    setOnboardedHomeVN(onboardedHome.vn_text);
+    setReachedSchoolEN(reachedSchool.en_text);
+    setReachedSchoolVN(reachedSchool.vn_text);
+    setReachedHomeEN(reachedHome.en_text);
+    setReachedHomeVN(reachedHome.vn_text);
   };
 
   useEffect(() => {
@@ -123,7 +106,6 @@ const Notification = () => {
     const [newNotificationVN, setNewNotificationVN] = useState('');
 
     const setTextNotification = () => {
-      //const { getFieldDecorator } = form;
       switch (noNotifiction) {
         case 1:
           return (
@@ -194,7 +176,7 @@ const Notification = () => {
               <Col md={12}>
                 <Item label="EN">
                   <TextArea
-                    defaultValue={setOnboardedHomeEN}
+                    defaultValue={onboardedHomeVN}
                     onChange={e => setNewNotificationEN(e.target.value)}
                   />
                 </Item>
@@ -286,10 +268,10 @@ const Notification = () => {
             <Icon
               type="form"
               style={{ color: '#08c' }}
-              onClick={() => {
-                setNoNotification(3);
-                changeStateModal();
-              }}
+              // onClick={() => {
+              //   setNoNotification(3);
+              //   changeStateModal();
+              // }}
             />
           </h4>
           <Row gutter={16} style={{ marginBottom: '12px' }}>
@@ -317,10 +299,10 @@ const Notification = () => {
             <Icon
               type="form"
               style={{ color: '#08c' }}
-              onClick={() => {
-                setNoNotification(5);
-                changeStateModal();
-              }}
+              // onClick={() => {
+              //   setNoNotification(5);
+              //   changeStateModal();
+              // }}
             />
           </h4>
           <Row gutter={16} style={{ marginBottom: '24px' }}>
@@ -351,10 +333,10 @@ const Notification = () => {
             <Icon
               type="form"
               style={{ color: '#08c' }}
-              onClick={() => {
-                setNoNotification(4);
-                changeStateModal();
-              }}
+              // onClick={() => {
+              //   setNoNotification(4);
+              //   changeStateModal();
+              // }}
             />
           </h4>
           <Row gutter={16} style={{ marginBottom: '12px' }}>
@@ -382,10 +364,10 @@ const Notification = () => {
             <Icon
               type="form"
               style={{ color: '#08c' }}
-              onClick={() => {
-                setNoNotification(6);
-                changeStateModal();
-              }}
+              // onClick={() => {
+              //   setNoNotification(6);
+              //   changeStateModal();
+              //}}
             />
           </h4>
           <Row gutter={16} style={{ marginBottom: '24px' }}>
@@ -416,10 +398,10 @@ const Notification = () => {
             <Icon
               type="form"
               style={{ color: '#08c' }}
-              onClick={() => {
-                setNoNotification(1);
-                changeStateModal();
-              }}
+              // onClick={() => {
+              //   setNoNotification(1);
+              //   changeStateModal();
+              // }}
             />
           </h4>
           <Row gutter={16} style={{ marginBottom: '12px' }}>
@@ -447,10 +429,10 @@ const Notification = () => {
             <Icon
               type="form"
               style={{ color: '#08c' }}
-              onClick={() => {
-                setNoNotification(2);
-                changeStateModal();
-              }}
+              // onClick={() => {
+              //   setNoNotification(2);
+              //   changeStateModal();
+              // }}
             />
           </h4>
           <Row gutter={16} style={{ marginBottom: '24px' }}>
@@ -496,7 +478,9 @@ const mapDispatchToProps = {
   updateItem: actionCreator.updateItem,
 };
 
-const WrappedNotificationForm = Form.create({ name: 'driver' })(Notification);
+const WrappedNotificationForm = Form.create({ name: 'notification' })(
+  Notification
+);
 
 export default connect(
   mapStateToProps,

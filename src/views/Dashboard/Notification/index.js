@@ -35,25 +35,6 @@ const getMetaData = async (url, token) => {
   }
 };
 
-const postMetaData = async (url, token, jsonData) => {
-  console.log(jsonData);
-  try {
-    const response = await axios.post(
-      'http://it-staging.nhg.vn/core/api/settings/notification-template',
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    notification.error({ message: `Load fail with url: ${url}` });
-  }
-};
-
 const Notification = () => {
   const [isVisible, setVisible] = useState(false);
   const [noNotifiction, setNoNotification] = useState(0);
@@ -73,10 +54,6 @@ const Notification = () => {
 
   const { token } = useSelector(store => store.user);
 
-  // const data = useFetch(
-  //   'http://it-staging.nhg.vn/core/api/settings/notification'
-  // );
-  //const dataIndex = () => props.getList({ url: '/core/api/driver' });
   const disabledTextInput = true;
   const { access } = token;
 
@@ -124,77 +101,11 @@ const Notification = () => {
     setVisible(true);
   };
 
-  const getMetaSubmit = async props => {
-    await Promise.all([
-      postMetaData('/core/api/settings/notification-template', access, props),
-    ]);
-  };
-
-  const ModalInf = props => {
+  const ModalInf = () => {
     const [newNotificationEN, setNewNotificationEN] = useState('');
     const [newNotificationVN, setNewNotificationVN] = useState('');
 
-    const submitNewNotification = e => {
-      //console.log(token);
-      e.preventDefault();
-
-      getMetaSubmit(user);
-
-      const user = [
-        {
-          '1': {
-            en_text: '<student-name> has missed the bus',
-            vn_text: '<student-name> đã lỡ chuyến xe hôm nay',
-          },
-          '2': {
-            en_text: '<student-name> is absent today',
-            vn_text: '<student-name> đã báo vắng mặt hôm nay',
-          },
-          '3': {
-            en_text: '<student-name> onboarded to school',
-            vn_text: '<student-name> đã lên xe bus. Khởi hành tới trường',
-          },
-          '4': {
-            en_text: '<student-name> onboarded to home',
-            vn_text: '<student-name> đã lên xe. Bắt đầu về nhà',
-          },
-          '5': {
-            en_text: '<student-name> reached school',
-            vn_text: '<student-name> đã tới trường',
-          },
-          '6': {
-            en_text: '<student-name> reached home',
-            vn_text: '<student-name> đã về tới trạm',
-          },
-        },
-      ];
-      // try {
-      //   const response = await axios.get(process.env.REACT_APP_BACKEND_URL + url, {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   });
-
-      //   return response.data;
-      // } catch (error) {
-      //   notification.error({ message: `Load fail with url: ${url}` });
-      // }
-
-      // axios
-      //   .get('http://it-staging.nhg.vn/core/api/settings/notification', {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   })
-      //   .then(res => {
-      //     console.log(res);
-      //     console.log(res.data);
-      //   });
-    };
-
-    const setTextNotification = props => {
-      console.log(props);
-      //const { getFieldDecorator } = form;
+    const setTextNotification = () => {
       switch (noNotifiction) {
         case 1:
           return (
@@ -265,7 +176,7 @@ const Notification = () => {
               <Col md={12}>
                 <Item label="EN">
                   <TextArea
-                    defaultValue={onboardedHomeEN}
+                    defaultValue={onboardedHomeVN}
                     onChange={e => setNewNotificationEN(e.target.value)}
                   />
                 </Item>
@@ -328,11 +239,11 @@ const Notification = () => {
       <Modal
         title="Update notification"
         visible={isVisible}
-        onOk={submitNewNotification}
+        //onOk={this.handleOk}
         //confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
-        {setTextNotification(props)}
+        {setTextNotification()}
       </Modal>
     );
   };
@@ -456,7 +367,7 @@ const Notification = () => {
               // onClick={() => {
               //   setNoNotification(6);
               //   changeStateModal();
-              // }}
+              //}}
             />
           </h4>
           <Row gutter={16} style={{ marginBottom: '24px' }}>
@@ -544,24 +455,7 @@ const Notification = () => {
               />
             </Col>
           </Row>
-          <ModalInf
-            setVisible={setVisible}
-            visible={isVisible}
-            fields={{
-              missBusEN,
-              missBusVN,
-              absentEN,
-              absentVN,
-              onboardedSchoolEN,
-              onboardedSchoolVN,
-              onboardedHomeEN,
-              setOnboardedHomeVN,
-              reachedSchoolEN,
-              reachedSchoolVN,
-              reachedHomeEN,
-              reachedHomeVN,
-            }}
-          />
+          <ModalInf setVisible={setVisible} visible={isVisible} />
         </TabPane>
         <TabPane
           tab={
@@ -584,7 +478,9 @@ const mapDispatchToProps = {
   updateItem: actionCreator.updateItem,
 };
 
-const WrappedNotificationForm = Form.create({ name: 'driver' })(Notification);
+const WrappedNotificationForm = Form.create({ name: 'notification' })(
+  Notification
+);
 
 export default connect(
   mapStateToProps,

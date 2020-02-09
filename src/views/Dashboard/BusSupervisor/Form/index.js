@@ -147,6 +147,7 @@ const BusSupervisorForm = ({ formSave, updateItem, id, data, form }) => {
 
     fields.birthday = fields.birthday.format('YYYY-MM-DD');
     fields.start_working_date = fields.start_working_date.format('YYYY-MM-DD');
+
     if (id) {
       fields.id = id;
       updateItem({

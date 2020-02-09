@@ -48,7 +48,7 @@ const SliderMenu = ({ location }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  console.log('rerender :', group, item);
+  //console.log('rerender :', group, item);
 
   return (
     <Sider

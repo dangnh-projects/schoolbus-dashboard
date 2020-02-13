@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState, Fragment } from 'react';
 import {
   Form,
   Row,
@@ -15,10 +15,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
 import ParentForm from './ParentForm';
 import { BASE_URL } from 'api';
+import StudentContact from './StudentContactModal';
 
 const { Search } = Input;
 
-const IdSearchBar = memo(props => {
+const IdSearchBar = memo(() => {
   const dispatch = useDispatch();
 
   const handleOnSearch = idNumber => {
@@ -33,7 +34,7 @@ const IdSearchBar = memo(props => {
     <Row
       type="flex"
       justify="center"
-      align="center"
+      align="middle"
       style={{ alignItems: 'center' }}
     >
       <Col md={10}>Search by ID number:</Col>
@@ -44,8 +45,16 @@ const IdSearchBar = memo(props => {
   );
 });
 
-const ParentData = memo(({ parent, siblings, student }) => {
+const ParentData = memo(({ parent, siblings, student, contact }) => {
   const dispatch = useDispatch();
+  const [isVisible, setVisible] = useState(false);
+
+  const [type, setType] = useState('');
+  const [title, setTitle] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+
   const handleOnNext = () => {
     const data = { id: student.id, parent_id: parent.info };
     dispatch(
@@ -55,6 +64,22 @@ const ParentData = memo(({ parent, siblings, student }) => {
       })
     );
   };
+
+  const familyMember = [
+    { title: 'Father', value: 'father' },
+    { title: 'Mother', value: 'mother' },
+    { title: 'Brother', value: 'brother' },
+    { title: 'Sister', value: 'sister' },
+    { title: 'Guardian', value: 'guardian' },
+    { title: 'Grandfather', value: 'grandfather' },
+    { title: 'Grandmother', value: 'grandmother' },
+    { title: 'Uncle', value: 'uncle' },
+    { title: 'Aunt', value: 'aunt' },
+    { title: 'Brother in law', value: 'brother-in-law' },
+    { title: 'Sister in law', value: 'sister-in-law' },
+    { title: 'Cousin', value: 'cousin' },
+  ];
+
   return (
     <Row>
       <Divider orientation="left">Parent</Divider>
@@ -104,7 +129,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
         </Descriptions.Item>
       </Descriptions>
       {siblings && siblings.length > 0 && (
-        <div>
+        <Fragment>
           <Divider orientation="left">Sibling</Divider>
           <Table
             columns={[
@@ -117,7 +142,51 @@ const ParentData = memo(({ parent, siblings, student }) => {
             ]}
             dataSource={siblings || []}
           />
-        </div>
+        </Fragment>
+      )}
+
+      {siblings && siblings.length > 0 && (
+        <Fragment>
+          <Row type="flex" gutter={16} style={{ alignItems: 'center' }}>
+            <Col md={16}>
+              <Divider orientation="left">Student Contact Information</Divider>
+            </Col>
+            <Col md={4} style={{ textAlign: 'center' }}>
+              <Button onClick={() => setVisible(true)}>Add contact</Button>
+            </Col>
+            <Col md={4}>
+              <Divider />
+            </Col>
+            <Col md={24} style={{ marginTop: '10px' }}>
+              <Table
+                columns={[
+                  { title: 'Relationship', dataIndex: 'relationship' },
+                  { title: 'Full name', dataIndex: 'fullname' },
+                  { title: 'Phone number', dataIndex: 'phonenumber' },
+                ]}
+                dataSource={contact || []}
+              />
+            </Col>
+          </Row>
+          <StudentContact
+            isVisible={isVisible}
+            setVisible={setVisible}
+            value={{
+              title: title,
+              firstname: firstname,
+              lastname: lastname,
+              type: type,
+              contactNumber: contactNumber,
+            }}
+            setValue={{
+              setTitle: setTitle,
+              setFirstname: setFirstname,
+              setLastname: setLastname,
+              setType: setType,
+              setContactNumber: setContactNumber,
+            }}
+          />
+        </Fragment>
       )}
 
       <Row type="flex" align="middle" style={{ marginTop: 24 }}>
@@ -135,13 +204,13 @@ const ParentData = memo(({ parent, siblings, student }) => {
   );
 });
 
-const ParentInfo = props => {
+const ParentInfo = ({ form }) => {
   const { parent, siblings, student, showParentForm } = useSelector(
     state => state.student
   );
   const dispatch = useDispatch();
   return (
-    <div>
+    <Fragment>
       <Form style={{ padding: 16 }} layout="horizontal">
         <Row gutter={16}>
           <Row type="flex" gutter={18} style={{ alignItems: 'center' }}>
@@ -165,13 +234,14 @@ const ParentInfo = props => {
                 parent={parent}
                 siblings={siblings}
                 student={student}
+                form={form}
               />
             </Col>
           )}
           {showParentForm && <ParentForm />}
         </Row>
       </Form>
-    </div>
+    </Fragment>
   );
 };
 

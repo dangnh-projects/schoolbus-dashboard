@@ -90,6 +90,7 @@ const StudentForm = ({ formSave, updateItem, id }) => {
               title={step.title}
               status={getStatus(idx, stage)}
               style={{ cursor: 'pointer' }}
+              key={idx}
             />
           ))}
         </Steps>

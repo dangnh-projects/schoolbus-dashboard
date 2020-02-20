@@ -1,10 +1,12 @@
 import React from 'react';
-import { Modal, Row, Col, Select, Form, Input } from 'antd';
+import { Modal, Row, Col, Form, Input } from 'antd';
+import { actionCreator } from 'store/student/student.meta';
+import { useDispatch } from 'react-redux';
 
 const Item = Form.Item;
-const Option = Select;
 
 const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
+  const dispatch = useDispatch();
   const { getFieldDecorator } = form;
 
   const handleSubmitCheck = e => {
@@ -13,9 +15,25 @@ const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
       if (err) {
         return;
       } else {
-        //handleSubmit && handleSubmit(fieldsValue);
+        handleSubmit && handleSubmit(fieldsValue);
       }
     });
+  };
+
+  const handleSubmit = () => {
+    const fields = {
+      name: value.fullname,
+      relationship: value.relationship,
+      phone: value.contactNumber,
+      parent: 121,
+    };
+
+    dispatch(
+      actionCreator.postContact({
+        data: fields,
+      })
+    );
+    setVisible(false);
   };
 
   return (
@@ -25,73 +43,25 @@ const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
       onOk={handleSubmitCheck}
     >
       <Row gutter={16}>
-        <Col md={12}>
-          <Item label="Title">
-            {getFieldDecorator('title', {
-              initialValue: value.title,
+        <Col md={24}>
+          <Item label="Full name">
+            {getFieldDecorator('fullname', {
+              initialValue: value.fullname,
               rules: [
                 {
                   required: true,
-                  message: 'Title is required',
+                  message: 'Full name is required',
                 },
               ],
-            })(
-              <Select
-                onChange={val => setValue.setTitle(val)}
-                style={{ width: '200px' }}
-              >
-                <Option value="mr">Mr.</Option>
-                <Option value="mrs">Mrs.</Option>
-                <Option value="ms">Ms.</Option>
-                <Option value="miss">Miss.</Option>
-              </Select>
-            )}
+            })(<Input onChange={e => setValue.setFullname(e.target.value)} />)}
           </Item>
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col md={12}>
-          <Item label="First name">
-            {getFieldDecorator('firstname', {
-              initialValue: value.firstname,
-              rules: [
-                {
-                  required: true,
-                  message: 'First name is required',
-                },
-              ],
-            })(
-              <Input
-                style={{ width: '200px' }}
-                onChange={e => setValue.setFirstname(e.target.value)}
-              />
-            )}
-          </Item>
-        </Col>
-        <Col md={12}>
-          <Item label="Last name">
-            {getFieldDecorator('lastname', {
-              initialValue: value.lastname,
-              rules: [
-                {
-                  required: true,
-                  message: 'Last name is required',
-                },
-              ],
-            })(
-              <Input
-                style={{ width: '200px' }}
-                onChange={e => setValue.setLastname(e.target.value)}
-              />
-            )}
-          </Item>
-        </Col>
-      </Row>
-      <Row gutter={16}>
-        <Col md={12}>
+        <Col md={24}>
           <Item label="Relationship">
             {getFieldDecorator('relationship', {
-              initialValue: value.type,
+              initialValue: value.relationship,
               rules: [
                 {
                   required: true,
@@ -99,34 +69,13 @@ const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
                 },
               ],
             })(
-              <Select
-                onChange={val => setValue.setType(val)}
-                style={{ width: '200px' }}
-              >
-                {/* {familyMember.map(({ value, title }) => (
-                    <Option value={value} key={value}>
-                      {title}
-                    </Option>
-                  ))} */}
-                <Option value="father">Father</Option>
-                <Option value="mother">Mother</Option>
-                <Option value="brother">Brother</Option>
-                <Option value="sister">Sister</Option>
-                <Option value="guardian">Guardian</Option>
-                <Option value="grandfather">Grandfather</Option>
-                <Option value="grandmother">Grandmother</Option>
-                <Option value="uncle">Uncle</Option>
-                <Option value="aunt">Aunt</Option>
-                <Option value="brother-in-law">Brother in law</Option>
-                <Option value="sister-in-law">Sister in law</Option>
-                <Option value="cousin">Cousin</Option>
-              </Select>
+              <Input onChange={e => setValue.setRelationship(e.target.value)} />
             )}
           </Item>
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col md={12}>
+        <Col md={24}>
           <Item label="Contact number">
             {getFieldDecorator('contactnumber', {
               initialValue: value.contactNumber,
@@ -138,7 +87,6 @@ const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
               ],
             })(
               <Input
-                style={{ width: '200px' }}
                 onChange={e => setValue.setContactNumber(e.target.value)}
               />
             )}

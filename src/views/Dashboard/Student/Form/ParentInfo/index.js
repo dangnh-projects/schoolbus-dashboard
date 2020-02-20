@@ -1,4 +1,4 @@
-import React, { memo, useState, Fragment } from 'react';
+import React, { memo, useState, useEffect, Fragment } from 'react';
 import {
   Form,
   Row,
@@ -45,15 +45,25 @@ const IdSearchBar = memo(() => {
   );
 });
 
-const ParentData = memo(({ parent, siblings, student, contact }) => {
+const ParentData = memo(({ parent, siblings, student, contacts }) => {
   const dispatch = useDispatch();
   const [isVisible, setVisible] = useState(false);
 
-  const [type, setType] = useState('');
-  const [title, setTitle] = useState('');
-  const [firstname, setFirstname] = useState('');
-  const [lastname, setLastname] = useState('');
+  const [relationship, setRelationship] = useState('');
+  const [fullname, setFullname] = useState('');
   const [contactNumber, setContactNumber] = useState('');
+
+  const contacts_data = contacts.data.contacts || [];
+
+  // const getMeta = () => {
+  //   setFullname(fullname);
+  //   setRelationship(relationship);
+  //   setContactNumber(contactNumber);
+  // };
+
+  // useEffect(() => {
+  //   getMeta();
+  // }, [contacts, contacts_data, fullname]);
 
   const handleOnNext = () => {
     const data = { id: student.id, parent_id: parent.info };
@@ -64,21 +74,6 @@ const ParentData = memo(({ parent, siblings, student, contact }) => {
       })
     );
   };
-
-  const familyMember = [
-    { title: 'Father', value: 'father' },
-    { title: 'Mother', value: 'mother' },
-    { title: 'Brother', value: 'brother' },
-    { title: 'Sister', value: 'sister' },
-    { title: 'Guardian', value: 'guardian' },
-    { title: 'Grandfather', value: 'grandfather' },
-    { title: 'Grandmother', value: 'grandmother' },
-    { title: 'Uncle', value: 'uncle' },
-    { title: 'Aunt', value: 'aunt' },
-    { title: 'Brother in law', value: 'brother-in-law' },
-    { title: 'Sister in law', value: 'sister-in-law' },
-    { title: 'Cousin', value: 'cousin' },
-  ];
 
   return (
     <Row>
@@ -160,11 +155,15 @@ const ParentData = memo(({ parent, siblings, student, contact }) => {
             <Col md={24} style={{ marginTop: '10px' }}>
               <Table
                 columns={[
-                  { title: 'Relationship', dataIndex: 'relationship' },
-                  { title: 'Full name', dataIndex: 'fullname' },
-                  { title: 'Phone number', dataIndex: 'phonenumber' },
+                  { title: 'Full name', dataIndex: 'name', key: 'name' },
+                  {
+                    title: 'Relationship',
+                    dataIndex: 'relationship',
+                    key: 'relationship',
+                  },
+                  { title: 'Phone number', dataIndex: 'phone', key: 'phone' },
                 ]}
-                dataSource={contact || []}
+                dataSource={contacts_data}
               />
             </Col>
           </Row>
@@ -172,17 +171,13 @@ const ParentData = memo(({ parent, siblings, student, contact }) => {
             isVisible={isVisible}
             setVisible={setVisible}
             value={{
-              title: title,
-              firstname: firstname,
-              lastname: lastname,
-              type: type,
+              fullname: fullname,
+              relationship: relationship,
               contactNumber: contactNumber,
             }}
             setValue={{
-              setTitle: setTitle,
-              setFirstname: setFirstname,
-              setLastname: setLastname,
-              setType: setType,
+              setFullname: setFullname,
+              setRelationship: setRelationship,
               setContactNumber: setContactNumber,
             }}
           />
@@ -205,7 +200,7 @@ const ParentData = memo(({ parent, siblings, student, contact }) => {
 });
 
 const ParentInfo = ({ form }) => {
-  const { parent, siblings, student, showParentForm } = useSelector(
+  const { parent, siblings, student, showParentForm, contacts } = useSelector(
     state => state.student
   );
   const dispatch = useDispatch();
@@ -235,6 +230,7 @@ const ParentInfo = ({ form }) => {
                 siblings={siblings}
                 student={student}
                 form={form}
+                contacts={contacts}
               />
             </Col>
           )}

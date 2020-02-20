@@ -4,13 +4,20 @@ import { types } from './student.meta';
 const initialState = {
   student: null,
   parent: null,
+  contact: null,
   siblings: [],
   busRoutes: [],
   busStops: [],
+  contacts: [],
   loading: false,
   stage: 0,
   showParentForm: false,
 };
+
+const getContactSuccess = (state, action) => ({
+  ...state,
+  contacts: action.payload,
+});
 
 const postStudentSuccess = (state, action) => ({
   ...state,
@@ -25,6 +32,11 @@ const searchParentSuccess = (state, action) => ({
 const postParentSuccess = (state, action) => ({
   ...state,
   parent: action.payload,
+});
+
+const postContactSuccess = (state, action) => ({
+  ...state,
+  contact: action.payload,
 });
 
 const changeStage = (state, action) => ({
@@ -62,6 +74,8 @@ export default handleActions(
     [types.POST_PARENT_SUCCESS]: postParentSuccess,
     [types.UPDATE_STUDENT_SUCCESS]: updateStudentSuccess,
     [types.SET_SHOW_PARENT_FORM]: setShowParentForm,
+    [types.GET_CONTACT_SUCCESS]: getContactSuccess,
+    [types.POST_CONTACT_SUCCESS]: postContactSuccess,
   },
   initialState
 );

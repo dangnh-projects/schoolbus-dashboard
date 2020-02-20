@@ -12,12 +12,14 @@ import { notification } from 'antd';
 import { navigate } from '@reach/router';
 
 import { buildRequest } from 'api';
+import { apiRequest } from 'api/metaData';
 export const postRouteRequest = buildRequest('/core/api/bus-route');
 export const postRouteLocationRequest = buildRequest('/core/api/bus-location');
 export const getRouteLocationRequest = buildRequest('/core/api/bus-route');
 
 export const postStudentRequest = buildRequest('/core/api/student');
 export const postParentRequest = buildRequest('/core/api/parent');
+export const postContactRequest = buildRequest('/core/api/contacts');
 export const searchParentRequest = buildRequest(
   '/core/api/parent/by-id-number'
 );
@@ -84,6 +86,29 @@ function* postStudent({ payload }) {
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
+}
+
+function* postContact({ payload }) {
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+
+  try {
+    const formData = convertObjectToFormData(payload.data);
+    const { body } = yield call(postContactRequest.request, {
+      data: formData,
+      method: 'POST',
+      headers: { Authorization: `Bearer ${user.token.access}` },
+    });
+    yield put(actionCreator.postContactSuccess(body.data));
+    notification.success({
+      message: 'Create contact information successfully',
+    });
+  } catch (error) {
+    notification.error({ message: 'Request error!' });
+  }
 }
 
 function* searchParent({ payload }) {
@@ -359,10 +384,32 @@ function* postParent({ payload }) {
   yield put(actionCreator.setLoading(false));
 }
 
+function* getContact({ payload }) {
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+  const { id } = payload;
+  try {
+    const { body } = yield call(apiRequest.request, {
+      url: `/core/api/student/${id}/contacts`,
+      method: 'GET',
+      headers: { Authorization: `Bearer ${user.token.access}` },
+    });
+    yield put(actionCreator.getContactSuccess({ data: body.data }));
+  } catch (error) {
+    console.log('Error: get data contact fail');
+    notification.error({ message: 'Request error!' });
+  }
+}
+
 export default function* busRouteSaga() {
   yield takeLatest(types.POST_STUDENT, postStudent);
   yield takeLatest(types.POST_PARENT, postParent);
   yield takeLatest(types.SEARCH_PARENT, searchParent);
   yield takeLatest(types.UPDATE_STUDENT, updateStudent);
+  yield takeLatest(types.GET_CONTACT, getContact);
+  yield takeLatest(types.POST_CONTACT, postContact);
   yield takeEvery(types.ADD_STUDENT_TO_BUS_LOCATION, addToLocation);
 }

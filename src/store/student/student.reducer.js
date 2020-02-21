@@ -4,11 +4,11 @@ import { types } from './student.meta';
 const initialState = {
   student: null,
   parent: null,
-  contact: null,
+  contactCreate: null,
   siblings: [],
   busRoutes: [],
   busStops: [],
-  contacts: [],
+  contactList: [],
   loading: false,
   stage: 0,
   showParentForm: false,
@@ -16,7 +16,7 @@ const initialState = {
 
 const getContactSuccess = (state, action) => ({
   ...state,
-  contacts: action.payload,
+  contactList: action.payload,
 });
 
 const postStudentSuccess = (state, action) => ({
@@ -36,7 +36,7 @@ const postParentSuccess = (state, action) => ({
 
 const postContactSuccess = (state, action) => ({
   ...state,
-  contact: action.payload,
+  contactCreate: action.payload,
 });
 
 const changeStage = (state, action) => ({

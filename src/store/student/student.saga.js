@@ -102,6 +102,9 @@ function* postContact({ payload }) {
       method: 'POST',
       headers: { Authorization: `Bearer ${user.token.access}` },
     });
+    if (payload.afterSave) {
+      yield call(payload.afterSave);
+    }
     yield put(actionCreator.postContactSuccess(body.data));
     notification.success({
       message: 'Create contact information successfully',
@@ -390,16 +393,61 @@ function* getContact({ payload }) {
     yield call(navigate, '/login');
     return;
   }
-  const { id } = payload;
   try {
     const { body } = yield call(apiRequest.request, {
-      url: `/core/api/student/${id}/contacts`,
+      url: `/core/api/student/${payload.id}/contacts`,
       method: 'GET',
       headers: { Authorization: `Bearer ${user.token.access}` },
     });
+
     yield put(actionCreator.getContactSuccess({ data: body.data }));
   } catch (error) {
-    console.log('Error: get data contact fail');
+    notification.error({ message: 'Request error!' });
+  }
+}
+
+function* removeContact({ payload }) {
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+  try {
+    const { body } = yield call(apiRequest.request, {
+      url: `/core/api/contacts/${payload.id}`,
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${user.token.access}` },
+    });
+    if (payload.afterDelete) {
+      yield call(payload.afterDelete);
+    }
+    yield put(actionCreator.removeContactSuccess({ data: body.data }));
+    notification.success({ message: 'Contact removed successfully!' });
+  } catch (error) {
+    notification.error({ message: 'Request error!' });
+  }
+}
+
+function* putContact({ payload }) {
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+  try {
+    const formData = convertObjectToFormData(payload.data);
+    const { body } = yield call(apiRequest.request, {
+      url: `/core/api/contacts/${payload.id}`,
+      data: formData,
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${user.token.access}` },
+    });
+    if (payload.afterUpdate) {
+      yield call(payload.afterUpdate);
+    }
+    yield put(actionCreator.putContactSuccess(body));
+    notification.success({ message: 'Contact updated successfully!' });
+  } catch (error) {
     notification.error({ message: 'Request error!' });
   }
 }
@@ -411,5 +459,7 @@ export default function* busRouteSaga() {
   yield takeLatest(types.UPDATE_STUDENT, updateStudent);
   yield takeLatest(types.GET_CONTACT, getContact);
   yield takeLatest(types.POST_CONTACT, postContact);
+  yield takeLatest(types.REMOVE_CONTACT, removeContact);
+  yield takeLatest(types.PUT_CONTACT, putContact);
   yield takeEvery(types.ADD_STUDENT_TO_BUS_LOCATION, addToLocation);
 }

@@ -33,6 +33,12 @@ export const types = {
   ADD_STUDENT_TO_BUS_LOCATION: 'ADD_STUDENT_TO_BUS_LOCATION',
   ADD_STUDENT_TO_BUS_LOCATION_SUCCESS: 'ADD_STUDENT_TO_BUS_LOCATION_SUCCESS',
 
+  REMOVE_CONTACT: 'REMOVE_CONTACT',
+  REMOVE_CONTACT_SUCCESS: 'REMOVE_CONTACT_SUCCESS',
+
+  PUT_CONTACT: 'PUT_CONTACT',
+  PUT_CONTACT_SUCCESS: 'PUT_CONTACT_SUCCESS',
+
   SET_SHOW_PARENT_FORM: 'SET_SHOW_PARENT_FORM',
 };
 
@@ -61,6 +67,12 @@ export const actionCreator = {
 
   addToLocation: createAction(types.ADD_STUDENT_TO_BUS_LOCATION),
   addToLocationSuccess: createAction(types.ADD_STUDENT_TO_BUS_LOCATION_SUCCESS),
+
+  removeContact: createAction(types.REMOVE_CONTACT),
+  removeContactSuccess: createAction(types.REMOVE_CONTACT_SUCCESS),
+
+  putContact: createAction(types.PUT_CONTACT),
+  putContactSuccess: createAction(types.PUT_CONTACT_SUCCESS),
 
   setShowParentForm: createAction(types.SET_SHOW_PARENT_FORM),
 };

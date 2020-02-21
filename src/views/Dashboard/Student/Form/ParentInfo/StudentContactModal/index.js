@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Row, Col, Form, Input } from 'antd';
 import { actionCreator } from 'store/student/student.meta';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 
 const Item = Form.Item;
 
-const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
-  const dispatch = useDispatch();
+const StudentContact = ({
+  isVisible,
+  setVisible,
+  studentid,
+  parentid,
+  contactId,
+  setContactId,
+  data,
+  form,
+  putContact,
+  postContact,
+  getContact,
+}) => {
   const { getFieldDecorator } = form;
+  const [item, setItem] = useState(null);
+  const [relationship, setRelationship] = useState('');
+  const [fullname, setFullname] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
 
   const handleSubmitCheck = e => {
     e.preventDefault();
@@ -22,38 +37,67 @@ const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
 
   const handleSubmit = () => {
     const fields = {
-      name: value.fullname,
-      relationship: value.relationship,
-      phone: value.contactNumber,
-      parent: 121,
+      name: fullname,
+      relationship: relationship,
+      phone: contactNumber,
+      parent: parentid,
     };
-
-    dispatch(
-      actionCreator.postContact({
+    if (contactId) {
+      putContact({
         data: fields,
-      })
-    );
-    setVisible(false);
+        id: contactId,
+        afterUpdate: () =>
+          getContact({
+            id: studentid,
+          }),
+      });
+    } else {
+      postContact({
+        data: fields,
+        afterSave: () =>
+          getContact({
+            id: studentid,
+          }),
+      });
+    }
+    closedModal();
   };
 
+  const closedModal = () => {
+    setVisible(false);
+    setContactId(null);
+  };
+
+  useEffect(() => {
+    if (contactId) {
+      console.log(data);
+      const found = data.find(item => item.id === contactId);
+      setItem(found);
+      setFullname(found.name);
+      setRelationship(found.relationship);
+      setContactNumber(found.phone);
+    } else {
+      setItem(null);
+      setFullname('');
+      setRelationship('');
+      setContactNumber('');
+    }
+  }, [item, data, contactId]);
+
   return (
-    <Modal
-      visible={isVisible}
-      onCancel={() => setVisible(false)}
-      onOk={handleSubmitCheck}
-    >
+    <Modal visible={isVisible} onCancel={closedModal} onOk={handleSubmitCheck}>
       <Row gutter={16}>
         <Col md={24}>
           <Item label="Full name">
             {getFieldDecorator('fullname', {
-              initialValue: value.fullname,
+              initialValue: fullname,
               rules: [
                 {
                   required: true,
                   message: 'Full name is required',
                 },
               ],
-            })(<Input onChange={e => setValue.setFullname(e.target.value)} />)}
+            })(<Input onChange={e => setFullname(e.target.value)} />)}
           </Item>
         </Col>
       </Row>
@@ -61,16 +105,14 @@ const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
         <Col md={24}>
           <Item label="Relationship">
             {getFieldDecorator('relationship', {
-              initialValue: value.relationship,
+              initialValue: relationship,
               rules: [
                 {
                   required: true,
                   message: 'Relationship is required',
                 },
               ],
-            })(
-              <Input onChange={e => setValue.setRelationship(e.target.value)} />
-            )}
+            })(<Input onChange={e => setRelationship(e.target.value)} />)}
           </Item>
         </Col>
       </Row>
@@ -78,18 +120,14 @@ const StudentContact = ({ isVisible, setVisible, value, setValue, form }) => {
         <Col md={24}>
           <Item label="Contact number">
             {getFieldDecorator('contactnumber', {
-              initialValue: value.contactNumber,
+              initialValue: contactNumber,
               rules: [
                 {
                   required: true,
                   message: 'Contact number is required',
                 },
               ],
-            })(
-              <Input
-                onChange={e => setValue.setContactNumber(e.target.value)}
-              />
-            )}
+            })(<Input onChange={e => setContactNumber(e.target.value)} />)}
           </Item>
         </Col>
       </Row>
@@ -101,4 +139,15 @@ const WrappedStudentContact = Form.create({ name: 'student_contact' })(
   StudentContact
 );
 
-export default WrappedStudentContact;
+const mapDispatchToProps = {
+  putContact: actionCreator.putContact,
+  postContact: actionCreator.postContact,
+  getContact: actionCreator.getContact,
+};
+
+const mapStateToProps = state => state.student;
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WrappedStudentContact);

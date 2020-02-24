@@ -63,32 +63,14 @@ const ParentData = memo(({ parent, siblings, student, contactList }) => {
   };
 
   const editContact = props => {
-    // console.log('props: ');
-    // console.log(props);
-    // setContactId(props.id);
-    // setFullname(props.name);
-    // setRelationship(props.relationship);
-    // setContactNumber(props.phone);
     setContactId(props.id);
     setVisible(true);
   };
 
   const addContact = () => {
-    // console.log('clear!');
-    // setContactId('');
-    // setFullname('');
-    // setRelationship('');
-    // setContactNumber('');
     setContactId(null);
     setVisible(true);
   };
-
-  // useEffect(() => {
-  //   setValue.setContactId(value.contactId);
-  //   setValue.setFullname(value.fullname);
-  //   setValue.setRelationship(value.relationship);
-  //   setValue.setContactNumber(value.contactNumber);
-  // }, [value.contactId]);
 
   const columns_contacts = [
     { title: 'Full name', dataIndex: 'name', key: 'name' },
@@ -227,18 +209,6 @@ const ParentData = memo(({ parent, siblings, student, contactList }) => {
             contactId={contactId}
             setContactId={setContactId}
             data={contacts_data}
-            // value={{
-            //   fullname: fullname,
-            //   relationship: relationship,
-            //   contactNumber: contactNumber,
-            //   contactId: contactId,
-            // }}
-            // setValue={{
-            //   setFullname: setFullname,
-            //   setRelationship: setRelationship,
-            //   setContactNumber: setContactNumber,
-            //   setContactId: setContactId,
-            // }}
           />
         </Fragment>
       )}

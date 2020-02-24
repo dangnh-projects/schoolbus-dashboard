@@ -19,7 +19,6 @@ const StudentContact = ({
   getContact,
 }) => {
   const { getFieldDecorator } = form;
-  const [item, setItem] = useState(null);
   const [relationship, setRelationship] = useState('');
   const [fullname, setFullname] = useState('');
   const [contactNumber, setContactNumber] = useState('');
@@ -61,6 +60,7 @@ const StudentContact = ({
       });
     }
     closedModal();
+    form.resetFields();
   };
 
   const closedModal = () => {
@@ -72,17 +72,15 @@ const StudentContact = ({
     if (contactId) {
       console.log(data);
       const found = data.find(item => item.id === contactId);
-      setItem(found);
       setFullname(found.name);
       setRelationship(found.relationship);
       setContactNumber(found.phone);
     } else {
-      setItem(null);
       setFullname('');
       setRelationship('');
       setContactNumber('');
     }
-  }, [item, data, contactId]);
+  }, [contactId, data]);
 
   return (
     <Modal visible={isVisible} onCancel={closedModal} onOk={handleSubmitCheck}>
@@ -97,7 +95,12 @@ const StudentContact = ({
                   message: 'Full name is required',
                 },
               ],
-            })(<Input onChange={e => setFullname(e.target.value)} />)}
+            })(
+              <Input
+                maxLength={50}
+                onChange={e => setFullname(e.target.value)}
+              />
+            )}
           </Item>
         </Col>
       </Row>
@@ -112,7 +115,12 @@ const StudentContact = ({
                   message: 'Relationship is required',
                 },
               ],
-            })(<Input onChange={e => setRelationship(e.target.value)} />)}
+            })(
+              <Input
+                maxLength={50}
+                onChange={e => setRelationship(e.target.value)}
+              />
+            )}
           </Item>
         </Col>
       </Row>
@@ -127,7 +135,12 @@ const StudentContact = ({
                   message: 'Contact number is required',
                 },
               ],
-            })(<Input onChange={e => setContactNumber(e.target.value)} />)}
+            })(
+              <Input
+                maxLength={25}
+                onChange={e => setContactNumber(e.target.value)}
+              />
+            )}
           </Item>
         </Col>
       </Row>

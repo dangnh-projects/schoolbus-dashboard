@@ -10,19 +10,20 @@ import { types, actionCreator } from './student.meta';
 import { convertObjectToFormData } from '../utils';
 import { notification } from 'antd';
 import { navigate } from '@reach/router';
-
 import { buildRequest } from 'api';
-import { apiRequest } from 'api/metaData';
+
 export const postRouteRequest = buildRequest('/core/api/bus-route');
 export const postRouteLocationRequest = buildRequest('/core/api/bus-location');
 export const getRouteLocationRequest = buildRequest('/core/api/bus-route');
-
 export const postStudentRequest = buildRequest('/core/api/student');
 export const postParentRequest = buildRequest('/core/api/parent');
 export const postContactRequest = buildRequest('/core/api/contacts');
 export const searchParentRequest = buildRequest(
   '/core/api/parent/by-id-number'
 );
+export const getContactRequest = buildRequest('/core/api/student');
+export const deleteContactRequest = buildRequest('/core/api/contacts');
+export const putContactRequest = buildRequest('/core/api/contacts');
 
 function* postStudent({ payload }) {
   yield put(actionCreator.setLoading(true));
@@ -394,8 +395,8 @@ function* getContact({ payload }) {
     return;
   }
   try {
-    const { body } = yield call(apiRequest.request, {
-      url: `/core/api/student/${payload.id}/contacts`,
+    const { body } = yield call(getContactRequest.request, {
+      url: `/${payload.id}/contacts`,
       method: 'GET',
       headers: { Authorization: `Bearer ${user.token.access}` },
     });
@@ -413,8 +414,8 @@ function* removeContact({ payload }) {
     return;
   }
   try {
-    const { body } = yield call(apiRequest.request, {
-      url: `/core/api/contacts/${payload.id}`,
+    const { body } = yield call(deleteContactRequest.request, {
+      url: `/${payload.id}`,
       method: 'DELETE',
       headers: { Authorization: `Bearer ${user.token.access}` },
     });
@@ -436,8 +437,8 @@ function* putContact({ payload }) {
   }
   try {
     const formData = convertObjectToFormData(payload.data);
-    const { body } = yield call(apiRequest.request, {
-      url: `/core/api/contacts/${payload.id}`,
+    const { body } = yield call(putContactRequest.request, {
+      url: `/${payload.id}`,
       data: formData,
       method: 'PUT',
       headers: { Authorization: `Bearer ${user.token.access}` },

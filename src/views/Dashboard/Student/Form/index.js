@@ -56,6 +56,8 @@ const StudentForm = ({ formSave, updateItem, id }) => {
       if (found) {
         setItem(found);
         dispatch(actionCreator.postStudentSuccess(found));
+        dispatch(actionCreator.getContact({ id }));
+
         if (found && found.parent) {
           dispatch(actionCreator.postParentSuccess(found.parent));
 
@@ -90,6 +92,7 @@ const StudentForm = ({ formSave, updateItem, id }) => {
               title={step.title}
               status={getStatus(idx, stage)}
               style={{ cursor: 'pointer' }}
+              key={idx}
             />
           ))}
         </Steps>

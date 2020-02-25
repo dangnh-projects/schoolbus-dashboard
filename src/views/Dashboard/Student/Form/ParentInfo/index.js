@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect, Fragment } from 'react';
 import {
   Form,
   Row,
@@ -10,15 +10,17 @@ import {
   Descriptions,
   Icon,
   Modal,
+  Popconfirm,
 } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { actionCreator } from 'store/student/student.meta';
 import ParentForm from './ParentForm';
 import { BASE_URL } from 'api';
+import StudentContact from './StudentContactModal';
 
 const { Search } = Input;
 
-const IdSearchBar = memo(props => {
+const IdSearchBar = memo(() => {
   const dispatch = useDispatch();
 
   const handleOnSearch = idNumber => {
@@ -33,7 +35,7 @@ const IdSearchBar = memo(props => {
     <Row
       type="flex"
       justify="center"
-      align="center"
+      align="middle"
       style={{ alignItems: 'center' }}
     >
       <Col md={10}>Search by ID number:</Col>
@@ -44,8 +46,12 @@ const IdSearchBar = memo(props => {
   );
 });
 
-const ParentData = memo(({ parent, siblings, student }) => {
+const ParentData = memo(({ parent, siblings, student, contactList }) => {
   const dispatch = useDispatch();
+  const [isVisible, setVisible] = useState(false);
+  const [contactId, setContactId] = useState(null);
+  const contacts_data = contactList.data.contacts || [];
+
   const handleOnNext = () => {
     const data = { id: student.id, parent_id: parent.info };
     dispatch(
@@ -55,6 +61,66 @@ const ParentData = memo(({ parent, siblings, student }) => {
       })
     );
   };
+
+  const editContact = props => {
+    setContactId(props.id);
+    setVisible(true);
+  };
+
+  const addContact = () => {
+    setContactId(null);
+    setVisible(true);
+  };
+
+  const columns_contacts = [
+    { title: 'Full name', dataIndex: 'name', key: 'name' },
+    {
+      title: 'Relationship',
+      dataIndex: 'relationship',
+      key: 'relationship',
+    },
+    { title: 'Phone number', dataIndex: 'phone', key: 'phone' },
+    {
+      title: 'Action',
+      align: 'center',
+      render: (_, record) => {
+        return (
+          <Row style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              style={{ marginRight: 16 }}
+              onClick={() => editContact(record)}
+            >
+              <Icon type="form" />
+            </Button>
+            <Popconfirm
+              placement="top"
+              title={'Delete row?'}
+              onConfirm={() => {
+                dispatch(
+                  actionCreator.removeContact({
+                    id: `${record.id}`,
+                    afterDelete: () =>
+                      dispatch(
+                        actionCreator.getContact({
+                          id: `${student.id}`,
+                        })
+                      ),
+                  })
+                );
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="danger">
+                <Icon type="delete" />
+              </Button>
+            </Popconfirm>
+          </Row>
+        );
+      },
+    },
+  ];
+
   return (
     <Row>
       <Divider orientation="left">Parent</Divider>
@@ -104,7 +170,7 @@ const ParentData = memo(({ parent, siblings, student }) => {
         </Descriptions.Item>
       </Descriptions>
       {siblings && siblings.length > 0 && (
-        <div>
+        <Fragment>
           <Divider orientation="left">Sibling</Divider>
           <Table
             columns={[
@@ -117,7 +183,34 @@ const ParentData = memo(({ parent, siblings, student }) => {
             ]}
             dataSource={siblings || []}
           />
-        </div>
+        </Fragment>
+      )}
+      {columns_contacts && columns_contacts.length > 0 && (
+        <Fragment>
+          <Row type="flex" gutter={16} style={{ alignItems: 'center' }}>
+            <Col md={16}>
+              <Divider orientation="left">Student Contact Information</Divider>
+            </Col>
+            <Col md={4} style={{ textAlign: 'center' }}>
+              <Button onClick={addContact}>Add contact</Button>
+            </Col>
+            <Col md={4}>
+              <Divider />
+            </Col>
+            <Col md={24} style={{ marginTop: '10px' }}>
+              <Table columns={columns_contacts} dataSource={contacts_data} />
+            </Col>
+          </Row>
+          <StudentContact
+            isVisible={isVisible}
+            setVisible={setVisible}
+            studentid={student.id}
+            parentid={parent.info}
+            contactId={contactId}
+            setContactId={setContactId}
+            data={contacts_data}
+          />
+        </Fragment>
       )}
 
       <Row type="flex" align="middle" style={{ marginTop: 24 }}>
@@ -135,13 +228,17 @@ const ParentData = memo(({ parent, siblings, student }) => {
   );
 });
 
-const ParentInfo = props => {
-  const { parent, siblings, student, showParentForm } = useSelector(
-    state => state.student
-  );
+const ParentInfo = ({ form }) => {
+  const {
+    parent,
+    siblings,
+    student,
+    showParentForm,
+    contactList,
+  } = useSelector(state => state.student);
   const dispatch = useDispatch();
   return (
-    <div>
+    <Fragment>
       <Form style={{ padding: 16 }} layout="horizontal">
         <Row gutter={16}>
           <Row type="flex" gutter={18} style={{ alignItems: 'center' }}>
@@ -165,13 +262,15 @@ const ParentInfo = props => {
                 parent={parent}
                 siblings={siblings}
                 student={student}
+                form={form}
+                contactList={contactList}
               />
             </Col>
           )}
           {showParentForm && <ParentForm />}
         </Row>
       </Form>
-    </div>
+    </Fragment>
   );
 };
 

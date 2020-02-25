@@ -13,6 +13,9 @@ export const types = {
   POST_PARENT: 'POST_PARENT',
   POST_PARENT_SUCCESS: 'POST_PARENT_SUCCESS',
 
+  POST_CONTACT: 'POST_CONTACT',
+  POST_CONTACT_SUCCESS: 'POST_CONTACT_SUCCESS',
+
   UPDATE_STUDENT: 'UPDATE_STUDENT',
   UPDATE_STUDENT_SUCCESS: 'UPDATE_STUDENT_SUCCESS',
 
@@ -24,8 +27,17 @@ export const types = {
   GET_BUS_STOP: 'GET_BUS_STOP',
   GET_BUS_STOP_SUCCESS: 'GET_BUS_STOP_SUCCESS',
 
+  GET_CONTACT: 'GET_CONTACT',
+  GET_CONTACT_SUCCESS: 'GET_CONTACT_SUCCESS',
+
   ADD_STUDENT_TO_BUS_LOCATION: 'ADD_STUDENT_TO_BUS_LOCATION',
   ADD_STUDENT_TO_BUS_LOCATION_SUCCESS: 'ADD_STUDENT_TO_BUS_LOCATION_SUCCESS',
+
+  REMOVE_CONTACT: 'REMOVE_CONTACT',
+  REMOVE_CONTACT_SUCCESS: 'REMOVE_CONTACT_SUCCESS',
+
+  PUT_CONTACT: 'PUT_CONTACT',
+  PUT_CONTACT_SUCCESS: 'PUT_CONTACT_SUCCESS',
 
   SET_SHOW_PARENT_FORM: 'SET_SHOW_PARENT_FORM',
 };
@@ -47,8 +59,20 @@ export const actionCreator = {
   updateStudent: createAction(types.UPDATE_STUDENT),
   updateStudentSuccess: createAction(types.UPDATE_STUDENT_SUCCESS),
 
+  getContact: createAction(types.GET_CONTACT),
+  getContactSuccess: createAction(types.GET_CONTACT_SUCCESS),
+
+  postContact: createAction(types.POST_CONTACT),
+  postContactSuccess: createAction(types.POST_CONTACT_SUCCESS),
+
   addToLocation: createAction(types.ADD_STUDENT_TO_BUS_LOCATION),
   addToLocationSuccess: createAction(types.ADD_STUDENT_TO_BUS_LOCATION_SUCCESS),
+
+  removeContact: createAction(types.REMOVE_CONTACT),
+  removeContactSuccess: createAction(types.REMOVE_CONTACT_SUCCESS),
+
+  putContact: createAction(types.PUT_CONTACT),
+  putContactSuccess: createAction(types.PUT_CONTACT_SUCCESS),
 
   setShowParentForm: createAction(types.SET_SHOW_PARENT_FORM),
 };

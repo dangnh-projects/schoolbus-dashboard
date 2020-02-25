@@ -10,17 +10,20 @@ import { types, actionCreator } from './student.meta';
 import { convertObjectToFormData } from '../utils';
 import { notification } from 'antd';
 import { navigate } from '@reach/router';
-
 import { buildRequest } from 'api';
+
 export const postRouteRequest = buildRequest('/core/api/bus-route');
 export const postRouteLocationRequest = buildRequest('/core/api/bus-location');
 export const getRouteLocationRequest = buildRequest('/core/api/bus-route');
-
 export const postStudentRequest = buildRequest('/core/api/student');
 export const postParentRequest = buildRequest('/core/api/parent');
+export const postContactRequest = buildRequest('/core/api/contacts');
 export const searchParentRequest = buildRequest(
   '/core/api/parent/by-id-number'
 );
+export const getContactRequest = buildRequest('/core/api/student');
+export const deleteContactRequest = buildRequest('/core/api/contacts');
+export const putContactRequest = buildRequest('/core/api/contacts');
 
 function* postStudent({ payload }) {
   yield put(actionCreator.setLoading(true));
@@ -84,6 +87,32 @@ function* postStudent({ payload }) {
     notification.error({ message: 'Request error' });
   }
   yield put(actionCreator.setLoading(false));
+}
+
+function* postContact({ payload }) {
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+
+  try {
+    const formData = convertObjectToFormData(payload.data);
+    const { body } = yield call(postContactRequest.request, {
+      data: formData,
+      method: 'POST',
+      headers: { Authorization: `Bearer ${user.token.access}` },
+    });
+    if (payload.afterSave) {
+      yield call(payload.afterSave);
+    }
+    yield put(actionCreator.postContactSuccess(body.data));
+    notification.success({
+      message: 'Create contact information successfully',
+    });
+  } catch (error) {
+    notification.error({ message: 'Request error!' });
+  }
 }
 
 function* searchParent({ payload }) {
@@ -359,10 +388,79 @@ function* postParent({ payload }) {
   yield put(actionCreator.setLoading(false));
 }
 
+function* getContact({ payload }) {
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+  try {
+    const { body } = yield call(getContactRequest.request, {
+      url: `/${payload.id}/contacts`,
+      method: 'GET',
+      headers: { Authorization: `Bearer ${user.token.access}` },
+    });
+
+    yield put(actionCreator.getContactSuccess({ data: body.data }));
+  } catch (error) {
+    notification.error({ message: 'Request error!' });
+  }
+}
+
+function* removeContact({ payload }) {
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+  try {
+    const { body } = yield call(deleteContactRequest.request, {
+      url: `/${payload.id}`,
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${user.token.access}` },
+    });
+    if (payload.afterDelete) {
+      yield call(payload.afterDelete);
+    }
+    yield put(actionCreator.removeContactSuccess({ data: body.data }));
+    notification.success({ message: 'Contact removed successfully!' });
+  } catch (error) {
+    notification.error({ message: 'Request error!' });
+  }
+}
+
+function* putContact({ payload }) {
+  const user = yield select(store => store.user);
+  if (!user || !user.token || !user.token.access) {
+    yield call(navigate, '/login');
+    return;
+  }
+  try {
+    const formData = convertObjectToFormData(payload.data);
+    const { body } = yield call(putContactRequest.request, {
+      url: `/${payload.id}`,
+      data: formData,
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${user.token.access}` },
+    });
+    if (payload.afterUpdate) {
+      yield call(payload.afterUpdate);
+    }
+    yield put(actionCreator.putContactSuccess(body));
+    notification.success({ message: 'Contact updated successfully!' });
+  } catch (error) {
+    notification.error({ message: 'Request error!' });
+  }
+}
+
 export default function* busRouteSaga() {
   yield takeLatest(types.POST_STUDENT, postStudent);
   yield takeLatest(types.POST_PARENT, postParent);
   yield takeLatest(types.SEARCH_PARENT, searchParent);
   yield takeLatest(types.UPDATE_STUDENT, updateStudent);
+  yield takeLatest(types.GET_CONTACT, getContact);
+  yield takeLatest(types.POST_CONTACT, postContact);
+  yield takeLatest(types.REMOVE_CONTACT, removeContact);
+  yield takeLatest(types.PUT_CONTACT, putContact);
   yield takeEvery(types.ADD_STUDENT_TO_BUS_LOCATION, addToLocation);
 }

@@ -54,13 +54,16 @@ const Information = ({ form }) => {
       dob: dob && dob.format && dob.format('YYYY-MM-DD'),
       school_id: school,
       classroom,
-      image: avatar,
       home_number: homeNumber,
       street,
       district,
       ward,
       province,
     };
+
+    if (avatar) {
+      data.image = avatar;
+    }
 
     if (student) {
       data.id = student.id;

@@ -27,7 +27,7 @@
     "redux-saga": "^1.0.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set port=4000 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test-ci": "CI=true react-scripts test --coverage --watchAll=false",
